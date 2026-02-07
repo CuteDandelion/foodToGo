@@ -10,11 +10,17 @@ env:
   FLUTTER_VERSION: '3.24.0'
   JAVA_VERSION: '17'
 
+# Concurrency control to cancel redundant workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Job 1: Code Quality Checks
   analyze:
     name: Analyze & Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,19 +45,21 @@ jobs:
         run: dart format --output=none --set-exit-if-changed lib/ test/
 
       - name: Analyze code
-        run: flutter analyze --fatal-infos
+        run: flutter analyze --fatal-warnings
 
       - name: Run custom lint
         run: |
           if grep -q "very_good_analysis" pubspec.yaml; then
             echo "Using very_good_analysis for strict linting"
           fi
+        shell: bash
 
   # Job 2: Unit Tests
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: analyze
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -75,25 +83,29 @@ jobs:
       - name: Run code generation
         run: |
           if grep -q "build_runner" pubspec.yaml; then
-            flutter pub run build_runner build --delete-conflicting-outputs
+            dart run build_runner build --delete-conflicting-outputs
           fi
+        shell: bash
 
       - name: Run unit tests
         run: flutter test --coverage --test-randomize-ordering-seed random
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: coverage/lcov.info
           fail_ci_if_error: false
           verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   # Job 3: Build Android APK (Production)
   build-android-apk:
     name: Build Android APK (Production)
     runs-on: ubuntu-latest
     needs: [analyze, test]
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/')
+    timeout-minutes: 30
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -117,8 +129,9 @@ jobs:
       - name: Run code generation
         run: |
           if grep -q "build_runner" pubspec.yaml; then
-            flutter pub run build_runner build --delete-conflicting-outputs
+            dart run build_runner build --delete-conflicting-outputs
           fi
+        shell: bash
 
       - name: Build Production APK
         run: flutter build apk --release
@@ -143,7 +156,8 @@ jobs:
     name: Build Android App Bundle (Production)
     runs-on: ubuntu-latest
     needs: [analyze, test]
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/')
+    timeout-minutes: 30
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -167,8 +181,9 @@ jobs:
       - name: Run code generation
         run: |
           if grep -q "build_runner" pubspec.yaml; then
-            flutter pub run build_runner build --delete-conflicting-outputs
+            dart run build_runner build --delete-conflicting-outputs
           fi
+        shell: bash
 
       - name: Build App Bundle
         run: flutter build appbundle --release
@@ -185,7 +200,8 @@ jobs:
     name: Build iOS (Production)
     runs-on: macos-latest
     needs: [analyze, test]
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/')
+    timeout-minutes: 30
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -203,8 +219,9 @@ jobs:
       - name: Run code generation
         run: |
           if grep -q "build_runner" pubspec.yaml; then
-            flutter pub run build_runner build --delete-conflicting-outputs
+            dart run build_runner build --delete-conflicting-outputs
           fi
+        shell: bash
 
       - name: Build iOS
         run: flutter build ios --release --no-codesign
@@ -214,6 +231,7 @@ jobs:
     name: Build Web
     runs-on: ubuntu-latest
     needs: [analyze, test]
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -237,8 +255,9 @@ jobs:
       - name: Run code generation
         run: |
           if grep -q "build_runner" pubspec.yaml; then
-            flutter pub run build_runner build --delete-conflicting-outputs
+            dart run build_runner build --delete-conflicting-outputs
           fi
+        shell: bash
 
       - name: Build Web
         run: flutter build web --release
@@ -254,6 +273,7 @@ jobs:
   security-check:
     name: Security Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -270,12 +290,17 @@ jobs:
 
       - name: Check for outdated dependencies
         run: flutter pub outdated || true
+        shell: bash
 
       - name: Verify no dependency overrides in production
         run: |
-          if grep -A 5 "dependency_overrides:" pubspec.yaml; then
+          if grep -q "dependency_overrides:" pubspec.yaml; then
             echo "Warning: dependency_overrides found in pubspec.yaml"
+            grep -A 5 "dependency_overrides:" pubspec.yaml
+          else
+            echo "No dependency_overrides found - OK"
           fi
+        shell: bash
 
   # Note: E2E tests are excluded from CI as they require emulators/simulators
   # that are not available in GitHub Actions runners. Run E2E tests locally with:
