@@ -249,7 +249,7 @@ jobs:
           path: build/ios/iphoneos/Runner.app
           retention-days: 30
 
-   # Job 6: Build Web
+  # Job 6: Build Web
   build-web:
     name: Build Web
     runs-on: ubuntu-latest
