@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/constants.dart';
 import '../../../../core/storage/storage_manager.dart';
 import '../../../../shared/services/mock_data_service.dart';
+import '../../domain/entities/user_role.dart';
 
 // Events
 abstract class AuthEvent extends Equatable {
