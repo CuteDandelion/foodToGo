@@ -16,6 +16,102 @@ https://github.com/CuteDandelion/foodToGo.git
 - Commands assume Windows Command Prompt or PowerShell
 - Working directory: `C:\Users\justi\OneDrive\Desktop\FoodBeGood`
 
+## Project Paths
+
+### Critical Project Directories
+
+```
+C:\Users\justi\OneDrive\Desktop\FoodBeGood\
+├── lib\                          # Main Flutter source code
+│   ├── features\                 # Feature modules (Clean Architecture)
+│   ├── core\                     # Core utilities, errors, storage
+│   └── shared\                   # Shared widgets and services
+├── test\                         # Unit and widget tests
+├── integration_test\             # E2E tests (Patrol)
+├── android\                      # Android platform code
+├── ios\                          # iOS platform code
+├── assets\                       # Static assets
+│   ├── images\                   # Image assets
+│   ├── icons\                    # Icon assets
+│   └── fonts\                    # Font files (Inter family)
+├── memory\                       # Project documentation (CRITICAL)
+│   ├── architecture\             # Architecture docs
+│   ├── design\                   # UI/UX specifications
+│   ├── technical\                # Technical documentation
+│   └── development-log.md        # Project history
+├── .github\workflows\            # CI/CD configurations
+└── pubspec.yaml                  # Flutter dependencies
+```
+
+### Flutter SDK Path
+
+**Standard Flutter Installation Paths:**
+```bash
+# Windows (typical)
+C:\flutter\bin                    # Add to PATH
+C:\Users\<username>\flutter\bin   # User-local installation
+
+# Verify Flutter installation
+flutter doctor
+flutter --version
+```
+
+**Environment Variables Required:**
+```bash
+# Add to system PATH
+C:\flutter\bin
+
+# Android SDK (for Android builds)
+C:\Users\<username>\AppData\Local\Android\Sdk
+
+# Java (for Android builds)
+C:\Program Files\Eclipse Adoptium\jdk-<version>-hotspot\bin
+```
+
+### Build Output Paths
+
+```bash
+# Android APK output
+build\app\outputs\flutter-apk\app-release.apk
+
+# Android App Bundle output
+build\app\outputs\bundle\release\app-release.aab
+
+# iOS output (macOS only)
+build\ios\iphoneos\Runner.app
+
+# Web output
+build\web\
+
+# Test coverage output
+coverage\lcov.info
+```
+
+### Tool-Specific Paths
+
+**Patrol (E2E Testing):**
+```bash
+# Patrol configuration
+android\app\src\main\AndroidManifest.xml    # Android test config
+ios\Runner\Info.plist                        # iOS test config
+```
+
+**Firebase (if configured):**
+```bash
+# Firebase config files (DO NOT COMMIT)
+android\app\google-services.json              # Android
+ios\Runner\GoogleService-Info.plist          # iOS
+lib\firebase_options.dart                    # Generated config
+```
+
+**Code Generation:**
+```bash
+# Generated files (do not edit manually)
+lib\*.g.dart                                 # JSON serializable
+lib\*.freezed.dart                           # Freezed models
+lib\injection_container.config.dart          # Injectable config
+```
+
 ## Rules
 
 ### Rule 1: Code Security Priority
@@ -308,6 +404,208 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 - Create feature branches: `feature/description`
 - Write descriptive commit messages
 - Run `flutter analyze && flutter test` before committing
+
+## Git Worktree Hygiene
+
+### Single Source of Truth Principle
+**CRITICAL**: Maintain `main` branch as the single source of truth. All work must flow through PRs to main.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SINGLE SOURCE OF TRUTH                    │
+│                                                              │
+│   main (protected)                                          │
+│     ↑                                                        │
+│   PR #1 ←── feature/auth-login                              │
+│     ↑                                                        │
+│   PR #2 ←── feature/dashboard-ui                            │
+│     ↑                                                        │
+│   PR #3 ←── bugfix/login-validation                         │
+│                                                              │
+│   NEVER commit directly to main                              │
+│   ALWAYS create feature branches                             │
+│   ALWAYS use Pull Requests                                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Branch Naming Conventions
+
+```bash
+# Feature branches
+feature/<short-description>
+feature/user-authentication
+feature/dashboard-dark-mode
+
+# Bug fix branches
+bugfix/<issue-description>
+bugfix/login-crash-on-ios
+bugfix/memory-leak-in-bloc
+
+# Hotfix branches (production issues)
+hotfix/<critical-issue>
+hotfix/security-vulnerability
+hotfix/payment-gateway-error
+
+# Release branches
+release/<version>
+release/v1.2.0
+release/v2.0.0-beta
+```
+
+### Branch Lifecycle Management
+
+**1. Create Feature Branch (Always from latest main)**
+```bash
+# Ensure you're on main and it's up to date
+git checkout main
+git pull origin main
+
+# Create and switch to feature branch
+git checkout -b feature/your-feature-name
+
+# Push branch to remote
+git push -u origin feature/your-feature-name
+```
+
+**2. Keep Branch Updated**
+```bash
+# While working on feature, regularly sync with main
+git checkout main
+git pull origin main
+git checkout feature/your-feature-name
+git rebase main
+
+# Or merge main into feature
+git merge main
+```
+
+**3. Clean Up After Merge**
+```bash
+# Delete local branch after PR is merged
+git checkout main
+git pull origin main
+git branch -d feature/your-feature-name
+
+# Delete remote branch
+git push origin --delete feature/your-feature-name
+```
+
+### Remote Branch Pruning (Prevent Branch Pollution)
+
+**Automatic Pruning Configuration**
+```bash
+# Enable automatic pruning on fetch
+git config --global fetch.prune true
+
+# Or manually prune remote-tracking branches
+git fetch --prune
+```
+
+**Regular Branch Cleanup Commands**
+```bash
+# List all remote branches
+git branch -r
+
+# List merged branches (safe to delete)
+git branch -r --merged main
+
+# Delete specific stale remote branch
+git push origin --delete feature/old-feature-name
+
+# Clean up local references to deleted remote branches
+git remote prune origin
+
+# List branches not merged (review before deleting)
+git branch -r --no-merged main
+```
+
+**Branch Cleanup Schedule**
+- **Daily**: Remove branches merged via PRs
+- **Weekly**: Review and remove stale feature branches (>2 weeks old)
+- **Monthly**: Archive or document long-running branches
+
+### Worktree Best Practices
+
+**1. One Worktree Per Task**
+```bash
+# Create isolated worktree for hotfix while working on feature
+git worktree add ../foodbegood-hotfix hotfix/critical-fix
+cd ../foodbegood-hotfix
+# Work on hotfix independently
+```
+
+**2. Clean Worktree Structure**
+```
+C:\Users\justi\OneDrive\Desktop\
+├── FoodBeGood\                    # Main worktree (main branch)
+├── FoodBeGood-feature-auth\       # Feature worktree
+├── FoodBeGood-hotfix-payment\     # Hotfix worktree
+└── FoodBeGood-release-v1.2\       # Release worktree
+```
+
+**3. Remove Worktree When Done**
+```bash
+# Remove worktree
+git worktree remove ../foodbegood-hotfix
+
+# Or manually delete and prune
+git worktree prune
+```
+
+### Pre-Commit Checklist
+
+```bash
+# Before every commit, run:
+flutter analyze                    # No lint errors
+flutter test                       # All tests pass
+flutter format --set-exit-if-changed lib/ test/  # Properly formatted
+
+# Check what you're committing
+git status
+git diff --cached
+
+# Ensure no sensitive files
+git diff --cached --name-only | grep -E "(\.env|\.jks|keystore)" && echo "WARNING: Sensitive files detected!"
+```
+
+### Commit Message Standards
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation only
+- `style`: Formatting (no code change)
+- `refactor`: Code restructuring
+- `test`: Adding tests
+- `chore`: Build/process changes
+
+**Examples:**
+```
+feat(auth): add biometric authentication
+
+Implement fingerprint and face ID authentication
+using local_auth package. Added secure storage
+for credentials.
+
+Closes #123
+```
+
+```
+fix(dashboard): resolve memory leak in chart widget
+
+Dispose animation controllers properly to prevent
+memory accumulation during rapid navigation.
+
+Fixes #456
+```
 
 ## Key Resources
 
