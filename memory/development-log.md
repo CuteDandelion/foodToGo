@@ -36,6 +36,44 @@ FoodBeGood is a mobile application designed to help university students track th
 
 ## Latest Changes
 
+### [2026-02-08] GitHub Actions Workflow Additional Fixes - COMPLETED
+
+**Summary:**
+Applied additional improvements to the GitHub Actions CI/CD workflow to fix code generation timing and add missing artifact uploads.
+
+**Issues Fixed:**
+
+1. **Added Code Generation to Analyze Job** (Lines 44-49)
+   - Code generation now runs before `flutter analyze`
+   - Prevents false positive analysis errors on generated files
+   - Ensures generated files (`.g.dart`, `.freezed.dart`) exist before analysis
+
+2. **Added iOS Artifact Upload** (Lines 236-241)
+   - iOS build job now uploads the built app as an artifact
+   - Artifact retention: 30 days
+   - Path: `build/ios/iphoneos/Runner.app`
+   - Enables distribution and testing of iOS builds
+
+3. **Fixed Job Numbering** (Line 243)
+   - Corrected comment from "Job 6" to proper sequential numbering
+   - Web build job now correctly labeled
+
+**Files Modified:**
+- `.github/workflows/flutter_ci.yml` - Additional workflow improvements
+
+**Workflow Jobs Status:**
+| Job | Purpose | Status |
+|-----|---------|--------|
+| analyze | Code quality checks with code generation | ✅ Fixed |
+| test | Unit tests with coverage | ✅ Fixed |
+| build-android-apk | Production APK build | ✅ Fixed |
+| build-android-aab | Play Store bundle build | ✅ Fixed |
+| build-ios | iOS release build with artifact upload | ✅ Fixed |
+| build-web | Web build | ✅ Fixed |
+| security-check | Dependency audit | ✅ Fixed |
+
+---
+
 ### [2026-02-08] GitHub Actions Workflow Fixes - COMPLETED
 
 **Summary:**

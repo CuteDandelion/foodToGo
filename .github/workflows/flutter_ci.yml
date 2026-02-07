@@ -41,6 +41,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Run code generation
+        run: |
+          if grep -q "build_runner" pubspec.yaml; then
+            dart run build_runner build --delete-conflicting-outputs
+          fi
+        shell: bash
+
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed lib/ test/
 
@@ -226,7 +233,14 @@ jobs:
       - name: Build iOS
         run: flutter build ios --release --no-codesign
 
-  # Job 6: Build Web
+      - name: Upload iOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-${{ github.run_number }}
+          path: build/ios/iphoneos/Runner.app
+          retention-days: 30
+
+   # Job 6: Build Web
   build-web:
     name: Build Web
     runs-on: ubuntu-latest
