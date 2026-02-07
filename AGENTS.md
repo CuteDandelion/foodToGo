@@ -1,0 +1,317 @@
+# FoodBeGood - Agent Guidelines
+
+> Guidelines for AI agents working on the FoodBeGood Flutter mobile application.
+
+## Project Overview
+
+**FoodBeGood** is a food waste reduction mobile app for university canteens (targeting Mykolo Romerio Universitetas - MRU). Built with Flutter for iOS/Android, using BLoC pattern, Go Router, and Clean Architecture.
+
+## Environment
+
+**Git Repository**  
+https://github.com/CuteDandelion/foodToGo.git
+
+**Platform:** Windows
+- All file paths should use Windows-style backslashes (`\`)
+- Commands assume Windows Command Prompt or PowerShell
+- Working directory: `C:\Users\justi\OneDrive\Desktop\FoodBeGood`
+
+## Rules
+
+### Rule 1: Code Security Priority
+Always prioritize code security. When reviewing or writing code:
+- **Flag all security issues** and unsafe patterns immediately
+- **Suggest secure alternatives** with specific code examples
+- **Never ignore** potential security vulnerabilities (OWASP Top 10, injection attacks, XSS, CSRF, etc.)
+- **Question** any use of: unsafe eval(), hardcoded secrets, weak encryption, improper input validation, or insecure dependencies
+
+### Rule 2: Best Pattern Selection
+Always review and choose the best pattern for the task:
+- **Analyze multiple approaches** before implementing
+- **Consider trade-offs**: performance vs. readability, complexity vs. maintainability
+- **Prefer industry-standard patterns** over custom solutions
+- **Document your reasoning** when selecting non-obvious patterns
+- **Consider future maintainers**: Will this pattern be clear to other developers?
+
+### Rule 3: Always Document in Memory
+All project documentation MUST be stored in the `\memory\` directory:
+- **CRITICAL**: Never store documentation in the project root or other directories
+- Create documentation in appropriate subdirectories: `\memory\architecture\`, `\memory\design\`, `\memory\technical\`, `\memory\notes\`, `\memory\decisions\`
+- After every task, update `\memory\development-log.md` with changes made, files created/modified, and design decisions
+- Create interactive HTML diagrams for system architecture in `\memory\diagrams\`
+- Document architectural decisions as ADRs in `\memory\decisions\`
+
+### Rule 4: Design Must Reflect index.html and archived-images
+When implementing UI/UX design for the app:
+- **MUST reflect** the design specifications found in `index.html` and `archived-images` unless explicitly specified otherwise
+- **Reference first**: Always check `index.html` and `archived-images` before proposing or implementing any design changes
+- **Consistency required**: Maintain visual consistency with the established design system, color schemes, layouts, and components
+- **If impossible**: If implementing the exact design from `index.html` and `archived-images` is not feasible:
+  - Document the technical constraints or limitations
+  - Suggest better alternative designs that maintain the core user experience
+  - Provide specific recommendations with visual references or detailed descriptions
+  - Get approval before proceeding with alternative designs
+
+### Rule 5: Complete Testing Before Completion
+Before considering any task complete, you MUST run the full validation suite in a single session:
+- **Build**: Ensure the code compiles without errors
+- **Lint**: Run linting and fix all issues
+- **Unit Tests**: Execute all unit tests and ensure they pass
+- **E2E Tests**: Run Appium MCP tools to execute end-to-end tests
+  - Run E2E tests with head/visible mode when possible so interactions can be observed
+  - Verify critical user flows work as expected
+  - Document any test failures and fix before marking complete
+- **Never skip**: All tests must pass before the task is considered done
+
+## Build Commands
+
+### Flutter Development
+
+```bash
+# Install dependencies
+flutter pub get
+
+# Run code generation (for JSON serializable, freezed, retrofit)
+flutter pub run build_runner build --delete-conflicting-outputs
+
+# Watch for code generation changes
+flutter pub run build_runner watch --delete-conflicting-outputs
+
+# Run development server
+flutter run
+
+# Run on specific device
+flutter run -d ios        # iOS simulator (macOS only)
+flutter run -d android    # Android emulator
+
+# Build production APK
+flutter build apk --release
+
+# Build App Bundle for Play Store
+flutter build appbundle --release
+
+# Build iOS release (macOS only)
+flutter build ios --release
+```
+
+### Backend (Node.js)
+
+```bash
+cd backend
+npm install
+npm run dev        # Development with hot reload
+npm run build      # Build for production
+npm run start      # Production server
+```
+
+## Test Commands
+
+### Flutter Tests
+
+```bash
+# Run all tests
+flutter test
+
+# Run a single test file
+flutter test test/features/auth/domain/usecases/login_test.dart
+
+# Run tests matching a pattern
+flutter test --name "Login"
+
+# Run with coverage
+flutter test --coverage
+
+# Generate golden files (for widget tests)
+flutter test --update-goldens
+
+# Run integration tests
+flutter test integration_test/app_test.dart
+```
+
+### Backend Tests
+
+```bash
+npm test                    # Run all tests
+npm test -- auth.test.js    # Run single test file
+npm test -- --coverage      # With coverage
+npm test -- --watch         # Watch mode
+```
+
+### E2E Tests (Patrol)
+
+```bash
+# Run E2E tests
+patrol test
+
+# Run on specific device
+patrol test --device-id emulator-5554
+```
+
+## Lint & Format Commands
+
+### Flutter
+
+```bash
+# Analyze code
+flutter analyze
+
+# Format code
+flutter format lib/
+
+# Format with specific line length
+flutter format lib/ --line-length 100
+
+# Fix auto-fixable issues
+dart fix --apply
+```
+
+### Backend
+
+```bash
+npm run lint            # ESLint
+npm run lint:fix        # Auto-fix ESLint issues
+npm run format          # Prettier format
+```
+
+## Code Style Guidelines
+
+### Dart/Flutter Conventions
+
+**Naming:**
+- `PascalCase` for classes, enums, typedefs, type parameters
+- `camelCase` for variables, functions, methods
+- `snake_case` for file names and imports
+- `SCREAMING_SNAKE_CASE` for constants
+
+**Imports:**
+```dart
+// Order: Dart/Flutter → Packages → Relative
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../core/errors/failures.dart';
+import '../models/user_model.dart';
+```
+
+**Types:**
+- Always use explicit types for public APIs
+- Use `final` over `var` when value doesn't change
+- Use `const` constructors when possible
+- Prefer `async/await` over raw `Future`
+
+**Error Handling:**
+```dart
+// Use Either type from dartz for functional error handling
+Either<Failure, Success> result = await useCase(params);
+
+result.fold(
+  (failure) => emit(ErrorState(failure.message)),
+  (success) => emit(SuccessState(success)),
+);
+```
+
+### Architecture Pattern
+
+**Clean Architecture with BLoC:**
+```
+lib/
+├── features/
+│   └── feature_name/
+│       ├── data/
+│       │   ├── datasources/     # Remote/Local data sources
+│       │   ├── models/          # Data models
+│       │   └── repositories/    # Repository implementations
+│       ├── domain/
+│       │   ├── entities/        # Domain entities
+│       │   ├── repositories/    # Repository interfaces
+│       │   └── usecases/        # Use cases
+│       └── presentation/
+│           ├── bloc/            # BLoC files (bloc, event, state)
+│           ├── pages/           # Screen widgets
+│           └── widgets/         # Feature-specific widgets
+```
+
+### State Management (BLoC)
+
+```dart
+// Event naming
+abstract class AuthEvent {}
+class AuthLoginRequested extends AuthEvent {}
+
+// State naming
+abstract class AuthState {}
+class AuthInitial extends AuthState {}
+class AuthLoading extends AuthState {}
+class AuthAuthenticated extends AuthState {}
+class AuthError extends AuthState {
+  final String message;
+  AuthError(this.message);
+}
+```
+
+### Widget Guidelines
+
+```dart
+// Prefer const constructors
+const MyWidget({super.key});
+
+// Use super parameters for key
+class MyPage extends StatelessWidget {
+  const MyPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: const [
+            // Use const for static widgets
+            HeaderWidget(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+### Testing Standards
+
+```dart
+// Unit test naming
+group('LoginUseCase', () {
+  test('should return User when credentials are valid', () async {
+    // arrange
+    // act  
+    // assert
+  });
+});
+
+// Mock naming
+class MockAuthRepository extends Mock implements AuthRepository {}
+
+// Test coverage target: 80% minimum
+```
+
+### Documentation
+
+- Store all documentation in `\memory\` directory
+- Update `development-log.md` after each major change
+- Create ADRs for architectural decisions in `\memory\decisions\`
+- Use interactive HTML diagrams for system architecture
+
+### Git Workflow
+
+- Never push directly to `main`
+- Create feature branches: `feature/description`
+- Write descriptive commit messages
+- Run `flutter analyze && flutter test` before committing
+
+## Key Resources
+
+- **Tech Stack**: `\memory\technical\technology-stack.md`
+- **Development Log**: `\memory\development-log.md`
+- **App Design**: `\memory\design\app-design-v2.md`
+- **Brand Guidelines**: `\memory\design\brand-guidelines-v2.md`
