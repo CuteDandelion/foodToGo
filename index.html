@@ -1,0 +1,2793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FoodBeGood - Sustainable Food Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            /* Primary Brand Colors - Green Theme */
+            --color-primary: #10B981;
+            --color-primary-light: #34D399;
+            --color-primary-dark: #059669;
+            --color-primary-accent: #6EE7B7;
+            
+            /* Semantic Colors */
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-error: #EF4444;
+            --color-info: #3B82F6;
+            
+            /* Neutral Colors */
+            --color-slate-50: #F8FAFC;
+            --color-slate-100: #F1F5F9;
+            --color-slate-200: #E2E8F0;
+            --color-slate-300: #CBD5E1;
+            --color-slate-400: #94A3B8;
+            --color-slate-500: #64748B;
+            --color-slate-600: #475569;
+            --color-slate-700: #334155;
+            --color-slate-800: #1E293B;
+            --color-slate-900: #0F172A;
+            
+            /* Light Mode (Default) */
+            --bg-primary: #F8FAFC;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border-color: #E2E8F0;
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-card: #1E293B;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --border-color: #334155;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* Phone Frame */
+        .phone-frame {
+            width: 100%;
+            max-width: 390px;
+            height: 844px;
+            background: var(--bg-primary);
+            border-radius: 50px;
+            box-shadow: 0 25px 80px -20px rgba(0, 0, 0, 0.5), 
+                        0 0 0 12px #1a1a1a,
+                        0 0 0 14px #333;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Notch */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 35px;
+            background: #1a1a1a;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 1000;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            padding-top: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+        }
+        
+        .status-bar .time {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .status-bar .icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        
+        /* App Container */
+        .app-container {
+            height: calc(100% - 90px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            position: relative;
+        }
+        
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Screen Management */
+        .screen {
+            display: none;
+            min-height: 100%;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Navigation Bar */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-bar .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+        }
+        
+        .nav-bar .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .nav-bar .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-bar .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-bar .logo span {
+            color: var(--color-primary);
+        }
+        
+        /* Logo Component */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+        
+        .logo-badge {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Role Selection Screen */
+        .role-selection {
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100%;
+        }
+        
+        .role-selection .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .role-selection .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .role-selection .hero p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .role-cards {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .role-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .role-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px -8px rgba(16, 185, 129, 0.25);
+        }
+        
+        .role-card .icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        
+        .role-card.student .icon {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+            color: var(--color-primary);
+        }
+        
+        [data-theme="dark"] .role-card.student .icon {
+            background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+            color: var(--color-primary-light);
+        }
+        
+        .role-card.canteen .icon {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+            color: var(--color-info);
+        }
+        
+        [data-theme="dark"] .role-card.canteen .icon {
+            background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%);
+            color: #93C5FD;
+        }
+        
+        .role-card .content h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .role-card .content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        /* Login Screen */
+        .login-screen {
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+        
+        .login-screen .back-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .login-screen .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .login-screen .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .login-screen .header p {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-group input {
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            font-size: 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+        
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary);
+        }
+        
+        .forgot-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 18px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 16px -4px rgba(16, 185, 129, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.6);
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        
+        .login-footer {
+            margin-top: auto;
+            text-align: center;
+            padding-top: 32px;
+        }
+        
+        .login-footer p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .login-footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Dashboard Screen */
+        .dashboard {
+            padding: 0 20px 100px;
+        }
+        
+        .welcome-section {
+            padding: 8px 4px 24px;
+        }
+        
+        .welcome-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .welcome-section h2 span {
+            color: var(--color-primary);
+        }
+        
+        /* Metric Cards */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .metric-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-card.large {
+            grid-column: span 2;
+        }
+        
+        .metric-card.highlight {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            border: none;
+        }
+        
+        .metric-card.highlight .metric-label,
+        .metric-card.highlight .metric-sublabel {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .metric-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .metric-card.highlight .metric-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .metric-card:not(.highlight) .metric-icon {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+            color: var(--color-primary);
+        }
+
+        [data-theme="dark"] .metric-card:not(.highlight) .metric-icon {
+            background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+            color: var(--color-primary-light);
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        
+        .metric-card.highlight .metric-value {
+            color: white;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-sublabel {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .trend.up {
+            color: var(--color-success);
+        }
+        
+        .metric-card.highlight .trend.up {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 12px;
+        }
+        
+        .progress-bar-bg {
+            height: 6px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .metric-card.highlight .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .metric-card.highlight .progress-bar-fill {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Money Saved Card */
+        .money-saved-card {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+            border: 2px solid var(--color-primary);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        [data-theme="dark"] .money-saved-card {
+            background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+            border-color: var(--color-primary-light);
+        }
+        
+        .money-saved-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .money-saved-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .money-saved-title h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .money-saved-title h3 {
+            color: white;
+        }
+        
+        .money-saved-title p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .money-saved-title p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .comparison-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .comparison-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        
+        .comparison-header .label {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .comparison-header .label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .comparison-header .value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .comparison-header .value {
+            color: white;
+        }
+        
+        .comparison-bar-bg {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .comparison-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .comparison-bar-fill.this-month {
+            background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+        }
+        
+        .comparison-bar-fill.last-month {
+            background: linear-gradient(90deg, var(--text-muted), var(--text-secondary));
+        }
+        
+        .savings-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .breakdown-item {
+            text-align: center;
+        }
+        
+        .breakdown-item .amount {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        
+        [data-theme="dark"] .breakdown-item .amount {
+            color: var(--color-primary-light);
+        }
+        
+        .breakdown-item .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .breakdown-item .label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .motivational-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--color-primary-dark);
+        }
+        
+        [data-theme="dark"] .motivational-message {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--color-primary-light);
+        }
+        
+        /* Next Pickup Card */
+        .pickup-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .pickup-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .pickup-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .pickup-time {
+            text-align: right;
+        }
+        
+        .pickup-time .time {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        
+        .pickup-time .label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        /* Social Impact Card */
+        .impact-card {
+            background: linear-gradient(135deg, var(--color-slate-800) 0%, var(--color-slate-900) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .impact-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .impact-card p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+        
+        .impact-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .impact-stat .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary-light);
+        }
+        
+        .impact-stat .label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        
+        .fab {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 18px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 30px -8px rgba(16, 185, 129, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .fab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px -8px rgba(16, 185, 129, 0.7);
+        }
+        
+        .fab:active {
+            transform: scale(0.95);
+        }
+        
+        /* Pickup My Meal Screen */
+        .pickup-screen {
+            padding: 0 20px 100px;
+        }
+        
+        .container-section {
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        [data-theme="dark"] .container-section {
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+        }
+        
+        .food-container {
+            width: 180px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .container-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .container-lid {
+            transform-origin: top center;
+            transition: transform 0.4s ease;
+        }
+        
+        .container-lid.open {
+            transform: rotateX(-110deg);
+        }
+        
+        .food-stack {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: -10px;
+            width: 120px;
+        }
+        
+        .food-item {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            animation: foodDrop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-bottom: -15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        @keyframes foodDrop {
+            0% {
+                transform: translateY(-100px) scale(0.8);
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+            }
+            60% {
+                transform: translateY(10px) scale(1.05);
+            }
+            80% {
+                transform: translateY(-5px) scale(0.95);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .container-info h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .container-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .fill-indicator {
+            margin-top: 12px;
+        }
+        
+        .fill-bar-bg {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .fill-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .selected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            min-height: 40px;
+        }
+        
+        .selected-item-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .selected-item-tag .remove {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-error);
+            color: white;
+            border: none;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Food Categories */
+        .food-categories {
+            margin-bottom: 24px;
+        }
+        
+        .food-categories h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .category-btn {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-btn:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+        }
+        
+        .category-btn.selected {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border-color: var(--color-primary);
+            color: white;
+        }
+        
+        .category-btn .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .category-btn:not(.selected) .icon {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+        }
+        
+        [data-theme="dark"] .category-btn:not(.selected) .icon {
+            background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+        }
+        
+        .category-btn.selected .icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .category-btn span {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* QR Code Screen */
+        .qr-screen {
+            padding: 0 20px 100px;
+            text-align: center;
+        }
+        
+        .qr-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        
+        .qr-header {
+            margin-bottom: 24px;
+        }
+        
+        .qr-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .qr-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            background: white;
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .qr-code svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .qr-student-info {
+            margin-bottom: 16px;
+        }
+        
+        .qr-student-info .id {
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        
+        .qr-student-info .name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .qr-timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+        
+        .qr-timer.warning {
+            color: var(--color-error);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .order-summary {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+        }
+        
+        .order-summary h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: var(--color-primary);
+            padding-top: 12px;
+            margin-top: 4px;
+            border-top: 2px solid var(--border-color);
+        }
+        
+        /* Canteen Dashboard */
+        .canteen-dashboard {
+            padding: 0 20px 100px;
+        }
+        
+        .mission-card {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .mission-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .mission-card p {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .urgent-requests {
+            background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
+            border: 2px solid var(--color-error);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .urgent-requests {
+            background: linear-gradient(135deg, #450A0A 0%, #7F1D1D 100%);
+        }
+        
+        .urgent-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .urgent-header i {
+            color: var(--color-error);
+            font-size: 20px;
+        }
+        
+        .urgent-header h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-error);
+        }
+        
+        .urgent-count {
+            margin-left: auto;
+            background: var(--color-error);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .request-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .request-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+        }
+
+        [data-theme="dark"] .request-item {
+            background: var(--bg-secondary);
+        }
+        
+        .request-item .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .request-item .info {
+            flex: 1;
+        }
+        
+        .request-item .info .name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .request-item .info .time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .request-item .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .request-item .actions button {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .request-item .actions .approve {
+            background: var(--color-success);
+            color: white;
+        }
+        
+        .request-item .actions .reject {
+            background: var(--color-error);
+            color: white;
+        }
+        
+        /* Sustainability Stats */
+        .sustainability-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .sustainability-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .sustainability-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .sustainability-item {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+        
+        .sustainability-item .value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 4px;
+        }
+        
+        .sustainability-item .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        /* Settings Screen */
+        .settings-screen {
+            padding: 0 20px 100px;
+        }
+        
+        .settings-profile {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .settings-profile .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            margin: 0 auto 16px;
+        }
+        
+        .settings-profile h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .settings-profile p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .settings-list {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-item:hover {
+            background: var(--bg-primary);
+        }
+        
+        .settings-item .left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .settings-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .settings-item .icon.blue { background: #EFF6FF; color: #3B82F6; }
+        .settings-item .icon.green { background: #ECFDF5; color: #10B981; }
+        .settings-item .icon.orange { background: #FFF7ED; color: #F97316; }
+        .settings-item .icon.purple { background: #F3E8FF; color: #9333EA; }
+        .settings-item .icon.pink { background: #FDF2F8; color: #EC4899; }
+        .settings-item .icon.gray { background: #F1F5F9; color: #64748B; }
+        
+        .settings-item .label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .settings-item .value {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .settings-item .arrow {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            width: 52px;
+            height: 28px;
+            background: var(--color-slate-300);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: var(--color-primary);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+        
+        /* Profile Screen */
+        .profile-screen {
+            padding: 0 20px 100px;
+        }
+        
+        .profile-card {
+            background: linear-gradient(135deg, var(--color-slate-800) 0%, var(--color-slate-900) 100%);
+            border-radius: 24px;
+            padding: 28px;
+            color: white;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .profile-header .badge {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+        
+        .profile-header .shield {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .profile-qr-section {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            position: relative;
+        }
+        
+        .profile-qr {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 16px;
+            padding: 12px;
+        }
+        
+        .profile-qr svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .profile-photo {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .profile-photo img {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 8px;
+        }
+        
+        .profile-photo .university {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        .profile-info {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .profile-info .id {
+            font-family: monospace;
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+        
+        .profile-info .name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .profile-info .program {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Home Indicator */
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: var(--text-muted);
+            border-radius: 3px;
+            z-index: 1000;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--color-slate-800);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background: var(--color-success);
+        }
+        
+        .toast.error {
+            background: var(--color-error);
+        }
+        
+        /* Responsive */
+        @media (max-width: 400px) {
+            .phone-frame {
+                border-radius: 0;
+                max-width: 100%;
+                height: 100vh;
+                box-shadow: none;
+            }
+            
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="notch"></div>
+        
+        <div class="status-bar">
+            <span class="time" id="clock">9:41</span>
+            <div class="icons">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <div class="app-container" id="appContainer">
+            <!-- Role Selection Screen -->
+            <div class="screen active" id="roleSelection">
+                <div class="role-selection">
+                    <div class="hero">
+                        <div class="logo-container" style="margin-bottom: 24px;">
+                            <div class="logo-text">FOOD</div>
+                            <div class="logo-badge">BE</div>
+                            <div class="logo-text">GOOD</div>
+                        </div>
+                        <h1>Welcome!</h1>
+                        <p>Select your role to continue</p>
+                    </div>
+                    
+                    <div class="role-cards">
+                        <div class="role-card student" onclick="selectRole('student')">
+                            <div class="icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="content">
+                                <h3>Student</h3>
+                                <p>Track meals, save money, reduce waste</p>
+                            </div>
+                        </div>
+                        
+                        <div class="role-card canteen" onclick="selectRole('canteen')">
+                            <div class="icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="content">
+                                <h3>Canteen Staff</h3>
+                                <p>Manage food, prevent waste, help students</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Student Login Screen -->
+            <div class="screen" id="studentLogin">
+                <div class="login-screen">
+                    <button class="back-btn" onclick="showScreen('roleSelection')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    
+                    <div class="header">
+                        <div class="logo-container" style="margin-bottom: 24px;">
+                            <div class="logo-text">FOOD</div>
+                            <div class="logo-badge">BE</div>
+                            <div class="logo-text">GOOD</div>
+                        </div>
+                        <h2>Student Login</h2>
+                        <p>Sign in to access your account</p>
+                    </div>
+                    
+                    <form class="login-form" onsubmit="handleStudentLogin(event)">
+                        <div class="form-group">
+                            <label>Student ID</label>
+                            <input type="text" placeholder="Enter your student ID" value="61913042" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" placeholder="Enter your password" value="password" required>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-container">
+                                <input type="checkbox" checked>
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-link">Forgot Password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Sign In</button>
+                    </form>
+                    
+                    <div class="login-footer">
+                        <p>Don't have an account? <a href="#">Create Account</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Canteen Login Screen -->
+            <div class="screen" id="canteenLogin">
+                <div class="login-screen">
+                    <button class="back-btn" onclick="showScreen('roleSelection')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    
+                    <div class="header">
+                        <div class="logo-container" style="margin-bottom: 24px;">
+                            <div class="logo-text">FOOD</div>
+                            <div class="logo-badge">BE</div>
+                            <div class="logo-text">GOOD</div>
+                        </div>
+                        <h2>Canteen Portal</h2>
+                        <p>Staff login for food management</p>
+                    </div>
+                    
+                    <form class="login-form" onsubmit="handleCanteenLogin(event)">
+                        <div class="form-group">
+                            <label>Staff ID</label>
+                            <input type="text" placeholder="Enter staff ID" value="STAFF001" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" placeholder="Enter password" value="password" required>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-container">
+                                <input type="checkbox" checked>
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-link">Forgot Password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Sign In</button>
+                    </form>
+                    
+                    <div class="login-footer">
+                        <p>Need help? <a href="#">Contact Support</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Student Dashboard -->
+            <div class="screen" id="studentDashboard">
+                <div class="nav-bar">
+                    <button class="nav-btn" onclick="toggleMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="logo">FOOD<span>BE</span>GOOD</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="nav-btn" onclick="showScreen('settings')">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <button class="nav-btn">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dashboard">
+                    <div class="welcome-section">
+                        <h2>Good morning,<br><span>Zain!</span> 👋</h2>
+                    </div>
+                    
+                    <div class="metric-card highlight large">
+                        <div class="metric-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="metric-value">34</div>
+                        <div class="metric-label">Meals Saved</div>
+                        <div class="progress-container">
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 68%;"></div>
+                            </div>
+                        </div>
+                        <div class="metric-sublabel" style="margin-top: 8px;">68% of monthly goal</div>
+                    </div>
+                    
+                    <div class="money-saved-card">
+                        <div class="money-saved-header">
+                            <div class="money-saved-icon">
+                                <i class="fas fa-euro-sign"></i>
+                            </div>
+                            <div class="money-saved-title">
+                                <h3>Money Saved</h3>
+                                <p>vs Last Month</p>
+                            </div>
+                            <div class="trend up" style="margin-left: auto;">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+18%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-bars">
+                            <div class="comparison-item">
+                                <div class="comparison-header">
+                                    <span class="label">This Month</span>
+                                    <span class="value">€82.50</span>
+                                </div>
+                                <div class="comparison-bar-bg">
+                                    <div class="comparison-bar-fill this-month" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="comparison-item">
+                                <div class="comparison-header">
+                                    <span class="label">Last Month</span>
+                                    <span class="value">€70.00</span>
+                                </div>
+                                <div class="comparison-bar-bg">
+                                    <div class="comparison-bar-fill last-month" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="savings-breakdown">
+                            <div class="breakdown-item">
+                                <div class="amount">€45</div>
+                                <div class="label">Meals</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="amount">€22.50</div>
+                                <div class="label">Drinks</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="amount">€15</div>
+                                <div class="label">Snacks</div>
+                            </div>
+                        </div>
+                        
+                        <div class="motivational-message">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span>You're on track to save €1,000+ this year!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <div class="metric-value" style="font-size: 28px;">12.3</div>
+                            <div class="metric-label">Avg/Month</div>
+                            <div class="trend up">
+                                <span>Top 15%</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" style="font-size: 28px; color: #EC4899;">5</div>
+                            <div class="metric-label">Day Streak</div>
+                            <div class="metric-sublabel">🔥 Keep it going!</div>
+                        </div>
+                    </div>
+                    
+                    <div class="pickup-card">
+                        <div class="pickup-info">
+                            <h4><i class="fas fa-clock" style="color: var(--color-primary); margin-right: 8px;"></i>Next Pickup</h4>
+                            <p>Mensa Viadrina</p>
+                        </div>
+                        <div class="pickup-time">
+                            <div class="time">2h 45m</div>
+                            <div class="label">remaining</div>
+                        </div>
+                    </div>
+                    
+                    <div class="impact-card">
+                        <h4><i class="fas fa-heart"></i> Social Impact</h4>
+                        <p>Together with 156 other students, you've helped save food and reduce waste in your community.</p>
+                        <div class="impact-stats">
+                            <div class="impact-stat">
+                                <div class="value">156</div>
+                                <div class="label">Students Helped</div>
+                            </div>
+                            <div class="impact-stat">
+                                <div class="value">€12.50</div>
+                                <div class="label">Avg Saved/Student</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fab-container">
+                    <button class="fab" onclick="showScreen('pickupMeal')">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <span>Pickup My Meal</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Pickup My Meal Screen -->
+            <div class="screen" id="pickupMeal">
+                <div class="nav-bar">
+                    <button class="nav-btn" onclick="showScreen('studentDashboard')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="logo">Pickup My Meal</div>
+                    <div style="width: 44px;"></div>
+                </div>
+                
+                <div class="pickup-screen">
+                    <div class="container-section">
+                        <div class="food-container">
+                            <svg class="container-svg" viewBox="0 0 200 240">
+                                <!-- Container Body -->
+                                <defs>
+                                    <linearGradient id="containerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#F3F4F6"/>
+                                        <stop offset="100%" style="stop-color:#E5E7EB"/>
+                                    </linearGradient>
+                                    <linearGradient id="lidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#E5E7EB"/>
+                                        <stop offset="100%" style="stop-color:#D1D5DB"/>
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Container Body -->
+                                <path d="M30,80 L170,80 L160,210 L40,210 Z" fill="url(#containerGrad)" stroke="#9CA3AF" stroke-width="2"/>
+                                
+                                <!-- Container Lid -->
+                                <g class="container-lid" id="containerLid">
+                                    <path d="M25,80 L175,80 L165,55 L35,55 Z" fill="url(#lidGrad)" stroke="#9CA3AF" stroke-width="2"/>
+                                    <rect x="85" y="35" width="30" height="15" rx="3" fill="#9CA3AF"/>
+                                </g>
+                                
+                                <!-- Fill Level Indicator Background -->
+                                <rect x="45" y="195" width="110" height="8" rx="4" fill="#E5E7EB"/>
+                            </svg>
+                            
+                            <!-- Food Stack -->
+                            <div class="food-stack" id="foodStack"></div>
+                            
+                            <!-- Fill Level Bar -->
+                            <div style="position: absolute; bottom: 25px; left: 45px; width: 110px;">
+                                <div class="fill-bar-bg">
+                                    <div class="fill-bar" id="fillBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="container-info">
+                            <h4>Your Container</h4>
+                            <p id="containerStatus">Tap food below to add items</p>
+                        </div>
+                    </div>
+                    
+                    <div class="selected-items" id="selectedItems"></div>
+                    
+                    <div class="food-categories">
+                        <h4>Available Food</h4>
+                        <div class="category-grid">
+                            <button class="category-btn" onclick="addFood('salad', '🥗', 'Salad')">
+                                <div class="icon">🥗</div>
+                                <span>Salad</span>
+                            </button>
+                            <button class="category-btn" onclick="addFood('dessert', '🍰', 'Dessert')">
+                                <div class="icon">🍰</div>
+                                <span>Dessert</span>
+                            </button>
+                            <button class="category-btn" onclick="addFood('side', '🍟', 'Side')">
+                                <div class="icon">🍟</div>
+                                <span>Side</span>
+                            </button>
+                            <button class="category-btn" onclick="addFood('main1', '🍗', 'Chicken')">
+                                <div class="icon">🍗</div>
+                                <span>Chicken</span>
+                            </button>
+                            <button class="category-btn" onclick="addFood('main2', '🐟', 'Fish')">
+                                <div class="icon">🐟</div>
+                                <span>Fish</span>
+                            </button>
+                            <button class="category-btn" onclick="addFood('main3', '🥘', 'Veggie')">
+                                <div class="icon">🥘</div>
+                                <span>Veggie</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary" style="width: 100%;" onclick="showQRCode()" id="continueBtn" disabled>
+                        Continue to QR Code
+                    </button>
+                </div>
+            </div>
+            
+            <!-- QR Code Screen -->
+            <div class="screen" id="qrCodeScreen">
+                <div class="nav-bar">
+                    <button class="nav-btn" onclick="showScreen('pickupMeal')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="logo">Show to Canteen</div>
+                    <div style="width: 44px;"></div>
+                </div>
+                
+                <div class="qr-screen">
+                    <div class="qr-container">
+                        <div class="qr-header">
+                            <h3>Present this QR code</h3>
+                            <p>Show to canteen staff for verification</p>
+                        </div>
+                        
+                        <div class="qr-code" id="qrCode">
+                            <!-- QR Code SVG will be generated here -->
+                        </div>
+                        
+                        <div class="qr-student-info">
+                            <div class="id">ID: #61913042</div>
+                            <div class="name">Zain Ul Ebad</div>
+                        </div>
+                        
+                        <div class="qr-timer" id="qrTimer">
+                            <i class="fas fa-clock"></i>
+                            <span>Valid for: 5:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h4><i class="fas fa-clipboard-list"></i> Order Summary</h4>
+                        <div id="orderItems"></div>
+                        <div class="order-item">
+                            <span>Total Items</span>
+                            <span id="totalItems">0</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" style="width: 100%; margin-top: 16px;" onclick="showScreen('studentDashboard')">
+                        Back to Dashboard
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Profile Screen -->
+            <div class="screen" id="profileScreen">
+                <div class="nav-bar">
+                    <button class="nav-btn" onclick="showScreen('studentDashboard')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="logo">My Profile</div>
+                    <button class="nav-btn" onclick="showScreen('settings')">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                
+                <div class="profile-screen">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="badge">MRU Student</div>
+                            <div class="shield">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-qr-section">
+                            <div class="profile-qr" id="profileQR">
+                                <!-- QR Code -->
+                            </div>
+                            <div class="profile-photo">
+                                <div style="width: 100px; height: 100px; border-radius: 16px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; color: white; margin: 0 auto 8px;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="university">Mykolo Romerio Universitetas</div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-info">
+                            <div class="id">ID: #61913042</div>
+                            <div class="name">Zain Ul Ebad</div>
+                            <div class="program">Computer Science • Year 3</div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">34</div>
+                            <div class="metric-label">Meals</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">12</div>
+                            <div class="metric-label">Avg/Mo</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: #EC4899;">5</div>
+                            <div class="metric-label">Streak</div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-list" style="margin-top: 20px;">
+                        <div class="settings-item" onclick="showToast('Feature coming soon!')">
+                            <div class="left">
+                                <div class="icon green"><i class="fas fa-qrcode"></i></div>
+                                <span class="label">Show QR Code</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                        <div class="settings-item" onclick="showToast('Feature coming soon!')">
+                            <div class="left">
+                                <div class="icon blue"><i class="fas fa-history"></i></div>
+                                <span class="label">Meal History</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                        <div class="settings-item" onclick="showToast('Feature coming soon!')">
+                            <div class="left">
+                                <div class="icon orange"><i class="fas fa-trophy"></i></div>
+                                <span class="label">Achievements</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Screen -->
+            <div class="screen" id="settings">
+                <div class="nav-bar">
+                    <button class="nav-btn" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="logo">Settings</div>
+                    <div style="width: 44px;"></div>
+                </div>
+                
+                <div class="settings-screen">
+                    <div class="settings-profile">
+                        <div class="avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Zain Ul Ebad</h3>
+                        <p>Student at MRU</p>
+                        <button class="btn-secondary" style="width: 100%;" onclick="showScreen('profileScreen')">
+                            Edit Profile
+                        </button>
+                    </div>
+                    
+                    <div class="settings-list">
+                        <div class="settings-item" onclick="showToast('Language: English')">
+                            <div class="left">
+                                <div class="icon blue"><i class="fas fa-globe"></i></div>
+                                <span class="label">Language</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="value">English</span>
+                                <i class="fas fa-chevron-right arrow"></i>
+                            </div>
+                        </div>
+                        <div class="settings-item" onclick="showScreen('profileScreen')">
+                            <div class="left">
+                                <div class="icon green"><i class="fas fa-user"></i></div>
+                                <span class="label">Account</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                        <div class="settings-item" onclick="showToast('Meal history feature coming soon!')">
+                            <div class="left">
+                                <div class="icon orange"><i class="fas fa-history"></i></div>
+                                <span class="label">Meal History</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                        <div class="settings-item" onclick="showToast('Regulations feature coming soon!')">
+                            <div class="left">
+                                <div class="icon purple"><i class="fas fa-file-alt"></i></div>
+                                <span class="label">Regulations</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                        <div class="settings-item">
+                            <div class="left">
+                                <div class="icon gray"><i class="fas fa-moon"></i></div>
+                                <span class="label">Dark Mode</span>
+                            </div>
+                            <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode()"></div>
+                        </div>
+                        <div class="settings-item" onclick="showToast('Social media links coming soon!')">
+                            <div class="left">
+                                <div class="icon pink"><i class="fas fa-share-alt"></i></div>
+                                <span class="label">Social Media</span>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" style="width: 100%; margin-top: 24px; color: var(--color-error); border-color: var(--color-error);" onclick="logout()">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>Sign Out
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-muted);">
+                        FoodBeGood v2.0.0
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Canteen Dashboard -->
+            <div class="screen" id="canteenDashboard">
+                <div class="nav-bar">
+                    <button class="nav-btn" onclick="toggleMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="logo">Canteen Portal</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="nav-btn" onclick="showScreen('settings')">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <button class="nav-btn">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="canteen-dashboard">
+                    <div class="welcome-section">
+                        <h2>Mensa Viadrina<br><span>Dashboard</span></h2>
+                    </div>
+                    
+                    <div class="mission-card">
+                        <h3><i class="fas fa-bullseye" style="margin-right: 8px;"></i>Our Mission</h3>
+                        <p>Don't Waste Food</p>
+                        <p style="font-size: 13px; margin-top: 8px; opacity: 0.9;">Sustainability & Anti-Pollution</p>
+                    </div>
+                    
+                    <div class="metric-card highlight large">
+                        <div class="metric-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="metric-value">1,247</div>
+                        <div class="metric-label">Total Meals Saved</div>
+                        <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 13px;">
+                            <span><i class="fas fa-calendar-day" style="margin-right: 4px;"></i>Daily: 89</span>
+                            <span><i class="fas fa-calendar-week" style="margin-right: 4px;"></i>Weekly: 342</span>
+                            <span class="trend up"><i class="fas fa-arrow-up"></i>+23%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sustainability-card">
+                        <h4><i class="fas fa-leaf" style="color: var(--color-primary); margin-right: 8px;"></i>Sustainability Impact</h4>
+                        <div class="sustainability-grid">
+                            <div class="sustainability-item">
+                                <div class="value">428kg</div>
+                                <div class="label">Food Saved</div>
+                            </div>
+                            <div class="sustainability-item">
+                                <div class="value">€3,142</div>
+                                <div class="label">Cost Savings</div>
+                            </div>
+                            <div class="sustainability-item">
+                                <div class="value">287</div>
+                                <div class="label">Students Helped</div>
+                            </div>
+                            <div class="sustainability-item">
+                                <div class="value">€4,235</div>
+                                <div class="label">Student Savings</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="urgent-requests">
+                        <div class="urgent-header">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h4>Urgent Access Requests</h4>
+                            <div class="urgent-count">3</div>
+                        </div>
+                        <div class="request-list">
+                            <div class="request-item">
+                                <div class="avatar" style="background: #EC4899;">LS</div>
+                                <div class="info">
+                                    <div class="name">Lisa Schneider</div>
+                                    <div class="time">2 minutes ago</div>
+                                </div>
+                                <div class="actions">
+                                    <button class="approve" onclick="showToast('Request approved!')"><i class="fas fa-check"></i></button>
+                                    <button class="reject" onclick="showToast('Request rejected!')"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="request-item">
+                                <div class="avatar" style="background: #3B82F6;">MM</div>
+                                <div class="info">
+                                    <div class="name">Max Mustermann</div>
+                                    <div class="time">5 minutes ago</div>
+                                </div>
+                                <div class="actions">
+                                    <button class="approve" onclick="showToast('Request approved!')"><i class="fas fa-check"></i></button>
+                                    <button class="reject" onclick="showToast('Request rejected!')"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="request-item">
+                                <div class="avatar" style="background: #10B981;">ZW</div>
+                                <div class="info">
+                                    <div class="name">Zeno Walt</div>
+                                    <div class="time">8 minutes ago</div>
+                                </div>
+                                <div class="actions">
+                                    <button class="approve" onclick="showToast('Request approved!')"><i class="fas fa-check"></i></button>
+                                    <button class="reject" onclick="showToast('Request rejected!')"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pickup-card">
+                        <div class="pickup-info">
+                            <h4><i class="fas fa-info-circle" style="color: var(--color-primary); margin-right: 8px;"></i>Current Status</h4>
+                            <p>Everything is running smoothly</p>
+                        </div>
+                        <div class="pickup-time" style="color: var(--color-success);">
+                            <i class="fas fa-check-circle" style="font-size: 24px;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fab-container">
+                    <button class="fab" onclick="showToast('Update Food Status feature coming soon!')">
+                        <i class="fas fa-edit"></i>
+                        <span>Update Food Status</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="home-indicator"></div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // App State
+        let currentRole = null;
+        let currentScreen = 'roleSelection';
+        let selectedFoods = [];
+        let darkMode = false;
+        let qrTimerInterval = null;
+        
+        // Screen History for Back Navigation
+        let screenHistory = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadTheme();
+        });
+        
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+        }
+        
+        // Screen Navigation
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show target screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update history
+            if (currentScreen !== screenId) {
+                screenHistory.push(currentScreen);
+            }
+            currentScreen = screenId;
+            
+            // Scroll to top
+            document.getElementById('appContainer').scrollTop = 0;
+        }
+        
+        function goBack() {
+            if (screenHistory.length > 0) {
+                const previousScreen = screenHistory.pop();
+                showScreen(previousScreen);
+                screenHistory.pop(); // Remove the current screen from history
+            } else {
+                showScreen('roleSelection');
+            }
+        }
+        
+        // Role Selection
+        function selectRole(role) {
+            currentRole = role;
+            if (role === 'student') {
+                showScreen('studentLogin');
+            } else {
+                showScreen('canteenLogin');
+            }
+        }
+        
+        // Login Handlers
+        function handleStudentLogin(event) {
+            event.preventDefault();
+            showToast('Login successful!', 'success');
+            setTimeout(() => {
+                showScreen('studentDashboard');
+                screenHistory = []; // Clear history after login
+            }, 500);
+        }
+        
+        function handleCanteenLogin(event) {
+            event.preventDefault();
+            showToast('Login successful!', 'success');
+            setTimeout(() => {
+                showScreen('canteenDashboard');
+                screenHistory = []; // Clear history after login
+            }, 500);
+        }
+        
+        // Logout
+        function logout() {
+            currentRole = null;
+            selectedFoods = [];
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                showScreen('roleSelection');
+                screenHistory = [];
+            }, 500);
+        }
+        
+        // Food Selection
+        function addFood(type, emoji, name) {
+            if (selectedFoods.length >= 5) {
+                showToast('Container is full! (Max 5 items)', 'error');
+                return;
+            }
+            
+            // Open lid
+            const lid = document.getElementById('containerLid');
+            lid.classList.add('open');
+            
+            // Add food after lid opens
+            setTimeout(() => {
+                selectedFoods.push({ type, emoji, name });
+                updateContainer();
+                updateSelectedItems();
+                
+                // Close lid after food drops
+                setTimeout(() => {
+                    lid.classList.remove('open');
+                }, 600);
+            }, 400);
+            
+            showToast(`${name} added to container!`, 'success');
+        }
+        
+        function removeFood(index) {
+            selectedFoods.splice(index, 1);
+            updateContainer();
+            updateSelectedItems();
+            showToast('Item removed', 'success');
+        }
+        
+        function updateContainer() {
+            const foodStack = document.getElementById('foodStack');
+            const fillBar = document.getElementById('fillBar');
+            const containerStatus = document.getElementById('containerStatus');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            // Update food stack
+            foodStack.innerHTML = selectedFoods.map((food, index) => `
+                <div class="food-item" style="background: ${getFoodColor(food.type)}; z-index: ${index};">
+                    ${food.emoji}
+                </div>
+            `).join('');
+            
+            // Update fill bar
+            const percentage = Math.min((selectedFoods.length / 5) * 100, 100);
+            fillBar.style.width = `${percentage}%`;
+            
+            // Update status
+            if (selectedFoods.length === 0) {
+                containerStatus.textContent = 'Tap food below to add items';
+            } else if (selectedFoods.length < 5) {
+                containerStatus.textContent = `${selectedFoods.length} item${selectedFoods.length > 1 ? 's' : ''} selected (${percentage.toFixed(0)}% full)`;
+            } else {
+                containerStatus.textContent = 'Container full! Ready to go!';
+            }
+            
+            // Enable/disable continue button
+            continueBtn.disabled = selectedFoods.length === 0;
+        }
+        
+        function updateSelectedItems() {
+            const container = document.getElementById('selectedItems');
+            container.innerHTML = selectedFoods.map((food, index) => `
+                <div class="selected-item-tag">
+                    <span>${food.emoji} ${food.name}</span>
+                    <button class="remove" onclick="removeFood(${index})">×</button>
+                </div>
+            `).join('');
+        }
+        
+        function getFoodColor(type) {
+            const colors = {
+                salad: '#DCFCE7',
+                dessert: '#FDF2F8',
+                side: '#FEF9C3',
+                main1: '#FFF7ED',
+                main2: '#EFF6FF',
+                main3: '#F3E8FF'
+            };
+            return colors[type] || '#F3F4F6';
+        }
+        
+        // QR Code
+        function showQRCode() {
+            if (selectedFoods.length === 0) {
+                showToast('Please select at least one food item', 'error');
+                return;
+            }
+            
+            showScreen('qrCodeScreen');
+            generateQRCode();
+            startQRTimer();
+            updateOrderSummary();
+        }
+        
+        function generateQRCode() {
+            const qrContainer = document.getElementById('qrCode');
+            const profileQR = document.getElementById('profileQR');
+            
+            // Generate a simple QR-like pattern using SVG
+            const qrSVG = `
+                <svg viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="white"/>
+                    <rect x="5" y="5" width="25" height="25" fill="#1E293B"/>
+                    <rect x="10" y="10" width="15" height="15" fill="white"/>
+                    <rect x="13" y="13" width="9" height="9" fill="#1E293B"/>
+                    <rect x="70" y="5" width="25" height="25" fill="#1E293B"/>
+                    <rect x="75" y="10" width="15" height="15" fill="white"/>
+                    <rect x="78" y="13" width="9" height="9" fill="#1E293B"/>
+                    <rect x="5" y="70" width="25" height="25" fill="#1E293B"/>
+                    <rect x="10" y="75" width="15" height="15" fill="white"/>
+                    <rect x="13" y="78" width="9" height="9" fill="#1E293B"/>
+                    ${generateRandomQRPattern()}
+                </svg>
+            `;
+            
+            qrContainer.innerHTML = qrSVG;
+            profileQR.innerHTML = qrSVG;
+        }
+        
+        function generateRandomQRPattern() {
+            let pattern = '';
+            const cellSize = 5;
+            for (let x = 35; x < 65; x += cellSize) {
+                for (let y = 35; y < 65; y += cellSize) {
+                    if (Math.random() > 0.5) {
+                        pattern += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="#1E293B"/>`;
+                    }
+                }
+            }
+            // Add some random cells in other areas
+            for (let i = 0; i < 50; i++) {
+                const x = Math.floor(Math.random() * 20) * cellSize + 5;
+                const y = Math.floor(Math.random() * 20) * cellSize + 35;
+                if (Math.random() > 0.5) {
+                    pattern += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="#1E293B"/>`;
+                }
+            }
+            return pattern;
+        }
+        
+        function startQRTimer() {
+            let seconds = 300; // 5 minutes
+            const timerElement = document.getElementById('qrTimer');
+            
+            if (qrTimerInterval) {
+                clearInterval(qrTimerInterval);
+            }
+            
+            qrTimerInterval = setInterval(() => {
+                seconds--;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerElement.innerHTML = `
+                    <i class="fas fa-clock"></i>
+                    <span>Valid for: ${mins}:${secs.toString().padStart(2, '0')}</span>
+                `;
+                
+                if (seconds <= 60) {
+                    timerElement.classList.add('warning');
+                } else {
+                    timerElement.classList.remove('warning');
+                }
+                
+                if (seconds <= 0) {
+                    clearInterval(qrTimerInterval);
+                    generateQRCode(); // Regenerate QR
+                    seconds = 300;
+                    timerElement.classList.remove('warning');
+                    showToast('QR Code refreshed!', 'success');
+                }
+            }, 1000);
+        }
+        
+        function updateOrderSummary() {
+            const container = document.getElementById('orderItems');
+            container.innerHTML = selectedFoods.map(food => `
+                <div class="order-item">
+                    <span>${food.emoji} ${food.name}</span>
+                    <span>Included</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('totalItems').textContent = selectedFoods.length;
+        }
+        
+        // Dark Mode
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            const toggle = document.getElementById('darkModeToggle');
+            const html = document.documentElement;
+            
+            if (darkMode) {
+                toggle.classList.add('active');
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggle.classList.remove('active');
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                darkMode = true;
+                document.getElementById('darkModeToggle').classList.add('active');
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+        
+        // Toast Notifications
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Menu Toggle
+        function toggleMenu() {
+            showToast('Menu feature coming soon!');
+        }
+    </script>
+</body>
+</html>
