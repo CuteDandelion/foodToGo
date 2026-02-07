@@ -36,6 +36,74 @@ FoodBeGood is a mobile application designed to help university students track th
 
 ## Latest Changes
 
+### [2026-02-08] GitHub Actions Workflow Fixes - COMPLETED
+
+**Summary:**
+Fixed multiple issues in the GitHub Actions CI/CD workflow to ensure reliable builds and prevent common CI failures.
+
+**Issues Fixed:**
+
+1. **Added Concurrency Control** (Line 13-15)
+   - Prevents redundant workflow runs when multiple pushes occur
+   - Cancels in-progress runs for the same PR/branch
+   - Reduces CI resource usage and wait times
+
+2. **Added Timeout Limits** (All jobs)
+   - `analyze`: 15 minutes
+   - `test`: 20 minutes
+   - `build-android-apk`: 30 minutes
+   - `build-android-aab`: 30 minutes
+   - `build-ios`: 30 minutes
+   - `build-web`: 20 minutes
+   - `security-check`: 10 minutes
+   - Prevents hung jobs from consuming resources indefinitely
+
+3. **Fixed Build Runner Command** (Lines 86, 132, 184, 222, 258)
+   - Changed: `flutter pub run build_runner` → `dart run build_runner`
+   - The `flutter pub run` command is deprecated in newer Flutter versions
+   - Using `dart run` is the recommended approach
+
+4. **Fixed Codecov Action Version** (Line 98)
+   - Updated: `codecov/codecov-action@v3` → `codecov/codecov-action@v4`
+   - v3 has deprecation warnings and may stop working
+   - v4 includes improved token handling and reliability
+
+5. **Fixed Flutter Analyze Flags** (Line 48)
+   - Changed: `--fatal-infos` → `--fatal-warnings`
+   - Info-level issues no longer fail the build
+   - Only warnings and errors will block the CI
+   - Reduces friction from minor code style issues
+
+6. **Fixed Job Condition Logic** (Lines 105, 159, 204)
+   - Added: `github.event_name == 'push' &&` to build job conditions
+   - Prevents build jobs from running on PRs from forks
+   - Ensures builds only run on direct pushes to main/master/release branches
+
+7. **Fixed Shell Script Issues** (Multiple locations)
+   - Added `shell: bash` to all run steps with shell commands
+   - Fixed security check grep to not fail when pattern not found
+   - Improved dependency override detection with better output
+
+8. **Added Codecov Token Support** (Lines 101-102)
+   - Added `CODECOV_TOKEN` environment variable support
+   - Required for Codecov v4 to upload coverage reports reliably
+
+**Files Modified:**
+- `.github/workflows/flutter_ci.yml` - Complete workflow improvements
+
+**Workflow Jobs:**
+| Job | Purpose | Status |
+|-----|---------|--------|
+| analyze | Code quality checks | ✅ Fixed |
+| test | Unit tests with coverage | ✅ Fixed |
+| build-android-apk | Production APK build | ✅ Fixed |
+| build-android-aab | Play Store bundle build | ✅ Fixed |
+| build-ios | iOS release build | ✅ Fixed |
+| build-web | Web build | ✅ Fixed |
+| security-check | Dependency audit | ✅ Fixed |
+
+---
+
 ### [2026-02-07] E2E Test Fix - AuthBloc Provider Issue RESOLVED
 
 **Summary:**
