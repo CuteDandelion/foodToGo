@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:foodbegood/features/auth/domain/entities/user_role.dart';
@@ -295,8 +294,6 @@ class MockDataService {
   static final MockDataService _instance = MockDataService._internal();
   factory MockDataService() => _instance;
   MockDataService._internal();
-
-  final Random _random = Random();
 
   /// Mock users
   final List<User> _users = [

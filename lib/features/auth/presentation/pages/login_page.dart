@@ -8,7 +8,7 @@ import '../../../../config/theme.dart';
 import '../../../../shared/services/mock_data_service.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_input.dart';
-import '../../../../shared/widgets/loading_indicator.dart';
+
 import '../../domain/entities/user_role.dart';
 import '../bloc/auth_bloc.dart';
 
