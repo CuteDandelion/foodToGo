@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../../../config/routes.dart';
-import '../../../../shared/services/mock_data_service.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/app_progress_bar.dart';
-import '../../../settings/presentation/bloc/theme_bloc.dart';
 import '../bloc/dashboard_bloc.dart';
 
 class StudentDashboardPage extends StatelessWidget {

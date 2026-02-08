@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foodbegood/features/auth/domain/entities/user_role.dart';
 import 'package:foodbegood/shared/services/mock_data_service.dart';
 
 void main() {
