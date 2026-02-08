@@ -36,6 +36,58 @@ FoodBeGood is a mobile application designed to help university students track th
 
 ## Latest Changes
 
+### [2026-02-08] Fixed GitHub Actions Test Failures & APK Login Error - COMPLETED
+
+**Summary:**
+Investigated and fixed two critical issues: (1) GitHub Actions CI was failing with 5 unit test errors in theme_bloc_test.dart when using random test ordering, and (2) the release APK had login errors due to StorageManager not being initialized before use.
+
+**Root Causes Identified:**
+
+1. **ThemeBloc Test Failures (CI only)**
+   - **Cause:** The `themeBloc` variable was declared as `late` in the test group but `blocTest` creates its own bloc instance via the `build` parameter. When tests ran in random order (via `--test-randomize-ordering-seed random`), the `tearDown` tried to close an uninitialized `late` variable.
+   - **Local vs CI Difference:** Local tests ran in file order and passed; CI uses random ordering which exposed the bug.
+
+2. **APK Login Error**
+   - **Cause:** `StorageManager` uses `late final` fields that are only initialized when `initialize()` is called. Neither `main.dart` nor `injection_container.dart` called this method, causing `LateInitializationError` when AuthBloc/ThemeBloc tried to access storage.
+
+**Fixes Applied:**
+
+1. **Fixed theme_bloc_test.dart**
+   - Removed unused `late ThemeBloc themeBloc` declaration
+   - Removed `tearDown` that tried to close uninitialized bloc
+   - Updated initial state test to create local bloc instance with `addTearDown` for cleanup
+   - File: `test/features/settings/presentation/bloc/theme_bloc_test.dart`
+
+2. **Fixed StorageManager Initialization**
+   - Added `await StorageManager().initialize()` call in `main.dart` before dependency injection
+   - This ensures storage is ready before any blocs try to access it
+   - File: `lib/main.dart`
+
+**Test Results:**
+
+| Test Run | Seed | Result |
+|----------|------|--------|
+| Local (sequential) | N/A | ✅ 123/123 passed |
+| Local (random) | 12345 | ✅ 123/123 passed |
+| Local (random) | 3536367345 | ✅ 123/123 passed |
+| CI (random) | random | ✅ Should now pass |
+
+**APK Build Results:**
+- ✅ Build successful: `build/app/outputs/flutter-apk/app-release.apk` (31.9MB)
+- ✅ Login flow should now work correctly with initialized storage
+
+**Files Modified:**
+- `test/features/settings/presentation/bloc/theme_bloc_test.dart` - Fixed late initialization error
+- `lib/main.dart` - Added StorageManager initialization
+
+**Commands Verified:**
+```bash
+flutter test --test-randomize-ordering-seed random  # All tests pass
+flutter build apk --release                          # Build succeeds
+```
+
+---
+
 ### [2026-02-08] Git Branch Cleanup & Full Validation Suite - COMPLETED
 
 **Summary:**

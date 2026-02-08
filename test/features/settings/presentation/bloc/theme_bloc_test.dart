@@ -11,7 +11,6 @@ class MockSharedPrefsStorage extends Mock implements SharedPrefsStorage {}
 
 void main() {
   group('ThemeBloc', () {
-    late ThemeBloc themeBloc;
     late MockStorageManager mockStorage;
     late MockSharedPrefsStorage mockPrefs;
 
@@ -23,20 +22,19 @@ void main() {
       when(() => mockStorage.prefs).thenReturn(mockPrefs);
     });
 
-    tearDown(() {
-      themeBloc.close();
-    });
-
     test('initial state has isDarkMode as false', () {
       // Arrange
       when(() => mockPrefs.getBool(AppConstants.storageKeyTheme))
           .thenAnswer((_) async => false);
 
       // Act
-      themeBloc = ThemeBloc(storage: mockStorage);
+      final themeBloc = ThemeBloc(storage: mockStorage);
 
       // Assert
       expect(themeBloc.state.isDarkMode, isFalse);
+
+      // Cleanup
+      addTearDown(() => themeBloc.close());
     });
 
     group('ThemeInitialized', () {
