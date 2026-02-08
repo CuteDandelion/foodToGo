@@ -1,19 +1,29 @@
-# Flutter Version Management (FVM)
+# Flutter Version Management
 
-This project uses [FVM](https://fvm.app/) (Flutter Version Management) to ensure all developers and CI/CD use the **exact same Flutter version**.
+This project ensures all developers and CI/CD use the **exact same Flutter version** through configuration in `pubspec.yaml`.
 
 ## Current Flutter Version
 
 **3.24.0** (stable channel)
 
-## Why FVM?
+The Flutter version is specified in `pubspec.yaml`:
+
+```yaml
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: "3.24.0"
+```
+
+## Why Version Locking?
 
 - **Consistency**: All developers use the same Flutter version
 - **CI/CD Alignment**: Local and CI environments match exactly
 - **No Conflicts**: Avoid "works on my machine" issues
-- **Easy Switching**: Switch between Flutter versions per project
+- **Reproducible Builds**: Same Flutter version = same build output
 
-## Installation
+## Optional: Using FVM (Flutter Version Management)
+
+While not required (since the version is locked in `pubspec.yaml`), you can use FVM for easier version management locally.
 
 ### 1. Install FVM
 
@@ -43,32 +53,36 @@ $env:PATH += ";$env:LOCALAPPDATA\Pub\Cache\bin"
 cd C:\Users\justi\OneDrive\Desktop\FoodBeGood
 
 # Install the Flutter version specified in .fvmrc
-fvm install
+fvm install 3.24.0
 
 # Use the project Flutter version
-fvm use
+fvm use 3.24.0
 ```
 
 ## Daily Usage
 
 ### Running Flutter Commands
 
-Always use `fvm flutter` instead of `flutter`:
-
+**Without FVM** (using system Flutter):
 ```bash
-# Instead of: flutter pub get
+# Ensure you're using Flutter 3.24.0
+flutter --version
+
+# Standard Flutter commands
+flutter pub get
+flutter run
+flutter analyze
+flutter test
+flutter build apk --release
+```
+
+**With FVM** (optional):
+```bash
+# Use fvm prefix for all commands
 fvm flutter pub get
-
-# Instead of: flutter run
 fvm flutter run
-
-# Instead of: flutter analyze
 fvm flutter analyze
-
-# Instead of: flutter test
 fvm flutter test
-
-# Instead of: flutter build apk
 fvm flutter build apk --release
 ```
 
@@ -118,17 +132,19 @@ fvm update
 
 ## CI/CD Integration
 
-The GitHub Actions workflow automatically reads the Flutter version from `.fvmrc`:
+The GitHub Actions workflow automatically reads the Flutter version from `pubspec.yaml`:
 
 ```yaml
 - name: Setup Flutter
   uses: subosito/flutter-action@v2
   with:
-    flutter-version-file: pubspec.yaml  # or .fvmrc
+    flutter-version-file: pubspec.yaml
     channel: 'stable'
 ```
 
 This ensures CI uses the **exact same version** as local development.
+
+**Note:** The `subosito/flutter-action` only supports reading the Flutter version from `pubspec.yaml` (specifically the `environment.flutter` field), not from `.fvmrc` files.
 
 ## Troubleshooting
 
@@ -156,35 +172,35 @@ fvm use 3.24.0
 
 When updating the Flutter version:
 
-1. **Update `.fvmrc`**:
+1. **Update `pubspec.yaml` environment** (Primary source of truth):
+   ```yaml
+   environment:
+     sdk: ">=3.6.0 <4.0.0"  # Match new Flutter version's Dart SDK
+     flutter: "3.25.0"      # New Flutter version
+   ```
+
+2. **Update FVM config** (Optional, for local FVM users):
    ```json
    {
      "flutter": "3.25.0"
    }
    ```
 
-2. **Update `pubspec.yaml` environment**:
-   ```yaml
-   environment:
-     sdk: ">=3.5.0 <4.0.0"  # Match Flutter 3.25.0 Dart SDK
-   ```
-
-3. **Update CI workflow** (if not using flutter-version-file):
-   ```yaml
-   env:
-     FLUTTER_VERSION: '3.25.0'
-   ```
-
-4. **Notify team**:
+3. **Notify team**:
    ```bash
-   fvm install
-   fvm use
+   # Without FVM
+   flutter upgrade 3.25.0
+   flutter pub get
+   
+   # With FVM
+   fvm install 3.25.0
+   fvm use 3.25.0
    fvm flutter pub get
    ```
 
 ## Related Files
 
-- `.fvmrc` - FVM configuration (version specification)
+- `pubspec.yaml` - **Primary** Flutter version specification (in `environment` section)
+- `.fvmrc` - Optional FVM configuration for local development
 - `.fvm/` - FVM cache directory (gitignored)
-- `pubspec.yaml` - Dart SDK constraints
-- `.github/workflows/flutter_ci.yml` - CI Flutter version
+- `.github/workflows/flutter_ci.yml` - CI reads version from `pubspec.yaml`
