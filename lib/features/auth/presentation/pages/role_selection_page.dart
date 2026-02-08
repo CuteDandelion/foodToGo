@@ -13,109 +13,112 @@ class RoleSelectionPage extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(24.r),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.white, Color(0xFFF8FAFC)],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Logo
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Colors.white, Color(0xFFF8FAFC)],
+                    ),
+                    border: Border.all(color: AppTheme.primary, width: 2),
+                    borderRadius: BorderRadius.circular(16.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.primary.withValues(alpha: 0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  border: Border.all(color: AppTheme.primary, width: 2),
-                  borderRadius: BorderRadius.circular(16.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.primary.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'FOOD',
-                      style: TextStyle(
-                        fontSize: 26.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.lightTextPrimary,
-                        letterSpacing: 3,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 4.h),
-                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppTheme.primary, AppTheme.primaryDark],
-                        ),
-                        borderRadius: BorderRadius.circular(20.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primary.withValues(alpha: 0.4),
-                            blurRadius: 8,
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        'BE',
+                  child: Column(
+                    children: [
+                      Text(
+                        'FOOD',
                         style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                          fontSize: 26.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppTheme.lightTextPrimary,
+                          letterSpacing: 3,
                         ),
                       ),
-                    ),
-                    Text(
-                      'GOOD',
-                      style: TextStyle(
-                        fontSize: 26.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.lightTextPrimary,
-                        letterSpacing: 3,
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 4.h),
+                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [AppTheme.primary, AppTheme.primaryDark],
+                          ),
+                          borderRadius: BorderRadius.circular(20.r),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.primary.withValues(alpha: 0.4),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          'BE',
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      Text(
+                        'GOOD',
+                        style: TextStyle(
+                          fontSize: 26.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppTheme.lightTextPrimary,
+                          letterSpacing: 3,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-              SizedBox(height: 48.h),
+                SizedBox(height: 48.h),
 
-              // Welcome text
-              Text(
-                'Welcome',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                'Select your role to continue',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.lightTextSecondary,
+                // Welcome text
+                Text(
+                  'Welcome',
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
-              ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Select your role to continue',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.lightTextSecondary,
+                  ),
+                ),
 
-              SizedBox(height: 48.h),
+                SizedBox(height: 48.h),
 
-              // Student Card
-              _RoleCard(
-                icon: Icons.school_outlined,
-                title: 'Student',
-                description: 'Track meals, save money, reduce waste',
-                onTap: () => context.goLogin(role: 'student'),
-              ),
+                // Student Card
+                _RoleCard(
+                  icon: Icons.school_outlined,
+                  title: 'Student',
+                  description: 'Track meals, save money, reduce waste',
+                  onTap: () => context.goLogin(role: 'student'),
+                ),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Canteen Card
-              _RoleCard(
-                icon: Icons.restaurant_outlined,
-                title: 'Canteen Staff',
-                description: 'Manage food, view analytics, help students',
-                onTap: () => context.goLogin(role: 'canteen'),
-              ),
-            ],
+                // Canteen Card
+                _RoleCard(
+                  icon: Icons.restaurant_outlined,
+                  title: 'Canteen Staff',
+                  description: 'Manage food, view analytics, help students',
+                  onTap: () => context.goLogin(role: 'canteen'),
+                ),
+                SizedBox(height: 24.h),
+              ],
+            ),
           ),
         ),
       ),

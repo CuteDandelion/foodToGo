@@ -53,8 +53,13 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     ThemeInitialized event,
     Emitter<ThemeState> emit,
   ) async {
-    final isDarkMode = await _storage.prefs.getBool(AppConstants.storageKeyTheme) ?? false;
-    emit(ThemeState(isDarkMode: isDarkMode));
+    try {
+      final isDarkMode = await _storage.prefs.getBool(AppConstants.storageKeyTheme) ?? false;
+      emit(ThemeState(isDarkMode: isDarkMode));
+    } catch (e) {
+      // Storage not initialized yet, use default (light theme)
+      emit(const ThemeState(isDarkMode: false));
+    }
   }
 
   Future<void> _onToggled(
@@ -62,7 +67,11 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     Emitter<ThemeState> emit,
   ) async {
     final newState = !state.isDarkMode;
-    await _storage.prefs.setBool(AppConstants.storageKeyTheme, newState);
+    try {
+      await _storage.prefs.setBool(AppConstants.storageKeyTheme, newState);
+    } catch (e) {
+      // Storage not initialized, ignore
+    }
     emit(ThemeState(isDarkMode: newState));
   }
 
@@ -70,7 +79,11 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     ThemeChanged event,
     Emitter<ThemeState> emit,
   ) async {
-    await _storage.prefs.setBool(AppConstants.storageKeyTheme, event.isDarkMode);
+    try {
+      await _storage.prefs.setBool(AppConstants.storageKeyTheme, event.isDarkMode);
+    } catch (e) {
+      // Storage not initialized, ignore
+    }
     emit(ThemeState(isDarkMode: event.isDarkMode));
   }
 }
