@@ -77,7 +77,14 @@ class AppRouter {
         path: RoutePaths.qrCode,
         builder: (context, state) {
           final pickupId = state.uri.queryParameters['pickupId'] ?? '';
-          return QRCodePage(pickupId: pickupId);
+          final qrData = state.uri.queryParameters['qrData'] ?? '';
+          final expiresAtStr = state.uri.queryParameters['expiresAt'];
+          final expiresAt = expiresAtStr != null ? DateTime.tryParse(expiresAtStr) : null;
+          return QRCodePage(
+            pickupId: pickupId,
+            qrData: qrData.isNotEmpty ? Uri.decodeComponent(qrData) : null,
+            expiresAt: expiresAt,
+          );
         },
       ),
 
@@ -117,7 +124,20 @@ extension GoRouterExtension on BuildContext {
   void goStudentDashboard() => go(RoutePaths.studentDashboard);
   void goCanteenDashboard() => go(RoutePaths.canteenDashboard);
   void goPickup() => go(RoutePaths.pickup);
-  void goQRCode({required String pickupId}) => go('${RoutePaths.qrCode}?pickupId=$pickupId');
+  void goQRCode({
+    required String pickupId,
+    String? qrData,
+    DateTime? expiresAt,
+    List<dynamic>? items,
+  }) {
+    final params = <String, String>{
+      'pickupId': pickupId,
+      if (qrData != null) 'qrData': Uri.encodeComponent(qrData),
+      if (expiresAt != null) 'expiresAt': expiresAt.toIso8601String(),
+    };
+    final queryString = params.entries.map((e) => '${e.key}=${e.value}').join('&');
+    go('${RoutePaths.qrCode}?$queryString');
+  }
   void goProfile() => go(RoutePaths.profile);
   void goSettings() => go(RoutePaths.settings);
   void goMealHistory() => go(RoutePaths.mealHistory);
