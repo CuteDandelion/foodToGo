@@ -7,8 +7,8 @@ on:
     branches: [ main, master, develop ]
 
 env:
-  FLUTTER_VERSION: '3.24.0'
   JAVA_VERSION: '17'
+  # Flutter version is read from .fvmrc file for consistency
 
 # Concurrency control to cancel redundant workflow runs
 concurrency:
@@ -34,7 +34,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version-file: .fvmrc
           channel: 'stable'
           cache: true
 
@@ -89,7 +89,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version-file: .fvmrc
           channel: 'stable'
           cache: true
 
@@ -135,7 +135,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version-file: .fvmrc
           channel: 'stable'
           cache: true
 
@@ -187,7 +187,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version-file: .fvmrc
           channel: 'stable'
           cache: true
 
@@ -225,7 +225,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version-file: .fvmrc
           channel: 'stable'
           cache: true
 
@@ -268,7 +268,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version-file: .fvmrc
           channel: 'stable'
           cache: true
 
@@ -304,7 +304,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version-file: .fvmrc
           channel: 'stable'
           cache: true
 

@@ -36,6 +36,77 @@ FoodBeGood is a mobile application designed to help university students track th
 
 ## Latest Changes
 
+### [2026-02-08] Flutter Version Management Setup - COMPLETED
+
+**Summary:**
+Implemented Flutter Version Management (FVM) to ensure consistent Flutter versions between local development and CI/CD. This resolves analyze issues caused by version mismatches where different Flutter versions may have different linting rules and analyzer behaviors.
+
+**Problem:**
+- GitHub Actions was using Flutter 3.24.0
+- Local developers could be using any Flutter version
+- Different Flutter versions have different analyzer rules
+- This caused "works on my machine" issues with `flutter analyze`
+
+**Solution Implemented:**
+
+1. **Created `.fvmrc` file** (NEW)
+   - Specifies Flutter version: 3.24.0
+   - Single source of truth for Flutter version
+   - Both CI and local development use this file
+
+2. **Updated GitHub Actions workflow**
+   - Changed from hardcoded `FLUTTER_VERSION: '3.24.0'`
+   - Now uses `flutter-version-file: .fvmrc`
+   - All 7 jobs updated to read version from `.fvmrc`
+   - Ensures CI always uses the same version as local dev
+
+3. **Updated `.gitignore`**
+   - Added `.fvm/` and `.fvm/flutter_sdk` to gitignore
+   - Prevents committing FVM cache files
+
+4. **Updated `pubspec.yaml`**
+   - Updated Dart SDK constraint from `>=3.2.0` to `>=3.5.0`
+   - Aligns with Flutter 3.24.0's Dart version (3.5.0)
+
+5. **Created Documentation** (NEW)
+   - `memory/technical/flutter-version-management.md`
+   - Complete FVM setup guide for developers
+   - IDE configuration instructions (VS Code, Android Studio)
+   - Daily usage commands and troubleshooting
+
+**Files Created:**
+- `.fvmrc` - FVM configuration file
+- `memory/technical/flutter-version-management.md` - Developer guide
+
+**Files Modified:**
+- `.github/workflows/flutter_ci.yml` - Updated all Flutter setup steps to use `.fvmrc`
+- `.gitignore` - Added FVM cache directory
+- `pubspec.yaml` - Updated Dart SDK constraint to match Flutter 3.24.0
+
+**For Developers:**
+```bash
+# Install FVM
+dart pub global activate fvm
+
+# Install project Flutter version
+fvm install
+fvm use
+
+# Run Flutter commands via FVM
+fvm flutter pub get
+fvm flutter analyze
+fvm flutter test
+```
+
+**Benefits:**
+- ✅ Consistent Flutter version across all environments
+- ✅ Eliminates version mismatch analyze issues
+- ✅ Easy version updates (change one file)
+- ✅ CI and local development always in sync
+- ✅ No more "works on my machine" problems
+
+---
+
 ### [2026-02-08] Flutter Test Suite Execution - COMPLETED
 
 **Summary:**

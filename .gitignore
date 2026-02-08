@@ -106,3 +106,7 @@ key.properties
 
 # iOS signing
 code_signing/
+
+# FVM (Flutter Version Management)
+.fvm/
+.fvm/flutter_sdk
