@@ -120,14 +120,48 @@ lib\injection_container.config.dart          # Injectable config
 
 ## Rules
 
-### Rule 1: Code Security Priority
+### Rule 1: Quality Over Quantity
+**Prioritize depth over speed.** Every deliverable must meet high quality standards:
+- **One excellent solution** is better than three mediocre ones
+- **Take time to think** before implementing - rushed code creates technical debt
+- **Refactor ruthlessly** - if code feels wrong, it probably is
+- **Prefer fewer, well-tested features** over many buggy ones
+- **Review your own work critically** before marking complete
+- **Ask: "Would I be proud to show this to a senior engineer?"**
+
+### Rule 2: Question Everything - Never Assume
+**When in doubt, ALWAYS ask. Assumptions are the root of bugs:**
+- **If requirements are unclear** → Ask for clarification before proceeding
+- **If context is missing** → Request more information
+- **If a pattern seems wrong** → Question it, don't blindly follow
+- **If you're unsure about a dependency** → Research and verify
+- **If the user says "just do X"** → Understand WHY before implementing
+- **Better to over-communicate than to guess wrong**
+
+### Rule 3: Invoke Software-Engineer Sub-Agent for Critical Decisions
+**For non-trivial decisions, invoke a software-engineer sub-agent to challenge your thinking:**
+- **Use the Task tool** with `subagent_type: "general"` to spawn a critical reviewer
+- **Ask the sub-agent to:**
+  - Review your proposed approach
+  - Identify potential flaws or better alternatives
+  - Question your assumptions
+  - Suggest different perspectives or patterns
+- **When to invoke:**
+  - Architecture decisions
+  - Non-obvious design patterns
+  - Security-sensitive code
+  - Performance-critical paths
+  - Any time you feel uncertain
+- **Example prompt:** *"Review my approach to [problem]. Challenge my assumptions. What am I missing? What could go wrong?"*
+
+### Rule 4: Code Security Priority
 Always prioritize code security. When reviewing or writing code:
 - **Flag all security issues** and unsafe patterns immediately
 - **Suggest secure alternatives** with specific code examples
 - **Never ignore** potential security vulnerabilities (OWASP Top 10, injection attacks, XSS, CSRF, etc.)
 - **Question** any use of: unsafe eval(), hardcoded secrets, weak encryption, improper input validation, or insecure dependencies
 
-### Rule 2: Best Pattern Selection
+### Rule 5: Best Pattern Selection
 Always review and choose the best pattern for the task:
 - **Analyze multiple approaches** before implementing
 - **Consider trade-offs**: performance vs. readability, complexity vs. maintainability
@@ -135,7 +169,7 @@ Always review and choose the best pattern for the task:
 - **Document your reasoning** when selecting non-obvious patterns
 - **Consider future maintainers**: Will this pattern be clear to other developers?
 
-### Rule 3: Always Document in Memory
+### Rule 6: Always Document in Memory
 All project documentation MUST be stored in the `\memory\` directory:
 - **CRITICAL**: Never store documentation in the project root or other directories
 - Create documentation in appropriate subdirectories: `\memory\architecture\`, `\memory\design\`, `\memory\technical\`, `\memory\notes\`, `\memory\decisions\`
@@ -143,7 +177,7 @@ All project documentation MUST be stored in the `\memory\` directory:
 - Create interactive HTML diagrams for system architecture in `\memory\diagrams\`
 - Document architectural decisions as ADRs in `\memory\decisions\`
 
-### Rule 4: Design Must Reflect index.html and archived-images
+### Rule 7: Design Must Reflect index.html and archived-images
 When implementing UI/UX design for the app:
 - **MUST reflect** the design specifications found in `index.html` and `archived-images` unless explicitly specified otherwise
 - **Reference first**: Always check `index.html` and `archived-images` before proposing or implementing any design changes
@@ -154,7 +188,7 @@ When implementing UI/UX design for the app:
   - Provide specific recommendations with visual references or detailed descriptions
   - Get approval before proceeding with alternative designs
 
-### Rule 5: Complete Testing Before Completion
+### Rule 8: Complete Testing Before Completion
 Before considering any task complete, you MUST run the full validation suite in a single session:
 - **Build**: Ensure the code compiles without errors
 - **Lint**: Run linting and fix all issues

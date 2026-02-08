@@ -11,7 +11,7 @@ class AppConstants {
   static const String storageKeyUserId = 'user_id';
   static const String storageKeyToken = 'auth_token';
   static const String storageKeyRefreshToken = 'refresh_token';
-  static const String storageKeyTheme = 'theme_mode';
+  static const String storageKeyTheme = 'theme_dark_mode';
   static const String storageKeyLanguage = 'language';
   static const String storageKeyFirstLaunch = 'first_launch';
   static const String storageKeyLastSync = 'last_sync';
