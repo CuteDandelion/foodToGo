@@ -44,7 +44,7 @@ class AppProgressBar extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onBackground,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 if (showPercentage)
@@ -65,8 +65,8 @@ class AppProgressBar extends StatelessWidget {
             height: height.h,
             decoration: BoxDecoration(
               color: backgroundColor ??
-                  theme.dividerTheme.color?.withOpacity(0.3) ??
-                  AppTheme.lightBorder.withOpacity(0.3),
+                  theme.dividerTheme.color?.withValues(alpha: 0.3) ??
+                  AppTheme.lightBorder.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular((height / 2).r),
             ),
             child: Row(
@@ -82,7 +82,7 @@ class AppProgressBar extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: [
                         color ?? AppTheme.primary,
-                        (color ?? AppTheme.primary).withOpacity(0.8),
+                        (color ?? AppTheme.primary).withValues(alpha: 0.8),
                       ],
                     ),
                     borderRadius: BorderRadius.circular((height / 2).r),

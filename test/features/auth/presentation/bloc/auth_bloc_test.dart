@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:foodbegood/config/constants.dart';
 import 'package:foodbegood/core/storage/storage_manager.dart';
-import 'package:foodbegood/features/auth/domain/entities/user_role.dart';
 import 'package:foodbegood/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:foodbegood/shared/services/mock_data_service.dart';
 

@@ -73,8 +73,8 @@ class AppButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
           ),
-          disabledBackgroundColor: AppTheme.primary.withOpacity(0.5),
-          disabledForegroundColor: Colors.white.withOpacity(0.7),
+          disabledBackgroundColor: AppTheme.primary.withValues(alpha: 0.5),
+          disabledForegroundColor: Colors.white.withValues(alpha: 0.7),
         );
       case ButtonVariant.secondary:
         return ElevatedButton.styleFrom(
@@ -86,8 +86,8 @@ class AppButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
             side: BorderSide(color: theme.dividerTheme.color ?? AppTheme.lightBorder, width: 2),
           ),
-          disabledBackgroundColor: theme.cardTheme.color?.withOpacity(0.5),
-          disabledForegroundColor: AppTheme.primary.withOpacity(0.5),
+          disabledBackgroundColor: theme.cardTheme.color?.withValues(alpha: 0.5),
+          disabledForegroundColor: AppTheme.primary.withValues(alpha: 0.5),
         );
       case ButtonVariant.ghost:
         return ElevatedButton.styleFrom(
@@ -98,7 +98,7 @@ class AppButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
           ),
-          disabledForegroundColor: AppTheme.primary.withOpacity(0.5),
+          disabledForegroundColor: AppTheme.primary.withValues(alpha: 0.5),
         );
     }
   }

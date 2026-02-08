@@ -20,6 +20,8 @@ import 'package:integration_test/integration_test.dart';
 /// - Pickup Page
 /// - QR Code Page
 
+// ignore_for_file: avoid_print
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

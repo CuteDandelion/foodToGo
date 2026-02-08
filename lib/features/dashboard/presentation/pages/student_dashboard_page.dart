@@ -108,7 +108,7 @@ class _StudentDashboardView extends StatelessWidget {
                       'Good morning,',
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                     Text(
@@ -141,7 +141,7 @@ class _StudentDashboardView extends StatelessWidget {
                               Container(
                                 padding: EdgeInsets.all(8.r),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Icon(
@@ -160,14 +160,14 @@ class _StudentDashboardView extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
-                                        color: Theme.of(context).colorScheme.onBackground,
+                                        color: Theme.of(context).colorScheme.onSurface,
                                       ),
                                     ),
                                     Text(
                                       'vs Last Month',
                                       style: TextStyle(
                                         fontSize: 12.sp,
-                                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                       ),
                                     ),
                                   ],
@@ -212,7 +212,7 @@ class _StudentDashboardView extends StatelessWidget {
                                     entry.key,
                                     style: TextStyle(
                                       fontSize: 12.sp,
-                                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                     ),
                                   ),
                                   Text(
@@ -220,7 +220,7 @@ class _StudentDashboardView extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).colorScheme.onBackground,
+                                      color: Theme.of(context).colorScheme.onSurface,
                                     ),
                                   ),
                                 ],
@@ -266,7 +266,7 @@ class _StudentDashboardView extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(12.r),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Icon(
@@ -285,14 +285,14 @@ class _StudentDashboardView extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).colorScheme.onBackground,
+                                      color: Theme.of(context).colorScheme.onSurface,
                                     ),
                                   ),
                                   Text(
                                     data.nextPickup!.location,
                                     style: TextStyle(
                                       fontSize: 13.sp,
-                                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ],
@@ -339,7 +339,7 @@ class _StudentDashboardView extends StatelessWidget {
                                   '${data.socialImpact.studentsHelped} students helped save money',
                                   style: TextStyle(
                                     fontSize: 13.sp,
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                   ),
                                 ),
                               ],
@@ -403,7 +403,7 @@ class _MetricCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(8.r),
                 decoration: BoxDecoration(
-                  color: isHighlight ? Colors.white.withOpacity(0.2) : Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: isHighlight ? Colors.white.withValues(alpha: 0.2) : Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Icon(
@@ -418,7 +418,7 @@ class _MetricCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
-                  color: isHighlight ? Colors.white : Theme.of(context).colorScheme.onBackground,
+                  color: isHighlight ? Colors.white : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
@@ -436,7 +436,7 @@ class _MetricCard extends StatelessWidget {
             subtitle,
             style: TextStyle(
               fontSize: 13.sp,
-              color: isHighlight ? Colors.white.withOpacity(0.8) : Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+              color: isHighlight ? Colors.white.withValues(alpha: 0.8) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           SizedBox(height: 12.h),
@@ -444,7 +444,7 @@ class _MetricCard extends StatelessWidget {
             progress: progress,
             height: 8,
             color: isHighlight ? Colors.white : Theme.of(context).colorScheme.primary,
-            backgroundColor: isHighlight ? Colors.white.withOpacity(0.3) : null,
+            backgroundColor: isHighlight ? Colors.white.withValues(alpha: 0.3) : null,
           ),
         ],
       ),
@@ -482,14 +482,14 @@ class _StatCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           Text(
             title,
             style: TextStyle(
               fontSize: 12.sp,
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -556,7 +556,7 @@ class _ComparisonBar extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             Text(
@@ -564,7 +564,7 @@ class _ComparisonBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ],
@@ -574,7 +574,7 @@ class _ComparisonBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(4.r),
           child: LinearProgressIndicator(
             value: progress,
-            backgroundColor: color.withOpacity(0.2),
+            backgroundColor: color.withValues(alpha: 0.2),
             valueColor: AlwaysStoppedAnimation<Color>(color),
             minHeight: 6.h,
           ),
