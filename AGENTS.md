@@ -45,10 +45,16 @@ C:\Users\justi\OneDrive\Desktop\FoodBeGood\
 
 ### Flutter SDK Path
 
+**Actual Flutter Installation (This Machine):**
+```bash
+# Windows - User-local installation
+C:\Users\justi\flutter\bin        # Add to PATH
+```
+
 **Standard Flutter Installation Paths:**
 ```bash
 # Windows (typical)
-C:\flutter\bin                    # Add to PATH
+C:\flutter\bin                    # System-wide installation
 C:\Users\<username>\flutter\bin   # User-local installation
 
 # Verify Flutter installation
@@ -59,10 +65,10 @@ flutter --version
 **Environment Variables Required:**
 ```bash
 # Add to system PATH
-C:\flutter\bin
+C:\Users\justi\flutter\bin
 
 # Android SDK (for Android builds)
-C:\Users\<username>\AppData\Local\Android\Sdk
+C:\Users\justi\AppData\Local\Android\Sdk
 
 # Java (for Android builds)
 C:\Program Files\Eclipse Adoptium\jdk-<version>-hotspot\bin
