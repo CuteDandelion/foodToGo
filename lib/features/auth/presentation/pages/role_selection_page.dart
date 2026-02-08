@@ -27,7 +27,7 @@ class RoleSelectionPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.primary.withOpacity(0.3),
+                      color: AppTheme.primary.withValues(alpha: 0.3),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
@@ -54,7 +54,7 @@ class RoleSelectionPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.r),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.primary.withOpacity(0.4),
+                            color: AppTheme.primary.withValues(alpha: 0.4),
                             blurRadius: 8,
                           ),
                         ],
@@ -142,7 +142,7 @@ class _RoleCard extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.r),
-        side: BorderSide(color: AppTheme.lightBorder),
+        side: const BorderSide(color: AppTheme.lightBorder),
       ),
       child: InkWell(
         onTap: onTap,
@@ -155,7 +155,7 @@ class _RoleCard extends StatelessWidget {
                 width: 56.w,
                 height: 56.w,
                 decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.1),
+                  color: AppTheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: Icon(

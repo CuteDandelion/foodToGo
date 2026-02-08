@@ -52,7 +52,7 @@ class CanteenDashboardPage extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(8.r),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Icon(
@@ -87,14 +87,14 @@ class CanteenDashboardPage extends StatelessWidget {
                         'Daily: ${dashboard.dailyAverage}',
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                         ),
                       ),
                       SizedBox(width: 8.w),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Row(
@@ -188,7 +188,7 @@ class CanteenDashboardPage extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
-                      color: AppTheme.error.withOpacity(0.1),
+                      color: AppTheme.error.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(
@@ -207,7 +207,7 @@ class CanteenDashboardPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onBackground,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         Text(
@@ -259,14 +259,14 @@ class CanteenDashboardPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onBackground,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         Text(
                           'Everything is running smoothly',
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ],
@@ -325,8 +325,8 @@ class _StatCard extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
                     color: isPositive
-                        ? const Color(0xFF10B981).withOpacity(0.1)
-                        : const Color(0xFFEF4444).withOpacity(0.1),
+                        ? const Color(0xFF10B981).withValues(alpha: 0.1)
+                        : const Color(0xFFEF4444).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(
@@ -346,14 +346,14 @@ class _StatCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           Text(
             subtitle,
             style: TextStyle(
               fontSize: 12.sp,
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],

@@ -22,7 +22,7 @@ class SettingsPage extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50.r,
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   child: Icon(
                     Icons.person,
                     size: 50.w,
@@ -37,7 +37,7 @@ class SettingsPage extends StatelessWidget {
                 Text(
                   'Student at MRU',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -81,7 +81,7 @@ class SettingsPage extends StatelessWidget {
                 secondary: Container(
                   padding: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Icon(
@@ -132,7 +132,7 @@ class SettingsPage extends StatelessWidget {
               'FoodBeGood v1.0.0',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
               ),
             ),
           ),
@@ -153,7 +153,7 @@ class SettingsPage extends StatelessWidget {
       leading: Container(
         padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Icon(
@@ -173,14 +173,14 @@ class SettingsPage extends StatelessWidget {
               subtitle,
               style: TextStyle(
                 fontSize: 13.sp,
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             )
           : null,
       trailing: Icon(
         Icons.arrow_forward_ios,
         size: 16.w,
-        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
       ),
       onTap: onTap,
     );

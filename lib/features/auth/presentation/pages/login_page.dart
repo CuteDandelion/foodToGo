@@ -82,13 +82,13 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         border: Border.all(color: AppTheme.primary, width: 2),
                         borderRadius: BorderRadius.circular(16.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primary.withOpacity(0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.primary.withValues(alpha: 0.3),
+                              blurRadius: 20,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                       ),
                       child: Column(
                         children: [
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(20.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.primary.withOpacity(0.4),
+                                  color: AppTheme.primary.withValues(alpha: 0.4),
                                   blurRadius: 8,
                                 ),
                               ],
@@ -252,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.all(12.r),
                           margin: EdgeInsets.only(bottom: 16.h),
                           decoration: BoxDecoration(
-                            color: AppTheme.error.withOpacity(0.1),
+                            color: AppTheme.error.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Row(
@@ -297,9 +297,9 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     padding: EdgeInsets.all(16.r),
                     decoration: BoxDecoration(
-                      color: AppTheme.primary.withOpacity(0.05),
+                      color: AppTheme.primary.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: AppTheme.primary.withOpacity(0.2)),
+                      border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

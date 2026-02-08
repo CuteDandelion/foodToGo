@@ -71,7 +71,7 @@ class AppInput extends StatelessWidget {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: theme.colorScheme.onBackground,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           SizedBox(height: 8.h),
@@ -95,8 +95,8 @@ class AppInput extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.sp,
             color: enabled
-                ? theme.colorScheme.onBackground
-                : theme.colorScheme.onBackground.withOpacity(0.5),
+                ? theme.colorScheme.onSurface
+                : theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
           decoration: _buildDecoration(theme),
         ),
@@ -106,7 +106,7 @@ class AppInput extends StatelessWidget {
             helperText!,
             style: TextStyle(
               fontSize: 12.sp,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -133,7 +133,7 @@ class AppInput extends StatelessWidget {
           ? Icon(
               prefixIcon,
               size: 20.w,
-              color: theme.colorScheme.onSurface.withOpacity(0.5),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             )
           : null,
       suffixIcon: suffixIcon,
@@ -183,13 +183,13 @@ class AppInput extends StatelessWidget {
       disabledBorder: OutlineInputBorder(
         borderRadius: borderRadius,
         borderSide: BorderSide(
-          color: (theme.dividerTheme.color ?? AppTheme.lightBorder).withOpacity(0.5),
+          color: (theme.dividerTheme.color ?? AppTheme.lightBorder).withValues(alpha: 0.5),
           width: 2,
         ),
       ),
       hintStyle: TextStyle(
         fontSize: 16.sp,
-        color: theme.colorScheme.onSurface.withOpacity(0.4),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
       ),
       errorStyle: const TextStyle(height: 0),
     );
