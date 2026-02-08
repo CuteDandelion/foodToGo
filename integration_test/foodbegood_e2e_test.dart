@@ -46,12 +46,19 @@ void main() {
 
   group('🎯 FoodBeGood Comprehensive E2E Test Suite', () {
     
+    // Helper function to reset app state before each test
+    Future<void> resetAppState() async {
+      await StorageManager().clearAll();
+    }
+
     // =========================================================================
     // GROUP 1: App Launch & Navigation Tests
     // =========================================================================
     group('App Launch & Navigation', () {
       
       testWidgets('1.1 App launches and shows Role Selection screen', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -70,6 +77,8 @@ void main() {
       });
 
       testWidgets('1.2 Navigate from Role Selection to Student Login', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -88,6 +97,8 @@ void main() {
       });
 
       testWidgets('1.3 Navigate from Role Selection to Canteen Login', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -104,6 +115,8 @@ void main() {
       });
 
       testWidgets('1.4 Back navigation from Login to Role Selection', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -130,6 +143,8 @@ void main() {
     group('Authentication Flows', () {
       
       testWidgets('2.1 Student login with valid credentials', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -155,6 +170,8 @@ void main() {
       });
 
       testWidgets('2.2 Student login with invalid credentials - User not found', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -179,6 +196,8 @@ void main() {
       });
 
       testWidgets('2.3 Student login with invalid credentials - Wrong password', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -203,6 +222,8 @@ void main() {
       });
 
       testWidgets('2.4 Student login with empty fields', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -223,6 +244,8 @@ void main() {
       });
 
       testWidgets('2.5 Canteen login with valid credentials', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -248,6 +271,8 @@ void main() {
       });
 
       testWidgets('2.6 Canteen login with invalid credentials', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -272,6 +297,8 @@ void main() {
       });
 
       testWidgets('2.7 Login with case-insensitive student ID', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -302,6 +329,8 @@ void main() {
     group('Student Dashboard', () {
       
       Future<void> loginAsStudent(WidgetTester tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -388,6 +417,8 @@ void main() {
     group('Pickup Flow', () {
       
       Future<void> navigateToPickup(WidgetTester tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -573,6 +604,8 @@ void main() {
     group('QR Code Page', () {
       
       Future<void> navigateToQRCode(WidgetTester tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -643,6 +676,8 @@ void main() {
     group('Settings Page', () {
       
       Future<void> navigateToSettings(WidgetTester tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -775,6 +810,8 @@ void main() {
     group('Profile Page', () {
       
       Future<void> navigateToProfile(WidgetTester tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -846,6 +883,8 @@ void main() {
     group('Meal History Page', () {
       
       Future<void> navigateToMealHistory(WidgetTester tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -904,6 +943,8 @@ void main() {
     group('Canteen Dashboard', () {
       
       Future<void> loginAsCanteen(WidgetTester tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -961,6 +1002,8 @@ void main() {
     group('Complete User Flows', () {
       
       testWidgets('10.1 Complete Student Flow - Login to Pickup', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -1005,6 +1048,8 @@ void main() {
       });
 
       testWidgets('10.2 Complete Canteen Flow - Login to Dashboard', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -1035,6 +1080,8 @@ void main() {
       });
 
       testWidgets('10.3 Full Navigation Loop - All Screens', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -1084,6 +1131,8 @@ void main() {
     group('Edge Cases & Error Handling', () {
       
       testWidgets('11.1 Rapid screen transitions', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -1104,6 +1153,8 @@ void main() {
       });
 
       testWidgets('11.2 Multiple login attempts', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -1137,6 +1188,8 @@ void main() {
       });
 
       testWidgets('11.3 Session persistence after navigation', (tester) async {
+        // Reset state and restart app
+        await resetAppState();
         await tester.pumpWidget(const FoodBeGoodApp());
         await tester.pumpAndSettle(const Duration(seconds: 3));
 

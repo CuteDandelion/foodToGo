@@ -86,7 +86,7 @@ class RoleSelectionPage extends StatelessWidget {
 
                 // Welcome text
                 Text(
-                  'Welcome',
+                  'Welcome!',
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 SizedBox(height: 8.h),
@@ -113,7 +113,7 @@ class RoleSelectionPage extends StatelessWidget {
                 _RoleCard(
                   icon: Icons.restaurant_outlined,
                   title: 'Canteen Staff',
-                  description: 'Manage food, view analytics, help students',
+                  description: 'Manage food, prevent waste, help students',
                   onTap: () => context.goLogin(role: 'canteen'),
                 ),
                 SizedBox(height: 24.h),

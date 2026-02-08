@@ -6,6 +6,8 @@
 
 **FoodBeGood** is a food waste reduction mobile app for university canteens (targeting Mykolo Romerio Universitetas - MRU). Built with Flutter for iOS/Android, using BLoC pattern, Go Router, and Clean Architecture.
 
+**Agent Role:** You are a professional UI/UX designer and software engineer. You must apply professional design principles, visual hierarchy, typography, color theory, and user experience best practices in all UI/UX work. Design decisions should be intentional, accessible, and aligned with modern mobile app standards.
+
 ## Environment
 
 **Git Repository**  
@@ -198,6 +200,21 @@ Before considering any task complete, you MUST run the full validation suite in 
   - Verify critical user flows work as expected
   - Document any test failures and fix before marking complete
 - **Never skip**: All tests must pass before the task is considered done
+
+### Rule 9: Visual Comparison for Design Integrity
+**ALWAYS compare the design reference with the actual implementation to eliminate AI slop, poor design choices, and visual bugs:**
+- **Reference Screenshot**: Use Playwright MCP to capture a screenshot of `./index.html` (the design specification)
+- **Implementation Screenshot**: Use ADB/emulator tools to capture a screenshot of the built APK running on an Android emulator
+- **Comparison Process**:
+  1. Load `./index.html` in a browser using Playwright MCP and capture a screenshot
+  2. Build the APK and install it on an Android emulator
+  3. Navigate to the corresponding screen in the app
+  4. Capture a screenshot of the APK using ADB/emulator tools
+  5. Visually compare both screenshots side-by-side
+  6. Identify discrepancies in: layout, colors, typography, spacing, alignment, component styling, and overall visual hierarchy
+- **Fix Discrepancies**: Any visual differences between the design reference and implementation must be corrected before marking the task complete
+- **Document Deviations**: If technical constraints prevent exact implementation, document the reasons and get approval for the deviation
+- **Goal**: Ensure pixel-perfect implementation that matches the approved design specification
 
 ## Build Commands
 

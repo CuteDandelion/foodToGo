@@ -41,10 +41,24 @@ void main() {
 
   group('🎯 Phase 1 E2E Test Suite', () {
     
-    testWidgets('1. App Launch - Role Selection Screen', (tester) async {
-      // Build the app
+    // Helper function to reset app state before each test
+    Future<void> resetAppState() async {
+      await StorageManager().clearAll();
+    }
+
+    // Helper function to restart the app fresh
+    Future<void> restartApp(WidgetTester tester) async {
+      // Clear storage
+      await resetAppState();
+      
+      // Re-pump the app widget to restart
       await tester.pumpWidget(const FoodBeGoodApp());
       await tester.pumpAndSettle(const Duration(seconds: 3));
+    }
+    
+    testWidgets('1. App Launch - Role Selection Screen', (tester) async {
+      // Restart app fresh
+      await restartApp(tester);
 
       // Verify Role Selection screen elements
       expect(find.text('Welcome'), findsOneWidget);
@@ -56,8 +70,8 @@ void main() {
     });
 
     testWidgets('2. Student Login Flow', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Tap on Student card
       await tester.tap(find.text('Student'));
@@ -73,8 +87,8 @@ void main() {
     });
 
     testWidgets('3. Canteen Login Flow', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Tap on Canteen Staff card
       await tester.tap(find.text('Canteen Staff'));
@@ -89,8 +103,8 @@ void main() {
     });
 
     testWidgets('4. Student Authentication - Success', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Navigate to Student Login
       await tester.tap(find.text('Student'));
@@ -115,8 +129,8 @@ void main() {
     });
 
     testWidgets('5. Student Dashboard - Metrics Display', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Login first
       await tester.tap(find.text('Student'));
@@ -140,8 +154,8 @@ void main() {
     });
 
     testWidgets('6. Pick Up My Meal Navigation', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Login
       await tester.tap(find.text('Student'));
@@ -169,8 +183,8 @@ void main() {
     });
 
     testWidgets('7. Canteen Authentication - Success', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Navigate to Canteen Login
       await tester.tap(find.text('Canteen Staff'));
@@ -196,8 +210,8 @@ void main() {
     });
 
     testWidgets('8. Canteen Dashboard - Analytics Display', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Login as canteen
       await tester.tap(find.text('Canteen Staff'));
@@ -222,8 +236,8 @@ void main() {
     });
 
     testWidgets('9. Settings Page Access', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Login as student
       await tester.tap(find.text('Student'));
@@ -249,8 +263,8 @@ void main() {
     });
 
     testWidgets('10. Theme Toggle Functionality', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Login and navigate to settings
       await tester.tap(find.text('Student'));
@@ -282,8 +296,8 @@ void main() {
     });
 
     testWidgets('11. Profile Page Access', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Login
       await tester.tap(find.text('Student'));
@@ -313,8 +327,8 @@ void main() {
     });
 
     testWidgets('12. Meal History Access', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // Login
       await tester.tap(find.text('Student'));
@@ -344,8 +358,8 @@ void main() {
     });
 
     testWidgets('13. Complete Student Flow', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // 1. Role Selection
       expect(find.text('Welcome'), findsOneWidget);
@@ -386,8 +400,8 @@ void main() {
     });
 
     testWidgets('14. Complete Canteen Flow', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       // 1. Role Selection
       expect(find.text('Welcome'), findsOneWidget);
@@ -419,8 +433,8 @@ void main() {
     });
 
     testWidgets('15. Phase 1 Summary - All Features', (tester) async {
-      await tester.pumpWidget(const FoodBeGoodApp());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Restart app fresh
+      await restartApp(tester);
 
       print('\n${'='*70}');
       print('🎯 PHASE 1 E2E TEST SUMMARY');
