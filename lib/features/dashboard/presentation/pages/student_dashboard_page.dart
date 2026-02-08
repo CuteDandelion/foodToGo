@@ -112,7 +112,7 @@ class _StudentDashboardView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${data.socialImpact.studentsHelped} students helped! 👋',
+                      'Zain! 👋',
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     SizedBox(height: 24.h),
@@ -126,6 +126,7 @@ class _StudentDashboardView extends StatelessWidget {
                       subtitle: 'Meals Saved',
                       progress: data.monthlyGoalProgress,
                       isHighlight: true,
+                      isLarge: true,
                     ),
 
                     SizedBox(height: 16.h),
@@ -202,30 +203,58 @@ class _StudentDashboardView extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 16.h),
-                          Wrap(
-                            spacing: 16.w,
+                          // Savings breakdown
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: data.moneySaved.breakdown.entries.map((entry) {
                               return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    entry.key,
+                                    '€${entry.value.toStringAsFixed(0)}',
                                     style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: Theme.of(context).colorScheme.primary,
                                     ),
                                   ),
                                   Text(
-                                    '€${entry.value.toStringAsFixed(2)}',
+                                    entry.key,
                                     style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).colorScheme.onSurface,
+                                      fontSize: 11.sp,
+                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ],
                               );
                             }).toList(),
+                          ),
+                          SizedBox(height: 16.h),
+                          // Motivational message
+                          Container(
+                            padding: EdgeInsets.all(12.r),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.savings_outlined,
+                                  size: 20.w,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    "You're on track to save €1,000+ this year!",
+                                    style: TextStyle(
+                                      fontSize: 13.sp,
+                                      color: Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -240,8 +269,9 @@ class _StudentDashboardView extends StatelessWidget {
                           child: _StatCard(
                             icon: Icons.show_chart,
                             iconColor: const Color(0xFFF59E0B),
-                            title: 'Avg/Mo',
+                            title: 'Avg/Month',
                             value: data.monthlyAverage.toString(),
+                            subtitle: 'Top 15%',
                           ),
                         ),
                         SizedBox(width: 12.w),
@@ -249,8 +279,9 @@ class _StudentDashboardView extends StatelessWidget {
                           child: _StatCard(
                             icon: Icons.local_fire_department,
                             iconColor: const Color(0xFFEC4899),
-                            title: 'Streak',
-                            value: '${data.currentStreak} days',
+                            title: 'Day Streak',
+                            value: '${data.currentStreak}',
+                            subtitle: '🔥 Keep it going!',
                           ),
                         ),
                       ],
@@ -298,13 +329,25 @@ class _StudentDashboardView extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Text(
-                              data.nextPickup!.formattedTime,
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  data.nextPickup!.formattedTime,
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                                Text(
+                                  'remaining',
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -315,31 +358,91 @@ class _StudentDashboardView extends StatelessWidget {
                     // Social Impact Card
                     AppCard(
                       variant: CardVariant.dark,
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.favorite,
-                            size: 24.w,
-                            color: const Color(0xFFEC4899),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.favorite,
+                                size: 24.w,
+                                color: const Color(0xFFEC4899),
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Social Impact',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 16.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          SizedBox(height: 12.h),
+                          Text(
+                            'Together with ${data.socialImpact.studentsHelped} other students, you\'ve helped save food and reduce waste in your community.',
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: Colors.white.withValues(alpha: 0.8),
+                              height: 1.5,
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          Container(
+                            padding: EdgeInsets.only(top: 16.h),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: Row(
                               children: [
-                                Text(
-                                  'Social Impact',
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${data.socialImpact.studentsHelped}',
+                                        style: TextStyle(
+                                          fontSize: 24.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF34D399),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Students Helped',
+                                        style: TextStyle(
+                                          fontSize: 11.sp,
+                                          color: Colors.white.withValues(alpha: 0.6),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  '${data.socialImpact.studentsHelped} students helped save money',
-                                  style: TextStyle(
-                                    fontSize: 13.sp,
-                                    color: Colors.white.withValues(alpha: 0.7),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '€${data.socialImpact.avgMoneySavedPerStudent.toStringAsFixed(2)}',
+                                        style: TextStyle(
+                                          fontSize: 24.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color: const Color(0xFF34D399),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Avg Saved/Student',
+                                        style: TextStyle(
+                                          fontSize: 11.sp,
+                                          color: Colors.white.withValues(alpha: 0.6),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -359,13 +462,31 @@ class _StudentDashboardView extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: Navigate to pickup
-        },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        icon: const Icon(Icons.add),
-        label: const Text('Pick Up My Meal'),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF10B981), Color(0xFF059669)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(50.r),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF10B981).withValues(alpha: 0.4),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            // TODO: Navigate to pickup
+          },
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          icon: const Icon(Icons.handshake_outlined),
+          label: const Text('Pickup My Meal'),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -380,6 +501,7 @@ class _MetricCard extends StatelessWidget {
   final String subtitle;
   final double progress;
   final bool isHighlight;
+  final bool isLarge;
 
   const _MetricCard({
     required this.icon,
@@ -389,6 +511,7 @@ class _MetricCard extends StatelessWidget {
     required this.subtitle,
     required this.progress,
     this.isHighlight = false,
+    this.isLarge = false,
   });
 
   @override
@@ -439,6 +562,16 @@ class _MetricCard extends StatelessWidget {
               color: isHighlight ? Colors.white.withValues(alpha: 0.8) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
+          if (isHighlight) ...[
+            SizedBox(height: 8.h),
+            Text(
+              '${(progress * 100).toInt()}% of monthly goal',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.white.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
           SizedBox(height: 12.h),
           AppProgressBar(
             progress: progress,
@@ -457,12 +590,14 @@ class _StatCard extends StatelessWidget {
   final Color iconColor;
   final String title;
   final String value;
+  final String? subtitle;
 
   const _StatCard({
     required this.icon,
     required this.iconColor,
     required this.title,
     required this.value,
+    this.subtitle,
   });
 
   @override
@@ -480,9 +615,9 @@ class _StatCard extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontSize: 24.sp,
+              fontSize: 28.sp,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).colorScheme.onSurface,
+              color: iconColor,
             ),
           ),
           Text(
@@ -492,6 +627,16 @@ class _StatCard extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
+          if (subtitle != null) ...[
+            SizedBox(height: 4.h),
+            Text(
+              subtitle!,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
+          ],
         ],
       ),
     );

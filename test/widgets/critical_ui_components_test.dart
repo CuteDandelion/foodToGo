@@ -346,7 +346,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Welcome'), findsOneWidget);
+      expect(find.text('Welcome!'), findsOneWidget);
       expect(find.text('Select your role to continue'), findsOneWidget);
       expect(find.text('Student'), findsOneWidget);
       expect(find.text('Canteen Staff'), findsOneWidget);
@@ -445,7 +445,7 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       // Should show role selection page
-      expect(find.text('Welcome'), findsOneWidget);
+      expect(find.text('Welcome!'), findsOneWidget);
     });
 
     testWidgets('App has correct title', (tester) async {
@@ -476,7 +476,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Should start at role selection
-      expect(find.text('Welcome'), findsOneWidget);
+      expect(find.text('Welcome!'), findsOneWidget);
     });
   });
 
@@ -488,7 +488,7 @@ void main() {
       await tester.pumpWidget(const FoodBeGoodApp());
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      expect(find.text('Welcome'), findsOneWidget);
+      expect(find.text('Welcome!'), findsOneWidget);
 
       // Reset
       addTearDown(tester.view.resetPhysicalSize);
@@ -501,7 +501,7 @@ void main() {
       await tester.pumpWidget(const FoodBeGoodApp());
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      expect(find.text('Welcome'), findsOneWidget);
+      expect(find.text('Welcome!'), findsOneWidget);
 
       // Reset
       addTearDown(tester.view.resetPhysicalSize);

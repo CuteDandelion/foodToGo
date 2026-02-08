@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'Sign in to your account',
+                    'Sign in to access your account',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppTheme.lightTextSecondary,
                     ),

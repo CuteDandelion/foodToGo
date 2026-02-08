@@ -15,7 +15,7 @@ void main() {
     await tester.pumpWidget(const FoodBeGoodApp());
 
     // Verify that the app launches and shows the role selection screen
-    expect(find.text('Welcome'), findsOneWidget);
+    expect(find.text('Welcome!'), findsOneWidget);
     expect(find.text('Select your role to continue'), findsOneWidget);
   });
 }
