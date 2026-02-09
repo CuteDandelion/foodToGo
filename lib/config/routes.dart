@@ -26,6 +26,101 @@ class RoutePaths {
   static const String mealHistory = '/meal-history';
 }
 
+/// Custom page transitions
+class AppPageTransitions {
+  AppPageTransitions._();
+
+  /// Slide from right transition
+  static CustomTransitionPage slideFromRight({
+    required LocalKey key,
+    required Widget child,
+  }) {
+    return CustomTransitionPage(
+      key: key,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOutCubic;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
+  }
+
+  /// Fade transition
+  static CustomTransitionPage fade({
+    required LocalKey key,
+    required Widget child,
+  }) {
+    return CustomTransitionPage(
+      key: key,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    );
+  }
+
+  /// Scale and fade transition
+  static CustomTransitionPage scaleFade({
+    required LocalKey key,
+    required Widget child,
+  }) {
+    return CustomTransitionPage(
+      key: key,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.9, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+            ),
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  /// Slide up transition (for modals)
+  static CustomTransitionPage slideUp({
+    required LocalKey key,
+    required Widget child,
+  }) {
+    return CustomTransitionPage(
+      key: key,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.easeOutCubic;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
+  }
+}
+
 /// App router configuration
 class AppRouter {
   AppRouter._();
@@ -42,48 +137,66 @@ class AppRouter {
       // Role Selection
       GoRoute(
         path: RoutePaths.roleSelection,
-        builder: (context, state) => const RoleSelectionPage(),
+        pageBuilder: (context, state) => AppPageTransitions.fade(
+          key: state.pageKey,
+          child: const RoleSelectionPage(),
+        ),
       ),
 
       // Login
       GoRoute(
         path: RoutePaths.login,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final role = state.uri.queryParameters['role'] ?? 'student';
-          return LoginPage(role: role);
+          return AppPageTransitions.slideFromRight(
+            key: state.pageKey,
+            child: LoginPage(role: role),
+          );
         },
       ),
 
       // Student Dashboard
       GoRoute(
         path: RoutePaths.studentDashboard,
-        builder: (context, state) => const StudentDashboardPage(),
+        pageBuilder: (context, state) => AppPageTransitions.scaleFade(
+          key: state.pageKey,
+          child: const StudentDashboardPage(),
+        ),
       ),
 
       // Canteen Dashboard
       GoRoute(
         path: RoutePaths.canteenDashboard,
-        builder: (context, state) => const CanteenDashboardPage(),
+        pageBuilder: (context, state) => AppPageTransitions.scaleFade(
+          key: state.pageKey,
+          child: const CanteenDashboardPage(),
+        ),
       ),
 
       // Pickup
       GoRoute(
         path: RoutePaths.pickup,
-        builder: (context, state) => const PickupPage(),
+        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+          key: state.pageKey,
+          child: const PickupPage(),
+        ),
       ),
 
       // QR Code
       GoRoute(
         path: RoutePaths.qrCode,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final pickupId = state.uri.queryParameters['pickupId'] ?? '';
           final qrData = state.uri.queryParameters['qrData'] ?? '';
           final expiresAtStr = state.uri.queryParameters['expiresAt'];
           final expiresAt = expiresAtStr != null ? DateTime.tryParse(expiresAtStr) : null;
-          return QRCodePage(
-            pickupId: pickupId,
-            qrData: qrData.isNotEmpty ? Uri.decodeComponent(qrData) : null,
-            expiresAt: expiresAt,
+          return AppPageTransitions.scaleFade(
+            key: state.pageKey,
+            child: QRCodePage(
+              pickupId: pickupId,
+              qrData: qrData.isNotEmpty ? Uri.decodeComponent(qrData) : null,
+              expiresAt: expiresAt,
+            ),
           );
         },
       ),
@@ -91,19 +204,28 @@ class AppRouter {
       // Profile
       GoRoute(
         path: RoutePaths.profile,
-        builder: (context, state) => const ProfilePage(),
+        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+          key: state.pageKey,
+          child: const ProfilePage(),
+        ),
       ),
 
       // Settings
       GoRoute(
         path: RoutePaths.settings,
-        builder: (context, state) => const SettingsPage(),
+        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+          key: state.pageKey,
+          child: const SettingsPage(),
+        ),
       ),
 
       // Meal History
       GoRoute(
         path: RoutePaths.mealHistory,
-        builder: (context, state) => const MealHistoryPage(),
+        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+          key: state.pageKey,
+          child: const MealHistoryPage(),
+        ),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

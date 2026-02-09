@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foodbegood/features/pickup/presentation/bloc/pickup_bloc.dart';
 import 'package:foodbegood/shared/services/mock_data_service.dart';
 import 'package:foodbegood/config/routes.dart';
+import 'package:foodbegood/shared/widgets/animations.dart';
+import 'package:foodbegood/shared/widgets/custom_icons.dart' as custom_icons;
+import 'package:foodbegood/shared/widgets/animated_progress.dart';
 
 /// Food selection page with category grid
 class PickupPage extends StatelessWidget {
@@ -30,6 +34,7 @@ class _PickupPageContent extends StatelessWidget {
       body: BlocConsumer<PickupBloc, PickupState>(
         listener: (context, state) {
           if (state.status == PickupStatus.created) {
+            AppHaptics.success();
             // Navigate to QR code page
             context.goQRCode(
               pickupId: state.pickupId!,
@@ -38,8 +43,9 @@ class _PickupPageContent extends StatelessWidget {
               items: state.selectedItems,
             );
           }
-          
+
           if (state.errorMessage != null) {
+            AppHaptics.error();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.errorMessage!),
@@ -57,24 +63,26 @@ class _PickupPageContent extends StatelessWidget {
           return Column(
             children: [
               // Header
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Text(
-                      'Select Your Items',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Choose up to 5 items for your meal',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
-                          ),
-                    ),
-                  ],
+              FadeInAnimation(
+                child: Padding(
+                  padding: EdgeInsets.all(16.r),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Select Your Items',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Choose up to 5 items for your meal',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -83,23 +91,25 @@ class _PickupPageContent extends StatelessWidget {
 
               // Selected Items Count
               if (state.selectedItems.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${state.selectedItems.length}/5 items selected',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      TextButton.icon(
-                        onPressed: () {
-                          context.read<PickupBloc>().add(const PickupClearSelection());
-                        },
-                        icon: const Icon(Icons.clear_all, size: 18),
-                        label: const Text('Clear'),
-                      ),
-                    ],
+                FadeInAnimation(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${state.selectedItems.length}/5 items selected',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                            context.read<PickupBloc>().add(const PickupClearSelection());
+                          },
+                          icon: const Icon(Icons.clear_all, size: 18),
+                          label: const Text('Clear'),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -127,76 +137,72 @@ class _FoodContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
-    return Container(
-      margin: const EdgeInsets.all(16.0),
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.primary.withAlpha(26),
-            colorScheme.primary.withAlpha(10),
-          ],
+
+    return FadeInAnimation(
+      child: Container(
+        margin: EdgeInsets.all(16.r),
+        padding: EdgeInsets.all(20.r),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.primary.withAlpha(26),
+              colorScheme.primary.withAlpha(10),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(
+            color: colorScheme.primary.withAlpha(51),
+            width: 2,
+          ),
         ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.primary.withAlpha(51),
-          width: 2,
-        ),
-      ),
-      child: Column(
-        children: [
-          // Container visualization
-          Container(
-            height: 120,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: colorScheme.outline.withAlpha(51),
+        child: Column(
+          children: [
+            // Container visualization
+            Container(
+              height: 120.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
+                  color: colorScheme.outline.withAlpha(51),
+                ),
               ),
-            ),
-            child: state.selectedItems.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.restaurant_outlined,
-                          size: 40,
-                          color: colorScheme.onSurface.withAlpha(102),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Your container is empty',
-                          style: TextStyle(
+              child: state.selectedItems.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            custom_icons.FoodIcons.meals,
+                            size: 40.w,
                             color: colorScheme.onSurface.withAlpha(102),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                : _AnimatedFoodItems(items: state.selectedItems),
-          ),
-          
-          const SizedBox(height: 12),
-          
-          // Fill progress
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: state.selectedItems.length / 5,
-              minHeight: 8,
-              backgroundColor: colorScheme.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                colorScheme.primary,
-              ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            'Your container is empty',
+                            style: TextStyle(
+                              color: colorScheme.onSurface.withAlpha(102),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : _AnimatedFoodItems(items: state.selectedItems),
             ),
-          ),
-        ],
+
+            SizedBox(height: 12.h),
+
+            // Fill progress with animation
+            AnimatedProgressBar(
+              progress: state.selectedItems.length / 5,
+              height: 8,
+              showGlow: true,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -211,10 +217,10 @@ class _AnimatedFoodItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: EdgeInsets.all(12.r),
       child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
+        spacing: 8.w,
+        runSpacing: 8.h,
         alignment: WrapAlignment.center,
         children: items.asMap().entries.map((entry) {
           final index = entry.key;
@@ -227,13 +233,13 @@ class _AnimatedFoodItems extends StatelessWidget {
               return Transform.scale(
                 scale: value,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
                     color: _parseColor(item.color).withAlpha(51),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
                       color: _parseColor(item.color).withAlpha(128),
                     ),
@@ -241,15 +247,16 @@ class _AnimatedFoodItems extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        item.icon,
-                        style: const TextStyle(fontSize: 20),
+                      Icon(
+                        custom_icons.FoodCategoryIcons.getIcon(item.name),
+                        size: 20.w,
+                        color: _parseColor(item.color),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4.w),
                       Text(
                         item.name,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
                           color: _parseColor(item.color),
                         ),
@@ -271,7 +278,7 @@ class _AnimatedFoodItems extends StatelessWidget {
   }
 }
 
-/// Food category grid
+/// Food category grid with staggered animation
 class _FoodCategoryGrid extends StatelessWidget {
   final PickupState state;
 
@@ -280,12 +287,12 @@ class _FoodCategoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: const EdgeInsets.all(16.0),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      padding: EdgeInsets.all(16.r),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 1.3,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisSpacing: 12.w,
+        mainAxisSpacing: 12.h,
       ),
       itemCount: state.categories.length,
       itemBuilder: (context, index) {
@@ -294,28 +301,36 @@ class _FoodCategoryGrid extends StatelessWidget {
         final isMaxed = count >= category.maxPerPickup;
         final isAtTotalLimit = state.selectedItems.length >= 5;
 
-        return _FoodCategoryCard(
-          category: category,
-          selectedCount: count,
-          isMaxed: isMaxed,
-          isAtTotalLimit: isAtTotalLimit,
-          onTap: () {
-            if (isMaxed || isAtTotalLimit) return;
-            context.read<PickupBloc>().add(PickupCategorySelected(category));
-          },
-          onRemove: count > 0
-              ? () {
-                  context.read<PickupBloc>().add(PickupCategoryDeselected(category));
-                }
-              : null,
+        return StaggeredAnimation(
+          index: index,
+          child: _FoodCategoryCard(
+            category: category,
+            selectedCount: count,
+            isMaxed: isMaxed,
+            isAtTotalLimit: isAtTotalLimit,
+            onTap: () {
+              if (isMaxed || isAtTotalLimit) {
+                AppHaptics.error();
+                return;
+              }
+              AppHaptics.lightImpact();
+              context.read<PickupBloc>().add(PickupCategorySelected(category));
+            },
+            onRemove: count > 0
+                ? () {
+                    AppHaptics.lightImpact();
+                    context.read<PickupBloc>().add(PickupCategoryDeselected(category));
+                  }
+                : null,
+          ),
         );
       },
     );
   }
 }
 
-/// Individual food category card
-class _FoodCategoryCard extends StatelessWidget {
+/// Individual food category card with press animation
+class _FoodCategoryCard extends StatefulWidget {
   final FoodCategory category;
   final int selectedCount;
   final bool isMaxed;
@@ -333,109 +348,142 @@ class _FoodCategoryCard extends StatelessWidget {
   });
 
   @override
+  State<_FoodCategoryCard> createState() => _FoodCategoryCardState();
+}
+
+class _FoodCategoryCardState extends State<_FoodCategoryCard> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final categoryColor = _parseColor(category.color);
-    final isSelected = selectedCount > 0;
-    final isDisabled = isMaxed || isAtTotalLimit;
+    final categoryColor = _parseColor(widget.category.color);
+    final isSelected = widget.selectedCount > 0;
+    final isDisabled = widget.isMaxed || widget.isAtTotalLimit;
 
     return GestureDetector(
-      onTap: isDisabled ? null : onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? categoryColor.withAlpha(51)
-              : colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
+      onTapDown: isDisabled ? null : (_) => setState(() => _isPressed = true),
+      onTapUp: isDisabled
+          ? null
+          : (_) {
+              setState(() => _isPressed = false);
+              widget.onTap();
+            },
+      onTapCancel: isDisabled ? null : () => setState(() => _isPressed = false),
+      child: AnimatedScale(
+        scale: _isPressed ? 0.95 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
             color: isSelected
-                ? categoryColor
-                : isDisabled
-                    ? colorScheme.outline.withAlpha(51)
-                    : colorScheme.outline.withAlpha(128),
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Main content
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    category.icon,
-                    style: const TextStyle(fontSize: 40),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    category.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isDisabled
-                              ? colorScheme.onSurface.withAlpha(102)
-                              : colorScheme.onSurface,
-                        ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Max ${category.maxPerPickup}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withAlpha(128),
-                        ),
-                  ),
-                ],
-              ),
+                ? categoryColor.withAlpha(51)
+                : colorScheme.surface,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: isSelected
+                  ? categoryColor
+                  : isDisabled
+                      ? colorScheme.outline.withAlpha(51)
+                      : colorScheme.outline.withAlpha(128),
+              width: isSelected ? 2 : 1,
             ),
-
-            // Selected count badge
-            if (isSelected)
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: categoryColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '$selectedCount',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: categoryColor.withAlpha(51),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
+                  ]
+                : null,
+          ),
+          child: Stack(
+            children: [
+              // Main content
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    custom_icons.AnimatedIconWidget(
+                      icon: custom_icons.FoodCategoryIcons.getIcon(widget.category.name),
+                      size: 40.w,
+                      color: isDisabled
+                          ? colorScheme.onSurface.withAlpha(102)
+                          : categoryColor,
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      widget.category.name,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: isDisabled
+                                ? colorScheme.onSurface.withAlpha(102)
+                                : colorScheme.onSurface,
+                          ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Max ${widget.category.maxPerPickup}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurface.withAlpha(128),
+                          ),
+                    ),
+                  ],
                 ),
               ),
 
-            // Remove button
-            if (isSelected && onRemove != null)
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: GestureDetector(
-                  onTap: onRemove,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: colorScheme.error.withAlpha(26),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.remove,
-                      size: 16,
-                      color: colorScheme.error,
+              // Selected count badge
+              if (isSelected)
+                Positioned(
+                  top: 8.h,
+                  right: 8.w,
+                  child: ScaleAnimation(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: categoryColor,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        '${widget.selectedCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+
+              // Remove button
+              if (isSelected && widget.onRemove != null)
+                Positioned(
+                  bottom: 8.h,
+                  right: 8.w,
+                  child: GestureDetector(
+                    onTap: widget.onRemove,
+                    child: Container(
+                      padding: EdgeInsets.all(4.r),
+                      decoration: BoxDecoration(
+                        color: colorScheme.error.withAlpha(26),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.remove,
+                        size: 16.w,
+                        color: colorScheme.error,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -459,7 +507,7 @@ class _BottomActionBar extends StatelessWidget {
     final isCreating = state.status == PickupStatus.creating;
 
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         border: Border(
@@ -474,58 +522,93 @@ class _BottomActionBar extends StatelessWidget {
           children: [
             // Selected items summary
             if (state.selectedItems.isNotEmpty)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                margin: const EdgeInsets.only(bottom: 12),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: state.selectedItems.map((item) {
-                    return Chip(
-                      avatar: Text(item.icon),
-                      label: Text(item.name),
-                      backgroundColor: _parseColor(item.color).withAlpha(26),
-                      side: BorderSide(
-                        color: _parseColor(item.color).withAlpha(77),
-                      ),
-                      visualDensity: VisualDensity.compact,
-                    );
-                  }).toList(),
+              FadeInAnimation(
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(12.r),
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Wrap(
+                    spacing: 8.w,
+                    runSpacing: 8.h,
+                    children: state.selectedItems.map((item) {
+                      return Chip(
+                        avatar: Icon(
+                          custom_icons.FoodCategoryIcons.getIcon(item.name),
+                          size: 18.w,
+                        ),
+                        label: Text(item.name),
+                        backgroundColor: _parseColor(item.color).withAlpha(26),
+                        side: BorderSide(
+                          color: _parseColor(item.color).withAlpha(77),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
 
-            // Confirm button
+            // Confirm button with gradient
             SizedBox(
               width: double.infinity,
-              height: 56,
-              child: FilledButton.icon(
-                onPressed: isCreating || state.selectedItems.isEmpty
-                    ? null
-                    : () {
-                        context.read<PickupBloc>().add(const PickupCreate());
-                      },
-                icon: isCreating
-                    ? SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: colorScheme.onPrimary,
+              height: 56.h,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                decoration: BoxDecoration(
+                  gradient: isCreating || state.selectedItems.isEmpty
+                      ? null
+                      : const LinearGradient(
+                          colors: [Color(0xFF10B981), Color(0xFF059669)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      )
-                    : const Icon(Icons.check_circle_outline),
-                label: Text(
-                  isCreating
-                      ? 'Creating...'
-                      : 'Confirm Pickup (${state.selectedItems.length})',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                  color: isCreating || state.selectedItems.isEmpty
+                      ? colorScheme.primary.withAlpha(128)
+                      : null,
+                  borderRadius: BorderRadius.circular(14.r),
+                  boxShadow: isCreating || state.selectedItems.isEmpty
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: const Color(0xFF10B981).withAlpha(102),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                ),
+                child: FilledButton.icon(
+                  onPressed: isCreating || state.selectedItems.isEmpty
+                      ? null
+                      : () {
+                          AppHaptics.mediumImpact();
+                          context.read<PickupBloc>().add(const PickupCreate());
+                        },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    disabledBackgroundColor: Colors.transparent,
+                  ),
+                  icon: isCreating
+                      ? SizedBox(
+                          width: 20.w,
+                          height: 20.w,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.onPrimary,
+                          ),
+                        )
+                      : const Icon(Icons.check_circle_outline),
+                  label: Text(
+                    isCreating
+                        ? 'Creating...'
+                        : 'Confirm Pickup (${state.selectedItems.length})',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

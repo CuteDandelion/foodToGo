@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/routes.dart';
 import '../../../../shared/widgets/app_card.dart';
-import '../../../../shared/widgets/app_progress_bar.dart';
+import '../../../../shared/widgets/animated_progress.dart';
+import '../../../../shared/widgets/animations.dart';
+import '../../../../shared/widgets/custom_icons.dart' as custom_icons;
 import '../bloc/dashboard_bloc.dart';
 
 class StudentDashboardPage extends StatelessWidget {
@@ -67,18 +69,20 @@ class _StudentDashboardView extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              context.goSettings();
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {
-              // TODO: Show notifications
-            },
-          ),
+                    custom_icons.AnimatedIconButton(
+                      icon: Icons.settings_outlined,
+                      onPressed: () {
+                        context.goSettings();
+                      },
+                    ),
+                    SizedBox(width: 8.w),
+                    custom_icons.AnimatedIconButton(
+                      icon: Icons.notifications_outlined,
+                      onPressed: () {
+                        // TODO: Show notifications
+                      },
+                    ),
+          SizedBox(width: 8.w),
         ],
       ),
       body: RefreshIndicator(
@@ -91,7 +95,7 @@ class _StudentDashboardView extends StatelessWidget {
           child: BlocBuilder<DashboardBloc, DashboardState>(
             builder: (context, state) {
               if (state is DashboardLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const _DashboardShimmer();
               }
 
               if (state is DashboardError) {
@@ -104,25 +108,34 @@ class _StudentDashboardView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Greeting
-                    Text(
-                      'Good morning,',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    FadeInAnimation(
+                      duration: const Duration(milliseconds: 400),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Good morning,',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                            ),
+                          ),
+                          Text(
+                            'Zain! 👋',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      'Zain! 👋',
-                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     SizedBox(height: 24.h),
 
-                    // Total Meals Card
-                    _MetricCard(
-                      icon: Icons.eco_outlined,
+                    // Total Meals Card with animated counter
+                    _AnimatedMetricCard(
+                      index: 0,
+                      icon: custom_icons.FoodIcons.meals,
                       iconColor: Colors.white,
                       title: 'Total Meals',
-                      value: data.totalMeals.toString(),
+                      value: data.totalMeals,
                       subtitle: 'Meals Saved',
                       progress: data.monthlyGoalProgress,
                       isHighlight: true,
@@ -132,8 +145,8 @@ class _StudentDashboardView extends StatelessWidget {
                     SizedBox(height: 16.h),
 
                     // Money Saved Card
-                    AppCard(
-                      variant: CardVariant.default_,
+                    _AnimatedCard(
+                      index: 1,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -146,7 +159,7 @@ class _StudentDashboardView extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Icon(
-                                  Icons.euro,
+                                  custom_icons.FoodIcons.money,
                                   size: 24.w,
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
@@ -239,7 +252,7 @@ class _StudentDashboardView extends StatelessWidget {
                             child: Row(
                               children: [
                                 Icon(
-                                  Icons.savings_outlined,
+                                  custom_icons.FoodIcons.savings,
                                   size: 20.w,
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
@@ -262,25 +275,27 @@ class _StudentDashboardView extends StatelessWidget {
 
                     SizedBox(height: 16.h),
 
-                    // Stats Grid
+                    // Stats Grid with animated counters
                     Row(
                       children: [
                         Expanded(
-                          child: _StatCard(
-                            icon: Icons.show_chart,
+                          child: _AnimatedStatCard(
+                            index: 2,
+                            icon: custom_icons.FoodIcons.chart,
                             iconColor: const Color(0xFFF59E0B),
                             title: 'Avg/Month',
-                            value: data.monthlyAverage.toString(),
+                            value: data.monthlyAverage,
                             subtitle: 'Top 15%',
                           ),
                         ),
                         SizedBox(width: 12.w),
                         Expanded(
-                          child: _StatCard(
-                            icon: Icons.local_fire_department,
+                          child: _AnimatedStatCard(
+                            index: 3,
+                            icon: custom_icons.FoodIcons.streak,
                             iconColor: const Color(0xFFEC4899),
                             title: 'Day Streak',
-                            value: '${data.currentStreak}',
+                            value: data.currentStreak,
                             subtitle: '🔥 Keep it going!',
                           ),
                         ),
@@ -291,7 +306,8 @@ class _StudentDashboardView extends StatelessWidget {
 
                     // Next Pickup Card
                     if (data.nextPickup != null)
-                      AppCard(
+                      _AnimatedCard(
+                        index: 4,
                         child: Row(
                           children: [
                             Container(
@@ -301,7 +317,7 @@ class _StudentDashboardView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Icon(
-                                Icons.access_time,
+                                custom_icons.FoodIcons.time,
                                 size: 24.w,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
@@ -356,15 +372,15 @@ class _StudentDashboardView extends StatelessWidget {
                     SizedBox(height: 16.h),
 
                     // Social Impact Card
-                    AppCard(
-                      variant: CardVariant.dark,
+                    _AnimatedCard(
+                      index: 5,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Icon(
-                                Icons.favorite,
+                                custom_icons.FoodIcons.impact,
                                 size: 24.w,
                                 color: const Color(0xFFEC4899),
                               ),
@@ -374,7 +390,7 @@ class _StudentDashboardView extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -384,7 +400,7 @@ class _StudentDashboardView extends StatelessWidget {
                             'Together with ${data.socialImpact.studentsHelped} other students, you\'ve helped save food and reduce waste in your community.',
                             style: TextStyle(
                               fontSize: 13.sp,
-                              color: Colors.white.withValues(alpha: 0.8),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                               height: 1.5,
                             ),
                           ),
@@ -394,7 +410,8 @@ class _StudentDashboardView extends StatelessWidget {
                             decoration: BoxDecoration(
                               border: Border(
                                 top: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: Theme.of(context).dividerTheme.color ??
+                                      Colors.grey.withValues(alpha: 0.2),
                                   width: 1,
                                 ),
                               ),
@@ -405,19 +422,19 @@ class _StudentDashboardView extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '${data.socialImpact.studentsHelped}',
+                                      AnimatedCounter(
+                                        target: data.socialImpact.studentsHelped,
                                         style: TextStyle(
                                           fontSize: 24.sp,
                                           fontWeight: FontWeight.w700,
-                                          color: const Color(0xFF34D399),
+                                          color: const Color(0xFF10B981),
                                         ),
                                       ),
                                       Text(
                                         'Students Helped',
                                         style: TextStyle(
                                           fontSize: 11.sp,
-                                          color: Colors.white.withValues(alpha: 0.6),
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                         ),
                                       ),
                                     ],
@@ -427,19 +444,21 @@ class _StudentDashboardView extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '€${data.socialImpact.avgMoneySavedPerStudent.toStringAsFixed(2)}',
+                                      AnimatedDoubleCounter(
+                                        target: data.socialImpact.avgMoneySavedPerStudent,
+                                        prefix: '€',
+                                        decimalPlaces: 2,
                                         style: TextStyle(
                                           fontSize: 24.sp,
                                           fontWeight: FontWeight.w700,
-                                          color: const Color(0xFF34D399),
+                                          color: const Color(0xFF10B981),
                                         ),
                                       ),
                                       Text(
                                         'Avg Saved/Student',
                                         style: TextStyle(
                                           fontSize: 11.sp,
-                                          color: Colors.white.withValues(alpha: 0.6),
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                                         ),
                                       ),
                                     ],
@@ -462,48 +481,26 @@ class _StudentDashboardView extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF10B981), Color(0xFF059669)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(50.r),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF10B981).withValues(alpha: 0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            // TODO: Navigate to pickup
-          },
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          icon: const Icon(Icons.handshake_outlined),
-          label: const Text('Pickup My Meal'),
-        ),
-      ),
+      floatingActionButton: const _PulsingFAB(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
 
-class _MetricCard extends StatelessWidget {
+/// Animated metric card with counter
+class _AnimatedMetricCard extends StatelessWidget {
+  final int index;
   final IconData icon;
   final Color iconColor;
   final String title;
-  final String value;
+  final int value;
   final String subtitle;
   final double progress;
   final bool isHighlight;
   final bool isLarge;
 
-  const _MetricCard({
+  const _AnimatedMetricCard({
+    required this.index,
     required this.icon,
     required this.iconColor,
     required this.title,
@@ -516,83 +513,110 @@ class _MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      variant: isHighlight ? CardVariant.highlight : CardVariant.default_,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(8.r),
-                decoration: BoxDecoration(
-                  color: isHighlight ? Colors.white.withValues(alpha: 0.2) : Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12.r),
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 500 + (index * 100)),
+      curve: Curves.easeOutCubic,
+      builder: (context, animationValue, child) {
+        final delayedValue = (animationValue - (index * 0.1)).clamp(0.0, 1.0);
+
+        return Opacity(
+          opacity: delayedValue,
+          child: Transform.translate(
+            offset: Offset(0, 30 * (1 - delayedValue)),
+            child: Transform.scale(
+              scale: 0.95 + (0.05 * delayedValue),
+              child: child,
+            ),
+          ),
+        );
+      },
+      child: AppCard(
+        variant: isHighlight ? CardVariant.highlight : CardVariant.default_,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: isHighlight
+                        ? Colors.white.withValues(alpha: 0.2)
+                        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 24.w,
+                    color: isHighlight ? iconColor : Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-                child: Icon(
-                  icon,
-                  size: 24.w,
-                  color: isHighlight ? iconColor : Theme.of(context).colorScheme.primary,
+                SizedBox(width: 12.w),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: isHighlight ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            AnimatedCounter(
+              target: value,
+              style: TextStyle(
+                fontSize: 36.sp,
+                fontWeight: FontWeight.w800,
+                color: isHighlight ? Colors.white : Theme.of(context).colorScheme.primary,
               ),
-              SizedBox(width: 12.w),
+            ),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: isHighlight
+                    ? Colors.white.withValues(alpha: 0.8)
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            if (isHighlight) ...[
+              SizedBox(height: 8.h),
               Text(
-                title,
+                '${(progress * 100).toInt()}% of monthly goal',
                 style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: isHighlight ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                  fontSize: 12.sp,
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
               ),
             ],
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 36.sp,
-              fontWeight: FontWeight.w800,
+            SizedBox(height: 12.h),
+            AnimatedProgressBar(
+              progress: progress,
+              height: 8,
               color: isHighlight ? Colors.white : Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: isHighlight ? Colors.white.withValues(alpha: 0.8) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-          if (isHighlight) ...[
-            SizedBox(height: 8.h),
-            Text(
-              '${(progress * 100).toInt()}% of monthly goal',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.white.withValues(alpha: 0.7),
-              ),
+              backgroundColor: isHighlight ? Colors.white.withValues(alpha: 0.3) : null,
+              showGlow: isHighlight,
             ),
           ],
-          SizedBox(height: 12.h),
-          AppProgressBar(
-            progress: progress,
-            height: 8,
-            color: isHighlight ? Colors.white : Theme.of(context).colorScheme.primary,
-            backgroundColor: isHighlight ? Colors.white.withValues(alpha: 0.3) : null,
-          ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _StatCard extends StatelessWidget {
+/// Animated stat card
+class _AnimatedStatCard extends StatelessWidget {
+  final int index;
   final IconData icon;
   final Color iconColor;
   final String title;
-  final String value;
+  final num value;
   final String? subtitle;
 
-  const _StatCard({
+  const _AnimatedStatCard({
+    required this.index,
     required this.icon,
     required this.iconColor,
     required this.title,
@@ -602,47 +626,179 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            icon,
-            size: 28.w,
-            color: iconColor,
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 500 + (index * 100)),
+      curve: Curves.easeOutCubic,
+      builder: (context, animationValue, child) {
+        final delayedValue = (animationValue - (index * 0.1)).clamp(0.0, 1.0);
+
+        return Opacity(
+          opacity: delayedValue,
+          child: Transform.translate(
+            offset: Offset(0, 30 * (1 - delayedValue)),
+            child: Transform.scale(
+              scale: 0.95 + (0.05 * delayedValue),
+              child: child,
+            ),
           ),
-          SizedBox(height: 12.h),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 28.sp,
-              fontWeight: FontWeight.w700,
+        );
+      },
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              icon,
+              size: 28.w,
               color: iconColor,
             ),
-          ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-          if (subtitle != null) ...[
-            SizedBox(height: 4.h),
-            Text(
-              subtitle!,
+            SizedBox(height: 12.h),
+            AnimatedCounter(
+              target: value,
               style: TextStyle(
-                fontSize: 12.sp,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                fontSize: 28.sp,
+                fontWeight: FontWeight.w700,
+                color: iconColor,
               ),
             ),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            if (subtitle != null) ...[
+              SizedBox(height: 4.h),
+              Text(
+                subtitle!,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
 }
 
+/// Animated card wrapper
+class _AnimatedCard extends StatelessWidget {
+  final int index;
+  final Widget child;
+
+  const _AnimatedCard({
+    required this.index,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 500 + (index * 100)),
+      curve: Curves.easeOutCubic,
+      builder: (context, animationValue, child) {
+        final delayedValue = (animationValue - (index * 0.1)).clamp(0.0, 1.0);
+
+        return Opacity(
+          opacity: delayedValue,
+          child: Transform.translate(
+            offset: Offset(0, 30 * (1 - delayedValue)),
+            child: Transform.scale(
+              scale: 0.95 + (0.05 * delayedValue),
+              child: child,
+            ),
+          ),
+        );
+      },
+      child: AppCard(child: child),
+    );
+  }
+}
+
+/// Pulsing FAB with gradient
+class _PulsingFAB extends StatefulWidget {
+  const _PulsingFAB();
+
+  @override
+  State<_PulsingFAB> createState() => _PulsingFABState();
+}
+
+class _PulsingFABState extends State<_PulsingFAB>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  final bool _isPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50.r),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF10B981).withValues(
+                  alpha: 0.3 + 0.2 * _controller.value,
+                ),
+                blurRadius: 20 + 10 * _controller.value,
+                spreadRadius: 2 + 2 * _controller.value,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: AnimatedScale(
+            scale: _isPressed ? 0.95 : 1.0,
+            duration: const Duration(milliseconds: 100),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF10B981), Color(0xFF059669)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(50.r),
+              ),
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  AppHaptics.mediumImpact();
+                  context.goPickup();
+                },
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                icon: const Icon(custom_icons.FoodIcons.pickup),
+                label: const Text('Pickup My Meal'),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Trend indicator widget
 class _TrendIndicator extends StatelessWidget {
   final double value;
   final bool isPositive;
@@ -676,6 +832,7 @@ class _TrendIndicator extends StatelessWidget {
   }
 }
 
+/// Comparison bar widget
 class _ComparisonBar extends StatelessWidget {
   final String label;
   final double value;
@@ -724,6 +881,56 @@ class _ComparisonBar extends StatelessWidget {
             minHeight: 6.h,
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// Dashboard shimmer loading state
+class _DashboardShimmer extends StatelessWidget {
+  const _DashboardShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Greeting shimmer
+        Container(
+          width: 120.w,
+          height: 16.h,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          width: 150.w,
+          height: 28.h,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+        ),
+        SizedBox(height: 24.h),
+
+        // Cards shimmer
+        ...List.generate(5, (index) {
+          return Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 120.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+              ),
+              SizedBox(height: 16.h),
+            ],
+          );
+        }),
       ],
     );
   }
