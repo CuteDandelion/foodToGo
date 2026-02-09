@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../config/theme.dart';
+import 'animations.dart';
 
 /// Button size variants
 enum ButtonSize { small, medium, large }
 
 /// Button style variants
-enum ButtonVariant { primary, secondary, ghost }
+enum ButtonVariant { primary, secondary, ghost, gradient }
 
-/// Primary button widget
-class AppButton extends StatelessWidget {
+/// Primary button widget with enhanced animations
+class AppButton extends StatefulWidget {
   const AppButton({
     super.key,
     required this.text,
@@ -21,6 +22,7 @@ class AppButton extends StatelessWidget {
     this.isFullWidth = true,
     this.icon,
     this.disabled = false,
+    this.gradientColors,
   });
 
   final String text;
@@ -31,26 +33,98 @@ class AppButton extends StatelessWidget {
   final bool isFullWidth;
   final IconData? icon;
   final bool disabled;
+  final List<Color>? gradientColors;
+
+  @override
+  State<AppButton> createState() => _AppButtonState();
+}
+
+class _AppButtonState extends State<AppButton> {
+  bool _isPressed = false;
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() => _isPressed = true);
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() => _isPressed = false);
+    AppHaptics.mediumImpact();
+    widget.onPressed?.call();
+  }
+
+  void _handleTapCancel() {
+    setState(() => _isPressed = false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isDisabled = disabled || isLoading || onPressed == null;
+    final isDisabled = widget.disabled || widget.isLoading || widget.onPressed == null;
 
-    return SizedBox(
-      width: isFullWidth ? double.infinity : null,
-      height: _getHeight(),
-      child: ElevatedButton(
-        onPressed: isDisabled ? null : onPressed,
-        style: _getButtonStyle(context),
-        child: isLoading
-            ? _buildLoadingIndicator()
-            : _buildContent(),
+    return AnimatedScale(
+      scale: _isPressed ? 0.95 : 1.0,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeOutCubic,
+      child: SizedBox(
+        width: widget.isFullWidth ? double.infinity : null,
+        height: _getHeight(),
+        child: widget.variant == ButtonVariant.gradient
+            ? _buildGradientButton(isDisabled)
+            : ElevatedButton(
+                onPressed: isDisabled ? null : () {
+                  AppHaptics.mediumImpact();
+                  widget.onPressed?.call();
+                },
+                style: _getButtonStyle(context),
+                child: widget.isLoading
+                    ? _buildLoadingIndicator()
+                    : _buildContent(),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildGradientButton(bool isDisabled) {
+    final colors = widget.gradientColors ??
+        const [
+          Color(0xFF10B981),
+          Color(0xFF059669),
+        ];
+
+    return GestureDetector(
+      onTapDown: isDisabled ? null : _handleTapDown,
+      onTapUp: isDisabled ? null : _handleTapUp,
+      onTapCancel: isDisabled ? null : _handleTapCancel,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isDisabled
+                ? colors.map((c) => c.withValues(alpha: 0.5)).toList()
+                : colors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(14.r),
+          boxShadow: isDisabled
+              ? null
+              : [
+                  BoxShadow(
+                    color: colors.first.withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+        ),
+        child: Center(
+          child: widget.isLoading
+              ? _buildLoadingIndicator()
+              : _buildContent(isDisabled: isDisabled),
+        ),
       ),
     );
   }
 
   double _getHeight() {
-    switch (size) {
+    switch (widget.size) {
       case ButtonSize.small:
         return 40.h;
       case ButtonSize.medium:
@@ -63,7 +137,7 @@ class AppButton extends StatelessWidget {
   ButtonStyle _getButtonStyle(BuildContext context) {
     final theme = Theme.of(context);
 
-    switch (variant) {
+    switch (widget.variant) {
       case ButtonVariant.primary:
         return ElevatedButton.styleFrom(
           backgroundColor: AppTheme.primary,
@@ -100,6 +174,17 @@ class AppButton extends StatelessWidget {
           ),
           disabledForegroundColor: AppTheme.primary.withValues(alpha: 0.5),
         );
+      case ButtonVariant.gradient:
+        // Handled separately in _buildGradientButton
+        return ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
+        );
     }
   }
 
@@ -110,25 +195,33 @@ class AppButton extends StatelessWidget {
       child: CircularProgressIndicator(
         strokeWidth: 2,
         valueColor: AlwaysStoppedAnimation<Color>(
-          variant == ButtonVariant.primary ? Colors.white : AppTheme.primary,
+          widget.variant == ButtonVariant.primary || widget.variant == ButtonVariant.gradient
+              ? Colors.white
+              : AppTheme.primary,
         ),
       ),
     );
   }
 
-  Widget _buildContent() {
-    if (icon != null) {
+  Widget _buildContent({bool isDisabled = false}) {
+    final textColor = widget.variant == ButtonVariant.primary ||
+            widget.variant == ButtonVariant.gradient
+        ? Colors.white
+        : AppTheme.primary;
+
+    if (widget.icon != null) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 20.w),
+          Icon(widget.icon, size: 20.w, color: isDisabled ? textColor.withValues(alpha: 0.7) : textColor),
           SizedBox(width: 8.w),
           Text(
-            text,
+            widget.text,
             style: TextStyle(
               fontSize: _getFontSize(),
               fontWeight: FontWeight.w600,
+              color: isDisabled ? textColor.withValues(alpha: 0.7) : textColor,
             ),
           ),
         ],
@@ -136,16 +229,17 @@ class AppButton extends StatelessWidget {
     }
 
     return Text(
-      text,
+      widget.text,
       style: TextStyle(
         fontSize: _getFontSize(),
         fontWeight: FontWeight.w600,
+        color: isDisabled ? textColor.withValues(alpha: 0.7) : textColor,
       ),
     );
   }
 
   double _getFontSize() {
-    switch (size) {
+    switch (widget.size) {
       case ButtonSize.small:
         return 14.sp;
       case ButtonSize.medium:
