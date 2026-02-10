@@ -24,6 +24,9 @@ class SettingsPage extends StatelessWidget {
         title: const Text('Settings'),
       ),
       body: ListView(
+        physics: const ClampingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         padding: EdgeInsets.all(16.r),
         children: [
           // Profile Header

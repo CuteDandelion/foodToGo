@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sensors_plus/sensors_plus.dart';
 
 import '../../../../config/routes.dart';
 import '../../domain/entities/user_role.dart';
@@ -12,8 +11,8 @@ import '../bloc/auth_bloc.dart';
 
 /// Unified Login Page - Single login for both Student and Canteen
 /// Features:
-/// - Logo design from logo.dart (exact HTML design)
-/// - Gyroscope-sensitive bubble background
+/// - Logo from PNG asset
+/// - Smooth animated bubble background
 /// - Pop-up animations with haptic feedback
 /// - Professional, modern form design
 /// - Fixed input styling (no dark mode effect)
@@ -37,10 +36,6 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
   late AnimationController _formPopController;
   late AnimationController _bubbleController;
 
-  // Gyroscope values for bubble movement
-  double _gyroX = 0.0;
-  double _gyroY = 0.0;
-
   @override
   void initState() {
     super.initState();
@@ -57,24 +52,14 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       duration: const Duration(milliseconds: 600),
     );
 
-    // Bubble animation
+    // Bubble animation - smoother, slower for better visual effect
     _bubbleController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 20),
+      duration: const Duration(seconds: 15),
     )..repeat();
 
     // Start animations with stagger
     _startAnimations();
-
-    // Listen to gyroscope
-    gyroscopeEventStream().listen((GyroscopeEvent event) {
-      if (mounted) {
-        setState(() {
-          _gyroX = event.x.clamp(-2.0, 2.0);
-          _gyroY = event.y.clamp(-2.0, 2.0);
-        });
-      }
-    });
   }
 
   Future<void> _startAnimations() async {
@@ -98,6 +83,13 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
     _formPopController.dispose();
     _bubbleController.dispose();
     super.dispose();
+  }
+
+  // Smooth scrolling physics for better UX
+  ScrollPhysics get _scrollPhysics {
+    return const ClampingScrollPhysics(
+      parent: AlwaysScrollableScrollPhysics(),
+    );
   }
 
   void _onLogin() {
@@ -147,40 +139,40 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       },
       child: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF29f094), // Bright green top (from logo.dart)
-                Color(0xFF00E676), // Medium green
-                Color(0xFF00C853), // Darker green bottom
-              ],
-            ),
-          ),
+          // Solid background color that matches the logo PNG background
+          color: const Color(0xFF29f094),
           child: Stack(
             children: [
-              // Gyroscope-sensitive bubble background
+              // Smooth animated bubble background (no gyroscope)
               ..._buildBubbles(),
 
-              // Main content
+              // Main content with smooth scrolling
               SafeArea(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 40.h),
+                child: CustomScrollView(
+                  physics: _scrollPhysics,
+                  slivers: [
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 40.h),
 
-                      // Logo with pop-up animation
-                      _buildAnimatedLogo(),
+                            // Logo with pop-up animation
+                            _buildAnimatedLogo(),
 
-                      SizedBox(height: 40.h),
+                            SizedBox(height: 40.h),
 
-                      // Login Form with pop-up animation
-                      _buildAnimatedForm(),
-                    ],
-                  ),
+                            // Login Form with pop-up animation
+                            _buildAnimatedForm(),
+
+                            const Spacer(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -190,21 +182,21 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
     );
   }
 
-  /// Build gyroscope-sensitive animated bubbles
+  /// Build smooth animated bubbles (no gyroscope for smoother experience)
   List<Widget> _buildBubbles() {
     final bubbles = [
-      _BubbleData(280, -50, -80, 0, 0.3),
-      _BubbleData(180, 80, -60, -2, 0.25),
-      _BubbleData(220, 320, -100, -4, 0.35),
-      _BubbleData(160, 450, 10, -6, 0.2),
-      _BubbleData(140, 180, 5, -8, 0.28),
-      _BubbleData(200, 50, 150, -10, 0.32),
-      _BubbleData(120, 250, 200, -12, 0.18),
-      _BubbleData(260, 400, 120, -14, 0.38),
-      _BubbleData(150, 100, 250, -16, 0.22),
-      _BubbleData(190, 300, 50, -18, 0.3),
-      _BubbleData(130, 150, 300, -20, 0.26),
-      _BubbleData(240, 380, 180, -22, 0.34),
+      _BubbleData(280, -50, -80, 0, 0.15),
+      _BubbleData(180, 80, -60, 2, 0.12),
+      _BubbleData(220, 320, -100, 4, 0.18),
+      _BubbleData(160, 450, 10, 6, 0.10),
+      _BubbleData(140, 180, 5, 8, 0.14),
+      _BubbleData(200, 50, 150, 10, 0.16),
+      _BubbleData(120, 250, 200, 12, 0.09),
+      _BubbleData(260, 400, 120, 14, 0.19),
+      _BubbleData(150, 100, 250, 16, 0.11),
+      _BubbleData(190, 300, 50, 18, 0.15),
+      _BubbleData(130, 150, 300, 20, 0.13),
+      _BubbleData(240, 380, 180, 22, 0.17),
     ];
 
     return bubbles.map((data) => _buildBubble(data)).toList();
@@ -217,22 +209,18 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
         final value = _bubbleController.value;
         final offset = _calculateBubbleOffset(value, data.delay);
 
-        // Apply gyroscope influence
-        final gyroOffsetX = _gyroX * 30 * data.sensitivity;
-        final gyroOffsetY = _gyroY * 30 * data.sensitivity;
-
         return Positioned(
-          top: data.top + offset.dy + gyroOffsetY,
-          right: data.right + offset.dx + gyroOffsetX,
+          top: data.top + offset.dy,
+          right: data.right + offset.dx,
           child: Container(
             width: data.size,
             height: data.size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withValues(alpha: 0.12),
+              color: Colors.white.withValues(alpha: 0.08),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withValues(alpha: 0.05),
+                  color: Colors.white.withValues(alpha: 0.03),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -245,9 +233,10 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
   }
 
   Offset _calculateBubbleOffset(double value, double delay) {
-    final adjustedValue = (value + delay / 20) % 1.0;
-    final x = 25 * math.sin(adjustedValue * 2 * math.pi);
-    final y = -40 * math.cos(adjustedValue * 2 * math.pi);
+    // Smoother, gentler movement
+    final adjustedValue = (value + delay / 15) % 1.0;
+    final x = 15 * math.sin(adjustedValue * 2 * math.pi);
+    final y = -25 * math.cos(adjustedValue * 2 * math.pi);
     return Offset(x, y);
   }
 
@@ -269,109 +258,27 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
     );
   }
 
-  /// Build the logo - Exact match to logo.dart (HTML design)
+  /// Build the logo using PNG asset
   Widget _buildLogo() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 35.h),
+      width: 280.w,
+      height: 180.h,
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(40.r),
-        border: Border.all(color: const Color(0xFF242a24), width: 3),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 0,
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 20,
             offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Top-left bracket - positioned with padding from edges
-          Positioned(
-            top: 8.h,
-            left: 8.w,
-            child: _buildCornerBracket(isTopLeft: true),
-          ),
-
-          // Bottom-right bracket - positioned with padding from edges
-          Positioned(
-            bottom: 8.h,
-            right: 8.w,
-            child: _buildCornerBracket(isTopLeft: false),
-          ),
-
-          // Text content - FOOD and GOOD touching with BE in between
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'FOOD',
-                style: TextStyle(
-                  fontSize: 56.sp,
-                  fontWeight: FontWeight.w900,
-                  color: const Color(0xFF242a24),
-                  letterSpacing: -2,
-                  height: 0.9,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.zero, // No vertical margin - FOOD and GOOD touch BE
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF29f094),
-                  borderRadius: BorderRadius.circular(4.r),
-                ),
-                child: Text(
-                  'BE',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF242a24),
-                  ),
-                ),
-              ),
-              Text(
-                'GOOD',
-                style: TextStyle(
-                  fontSize: 56.sp,
-                  fontWeight: FontWeight.w900,
-                  color: const Color(0xFF242a24),
-                  letterSpacing: -2,
-                  height: 0.9,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build corner bracket (L-shape)
-  Widget _buildCornerBracket({required bool isTopLeft}) {
-    return Container(
-      width: 55.w,
-      height: 55.h,
-      decoration: BoxDecoration(
-        border: Border(
-          top: isTopLeft
-              ? const BorderSide(color: Color(0xFF242a24), width: 4)
-              : BorderSide.none,
-          left: isTopLeft
-              ? const BorderSide(color: Color(0xFF242a24), width: 4)
-              : BorderSide.none,
-          bottom: !isTopLeft
-              ? const BorderSide(color: Color(0xFF242a24), width: 4)
-              : BorderSide.none,
-          right: !isTopLeft
-              ? const BorderSide(color: Color(0xFF242a24), width: 4)
-              : BorderSide.none,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(40.r),
+        child: Image.asset(
+          'assets/icons/Screenshot 2026-02-10 161900.png',
+          fit: BoxFit.cover,
         ),
-        borderRadius: isTopLeft
-            ? BorderRadius.only(topLeft: Radius.circular(16.r))
-            : BorderRadius.only(bottomRight: Radius.circular(16.r)),
       ),
     );
   }

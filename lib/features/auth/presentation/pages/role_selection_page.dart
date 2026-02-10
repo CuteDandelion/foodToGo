@@ -16,6 +16,9 @@ class RoleSelectionPage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(24.r),
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
