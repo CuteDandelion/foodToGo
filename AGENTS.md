@@ -331,7 +331,101 @@ A feature is ONLY complete when:
 5. ✅ Documentation updated in `/memory/`
 6. ✅ Code review completed (if applicable)
 
-### Rule 9: Visual Comparison for Design Integrity
+### Rule 9: Always Create Feature Branches for Implementation
+**ALWAYS create a dedicated feature branch when implementing, improving, or fixing features. NEVER work directly on main:**
+
+**Branch Creation Workflow (MANDATORY):**
+```bash
+# Step 1: Ensure you're on main and it's up to date
+git checkout main
+git pull origin main
+
+# Step 2: Create and switch to appropriately named feature branch
+git checkout -b feature/<short-description>        # For new features
+git checkout -b bugfix/<issue-description>         # For bug fixes
+git checkout -b improvement/<feature-improvement>  # For improvements
+
+# Step 3: Push branch to remote
+git push -u origin <branch-name>
+```
+
+**When to Create Branches:**
+- ✅ **New Features**: Always create `feature/<description>` branch
+- ✅ **Bug Fixes**: Always create `bugfix/<description>` branch  
+- ✅ **Improvements**: Always create `improvement/<description>` branch
+- ✅ **Refactoring**: Create `refactor/<description>` branch
+- ✅ **Documentation**: Create `docs/<description>` branch
+- ❌ **NEVER**: Commit directly to `main` or `master`
+
+**Branch Naming Requirements:**
+- Use kebab-case (hyphen-separated lowercase)
+- Keep names descriptive but concise (max 50 chars)
+- Include issue number if applicable: `feature/123-user-auth`
+- Examples:
+  - `feature/user-authentication`
+  - `bugfix/login-crash-ios`
+  - `improvement/dashboard-performance`
+  - `refactor/auth-bloc-cleanup`
+
+**Pre-Implementation Checklist:**
+- [ ] On latest `main` branch
+- [ ] Created appropriate feature branch
+- [ ] Branch pushed to remote
+- [ ] All changes will be committed to this branch (not main)
+
+### Rule 12: Prune Unused and Outdated Branches
+**Regularly prune unused, merged, and stale branches to maintain repository hygiene:**
+
+**Branch Pruning Workflow (Run Weekly):**
+```bash
+# Step 1: Fetch latest changes and prune remote-tracking branches
+git fetch --prune
+
+# Step 2: List branches that have been merged to main
+git branch -r --merged main
+
+# Step 3: Delete stale remote branches (merged and old)
+git push origin --delete feature/old-feature-name
+
+# Step 4: Clean up local branches
+git checkout main
+git pull origin main
+
+# Step 5: Delete local branches that are fully merged
+git branch -d feature/old-feature-name
+
+# Step 6: List stale local branches (>2 weeks old, review before deleting)
+git branch -vv | grep ': gone]'
+```
+
+**Branches to Prune:**
+- ✅ **Merged Branches**: Delete after PR is merged (both local and remote)
+- ✅ **Abandoned Branches**: Delete branches with no activity >30 days
+- ✅ **Superseded Branches**: Delete if work was redone in another branch
+- ✅ **Orphaned Branches**: Delete branches whose remote tracking is gone
+- ⚠️ **Review Before Delete**: Branches not merged but stale (>2 weeks)
+
+**Automatic Pruning Setup:**
+```bash
+# Enable automatic pruning on every fetch
+git config --global fetch.prune true
+
+# Enable automatic pruning of tags
+git config --global fetch.pruneTags true
+```
+
+**Pruning Schedule:**
+- **After Every PR Merge**: Delete the merged branch immediately
+- **Weekly**: Run full branch cleanup and review stale branches
+- **Monthly**: Deep clean - review all branches >30 days old
+
+**Safety Guidelines:**
+- Always verify branch is merged before deleting: `git branch -r --merged main`
+- For unmerged branches, review commits before deleting: `git log main..branch-name`
+- When in doubt, ask before deleting someone else's branch
+- Document why a branch was kept if it appears stale but is needed
+
+### Rule 13: Visual Comparison for Design Integrity
 **ALWAYS compare the design reference with the actual implementation to eliminate AI slop, poor design choices, and visual bugs:**
 - **Reference Screenshot**: Use Playwright MCP to capture a screenshot of `./index.html` (the design specification)
 - **Implementation Screenshot**: Use ADB/emulator tools to capture a screenshot of the built APK running on an Android emulator

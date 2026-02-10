@@ -39,6 +39,9 @@ class CanteenDashboardPage extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         padding: EdgeInsets.all(16.r),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

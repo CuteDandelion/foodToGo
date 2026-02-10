@@ -99,7 +99,9 @@ class _StudentDashboardView extends StatelessWidget {
           context.read<DashboardBloc>().add(const DashboardRefreshed());
         },
         child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: const ClampingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           padding: EdgeInsets.all(16.r),
           child: BlocBuilder<DashboardBloc, DashboardState>(
             builder: (context, state) {

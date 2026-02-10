@@ -66,6 +66,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             padding: EdgeInsets.all(24.r),
             child: Form(
               key: _formKey,

@@ -86,6 +86,9 @@ class _ProfilePageContent extends StatelessWidget {
           }
 
           return SingleChildScrollView(
+            physics: const ClampingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
