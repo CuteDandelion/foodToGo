@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodBeGood - Unified Login Design (Updated)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #00E676 0%, #00C853 50%, #00B248 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light Green Bubble Wave Background */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bubble-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -80px;
+            animation-delay: 0s;
+        }
+
+        .bubble-2 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: -60px;
+            animation-delay: -3s;
+        }
+
+        .bubble-3 {
+            width: 250px;
+            height: 250px;
+            bottom: 20%;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        .bubble-4 {
+            width: 180px;
+            height: 180px;
+            bottom: -50px;
+            left: 10%;
+            animation-delay: -9s;
+        }
+
+        .bubble-5 {
+            width: 150px;
+            height: 150px;
+            top: 40%;
+            right: 5%;
+            animation-delay: -12s;
+        }
+
+        /* Organic Wave Shapes */
+        .wave-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 20s infinite ease-in-out;
+        }
+
+        .wave-shape-1 {
+            width: 400px;
+            height: 400px;
+            top: -150px;
+            left: -150px;
+        }
+
+        .wave-shape-2 {
+            width: 350px;
+            height: 350px;
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(20px, -30px) scale(1.05); }
+            50% { transform: translate(-10px, 20px) scale(0.95); }
+            75% { transform: translate(30px, 10px) scale(1.02); }
+        }
+
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            50% { border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%; }
+            75% { border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%; }
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Food Container Logo - Exact Match to logo.html */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Main White Container - Exact from logo.html */
+        .food-container {
+            background-color: #ffffff;
+            padding: 30px 45px;
+            border-radius: 40px;
+            border: 3px solid #242a24;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        /* The Text Blocks - Exact from logo.html */
+        .logo-text-top, .logo-text-bottom {
+            color: #242a24;
+            font-size: 52px;
+            line-height: 0.85;
+            letter-spacing: -2px;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        /* The "BE" Badge - Exact from logo.html */
+        .logo-badge-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            margin: 0;
+        }
+
+        .logo-badge {
+            background-color: #29f094;
+            color: #242a24;
+            font-size: 16px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Decorative Inner Brackets - Exact from logo.html */
+        .bracket {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 4px solid #242a24;
+        }
+
+        .bracket.top-left {
+            top: 16px;
+            left: 16px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 16px;
+        }
+
+        .bracket.bottom-right {
+            bottom: 16px;
+            right: 16px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 16px;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+            border: 2px solid #1A1A1A;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Form Elements - Underline Style */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 4px;
+            border: none;
+            border-bottom: 2px solid #E0E0E0;
+            font-size: 16px;
+            font-family: inherit;
+            color: #1A1A1A;
+            background: transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: #00E676;
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        /* Password Field with Toggle */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            padding: 4px;
+            font-size: 18px;
+        }
+
+        .password-toggle:hover {
+            color: #666;
+        }
+
+        /* Remember Me & Forgot Password */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            margin-top: 8px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #CCC;
+            border-radius: 4px;
+            cursor: pointer;
+            accent-color: #00E676;
+        }
+
+        .remember-me label {
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            color: #00E676;
+            text-decoration: underline;
+        }
+
+        /* Primary Button - Pill Shape with Black Border */
+        .btn-primary {
+            width: 100%;
+            height: 52px;
+            background: #00E676;
+            color: #1A1A1A;
+            border: 2px solid #1A1A1A;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+        }
+
+        .btn-primary:hover {
+            background: #00C853;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 230, 118, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #E0E0E0;
+        }
+
+        .divider span {
+            padding: 0 12px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Role Selection */
+        .role-selection {
+            margin-bottom: 20px;
+        }
+
+        .role-label {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .role-toggle {
+            display: flex;
+            gap: 12px;
+        }
+
+        .role-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .role-btn:hover {
+            border-color: #00E676;
+            color: #00E676;
+        }
+
+        .role-btn.active {
+            background: #00E676;
+            border-color: #1A1A1A;
+            color: #1A1A1A;
+            font-weight: 600;
+        }
+
+        /* Create Account */
+        .create-account {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .create-account-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            height: 48px;
+            background: white;
+            color: #00E676;
+            border: 2px solid #00E676;
+            border-radius: 999px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #F0FFF4;
+            transform: translateY(-1px);
+        }
+
+        /* Demo Credentials */
+        .demo-note {
+            margin-top: 20px;
+            padding: 14px;
+            background: #F0FFF4;
+            border-radius: 12px;
+            border: 1px solid #00E676;
+        }
+
+        .demo-note-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #00C853;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-note-text {
+            font-size: 12px;
+            color: #1A1A1A;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .login-card {
+                padding: 24px 20px;
+            }
+
+            .food-container {
+                padding: 20px 30px;
+                border-radius: 30px;
+            }
+
+            .logo-text-top, .logo-text-bottom {
+                font-size: 36px;
+                letter-spacing: -1px;
+            }
+
+            .bracket {
+                width: 35px;
+                height: 35px;
+            }
+
+            .bracket.top-left {
+                top: 12px;
+                left: 12px;
+                border-top-left-radius: 12px;
+            }
+
+            .bracket.bottom-right {
+                bottom: 12px;
+                right: 12px;
+                border-bottom-right-radius: 12px;
+            }
+
+            .role-toggle {
+                flex-direction: column;
+            }
+        }
+
+        /* Design Approval Section */
+        .approval-section {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 320px;
+            z-index: 100;
+            border: 2px solid #1A1A1A;
+        }
+
+        .approval-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #1A1A1A;
+        }
+
+        .approval-section p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .approval-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .approval-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .approval-btn.approve {
+            background: #00E676;
+            color: #1A1A1A;
+            border: 2px solid #1A1A1A;
+        }
+
+        .approval-btn.approve:hover {
+            background: #00C853;
+        }
+
+        .approval-btn.reject {
+            background: white;
+            color: #666;
+            border: 2px solid #E0E0E0;
+        }
+
+        .approval-btn.reject:hover {
+            background: #F5F5F5;
+        }
+
+        @media (max-width: 768px) {
+            .approval-section {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin: 20px auto;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Light Green Bubble Wave Background -->
+    <div class="bubble bubble-1"></div>
+    <div class="bubble bubble-2"></div>
+    <div class="bubble bubble-3"></div>
+    <div class="bubble bubble-4"></div>
+    <div class="bubble bubble-5"></div>
+    <div class="wave-shape wave-shape-1"></div>
+    <div class="wave-shape wave-shape-2"></div>
+
+    <div class="container">
+        <!-- Food Container Logo - Exact Match to logo.html -->
+        <div class="logo-container">
+            <div class="food-container">
+                <div class="bracket top-left"></div>
+                <div class="logo-text-top">FOOD</div>
+                <div class="logo-badge-container">
+                    <span class="logo-badge">BE</span>
+                </div>
+                <div class="logo-text-bottom">GOOD</div>
+                <div class="bracket bottom-right"></div>
+            </div>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <!-- Header -->
+            <div class="header">
+                <h1>Welcome !</h1>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <!-- Email Field -->
+                <div class="form-group">
+                    <input 
+                        type="email" 
+                        class="form-input" 
+                        placeholder="Email"
+                        id="emailInput"
+                    >
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            placeholder="Password"
+                            id="passwordInput"
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password ?</a>
+                </div>
+
+                <!-- Sign In Button -->
+                <button type="submit" class="btn-primary" id="signInBtn">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>or continue as</span>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="role-selection">
+                <div class="role-toggle">
+                    <button type="button" class="role-btn active" id="studentBtn">
+                        👤 Student
+                    </button>
+                    <button type="button" class="role-btn" id="canteenBtn">
+                        🍽️ Canteen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Create Account -->
+            <div class="create-account">
+                <p class="create-account-text">Don't have an account ?</p>
+                <button type="button" class="btn-secondary">Create Account</button>
+            </div>
+
+            <!-- Demo Credentials -->
+            <div class="demo-note">
+                <div class="demo-note-title">Demo Credentials</div>
+                <div class="demo-note-text">
+                    Student: student@example.com / password123<br>
+                    Canteen: canteen@example.com / canteen123
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Approval Section -->
+    <div class="approval-section">
+        <h3>🎨 Updated Design</h3>
+        <p>Now featuring:</p>
+        <ul style="font-size: 13px; color: #666; margin-bottom: 16px; padding-left: 16px; line-height: 1.6;">
+            <li>✅ Food container logo with incomplete inner border</li>
+            <li>✅ Light green bubble wave background</li>
+            <li>✅ Cartoonish bold styling</li>
+            <li>✅ Underline input fields</li>
+            <li>✅ Pill-shaped buttons with borders</li>
+        </ul>
+        <div class="approval-buttons">
+            <button class="approval-btn approve" onclick="approveDesign()">✓ Approve</button>
+            <button class="approval-btn reject" onclick="requestChanges()">✕ Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Password Visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('passwordInput');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁' : '🙈';
+        });
+
+        // Role Toggle
+        const studentBtn = document.getElementById('studentBtn');
+        const canteenBtn = document.getElementById('canteenBtn');
+
+        studentBtn.addEventListener('click', function() {
+            this.classList.add('active');
+            canteenBtn.classList.remove('active');
+        });
+
+        canteenBtn.addEventListener('click', function() {
+            this.classList.add('active');
+            studentBtn.classList.remove('active');
+        });
+
+        // Form Submission
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Sign In clicked!');
+        });
+
+        // Design Approval Functions
+        function approveDesign() {
+            alert('✅ Design Approved!\\n\\nProceeding with Flutter implementation...');
+            document.querySelector('.approval-section').innerHTML = `
+                <h3>✅ Design Approved</h3>
+                <p style="color: #00C853; font-weight: 600;">Implementation in progress...</p>
+            `;
+        }
+
+        function requestChanges() {
+            const feedback = prompt('What changes would you like?');
+            if (feedback) {
+                alert('Feedback: ' + feedback);
+            }
+        }
+    </script>
+</body>
+</html>

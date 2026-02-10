@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        :root {
+            --bg-green: #29f094;
+            --dark-grey: #242a24;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-green);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        /* Main White Container */
+        .logo-card {
+            background-color: var(--white);
+            padding: 40px 50px;
+            border-radius: 40px;
+            border: 3px solid var(--dark-grey);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        /* The Text Blocks */
+        .text-row {
+            color: var(--dark-grey);
+            font-size: 80px;
+            line-height: 0.85;
+            letter-spacing: -2px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        /* The "BE" Badge */
+        .be-badge {
+            background-color: var(--bg-green);
+            color: var(--dark-grey);
+            font-size: 18px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        /* Decorative Inner Brackets */
+        .bracket {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--dark-grey);
+        }
+
+        .top-left {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 20px;
+        }
+
+        .bottom-right {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo-card">
+        <div class="bracket top-left"></div>
+
+        <h1 class="text-row">FOOD</h1>
+        <div class="be-badge">BE</div>
+        <h1 class="text-row">GOOD</h1>
+
+        <div class="bracket bottom-right"></div>
+    </div>
+
+</body>
+
+</html>

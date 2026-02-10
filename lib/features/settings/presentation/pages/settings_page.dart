@@ -11,6 +11,16 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.goStudentDashboard();
+            }
+          },
+        ),
         title: const Text('Settings'),
       ),
       body: ListView(
@@ -155,7 +165,7 @@ class SettingsPage extends StatelessWidget {
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop();
-              context.goRoleSelection();
+              context.goLogin();
             },
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFFEF4444),

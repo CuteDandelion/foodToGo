@@ -9,6 +9,7 @@ export 'package:foodbegood/features/auth/domain/entities/user_role.dart';
 class User {
   final String id;
   final String studentId;
+  final String? email;
   final String passwordHash;
   final UserRole role;
   final Profile profile;
@@ -16,6 +17,7 @@ class User {
   User({
     required this.id,
     required this.studentId,
+    this.email,
     required this.passwordHash,
     required this.role,
     required this.profile,
@@ -24,6 +26,7 @@ class User {
   Map<String, dynamic> toJson() => {
     'id': id,
     'studentId': studentId,
+    'email': email,
     'passwordHash': passwordHash,
     'role': role.name,
     'profile': profile.toJson(),
@@ -32,6 +35,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json['id'] as String,
     studentId: json['studentId'] as String,
+    email: json['email'] as String?,
     passwordHash: json['passwordHash'] as String,
     role: UserRole.values.firstWhere(
       (e) => e.name == json['role'],
@@ -300,6 +304,7 @@ class MockDataService {
     User(
       id: '1',
       studentId: '61913042',
+      email: 'student@example.com',
       passwordHash: _hashPassword('password123'),
       role: UserRole.student,
       profile: Profile(
@@ -312,6 +317,7 @@ class MockDataService {
     User(
       id: '2',
       studentId: '61913043',
+      email: 'maria@example.com',
       passwordHash: _hashPassword('password123'),
       role: UserRole.student,
       profile: Profile(
@@ -324,6 +330,7 @@ class MockDataService {
     User(
       id: '3',
       studentId: 'canteen001',
+      email: 'canteen@example.com',
       passwordHash: _hashPassword('canteen123'),
       role: UserRole.canteen,
       profile: Profile(
@@ -406,6 +413,17 @@ class MockDataService {
   User? getUserById(String id) {
     try {
       return _users.firstWhere((u) => u.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Get user by email
+  User? getUserByEmail(String email) {
+    try {
+      return _users.firstWhere(
+        (u) => u.email?.toLowerCase() == email.toLowerCase(),
+      );
     } catch (e) {
       return null;
     }

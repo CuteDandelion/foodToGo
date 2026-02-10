@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/auth/presentation/pages/login_page.dart';
-import '../features/auth/presentation/pages/role_selection_page.dart';
+import '../features/auth/presentation/pages/unified_login_page.dart';
 import '../features/canteen/presentation/pages/canteen_dashboard_page.dart';
 import '../features/dashboard/presentation/pages/student_dashboard_page.dart';
 import '../features/pickup/presentation/pages/pickup_page.dart';
@@ -15,8 +14,7 @@ import '../features/settings/presentation/pages/settings_page.dart';
 class RoutePaths {
   RoutePaths._();
 
-  static const String roleSelection = '/';
-  static const String login = '/login';
+  static const String login = '/';
   static const String studentDashboard = '/student/dashboard';
   static const String canteenDashboard = '/canteen/dashboard';
   static const String pickup = '/pickup';
@@ -132,27 +130,15 @@ class AppRouter {
   static final _router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
-    initialLocation: RoutePaths.roleSelection,
+    initialLocation: RoutePaths.login,
     routes: [
-      // Role Selection
-      GoRoute(
-        path: RoutePaths.roleSelection,
-        pageBuilder: (context, state) => AppPageTransitions.fade(
-          key: state.pageKey,
-          child: const RoleSelectionPage(),
-        ),
-      ),
-
-      // Login
+      // Unified Login (single entry point)
       GoRoute(
         path: RoutePaths.login,
-        pageBuilder: (context, state) {
-          final role = state.uri.queryParameters['role'] ?? 'student';
-          return AppPageTransitions.slideFromRight(
-            key: state.pageKey,
-            child: LoginPage(role: role),
-          );
-        },
+        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+          key: state.pageKey,
+          child: const UnifiedLoginPage(),
+        ),
       ),
 
       // Student Dashboard
@@ -241,8 +227,7 @@ class AppRouter {
 
 /// Extension for easy navigation
 extension GoRouterExtension on BuildContext {
-  void goRoleSelection() => go(RoutePaths.roleSelection);
-  void goLogin({String? role}) => go('${RoutePaths.login}${role != null ? '?role=$role' : ''}');
+  void goLogin() => go(RoutePaths.login);
   void goStudentDashboard() => go(RoutePaths.studentDashboard);
   void goCanteenDashboard() => go(RoutePaths.canteenDashboard);
   void goPickup() => go(RoutePaths.pickup);

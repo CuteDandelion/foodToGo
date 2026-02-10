@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodbegood/config/routes.dart';
 import 'package:foodbegood/shared/services/mock_data_service.dart';
 import 'package:intl/intl.dart';
 
@@ -47,6 +48,16 @@ class _MealHistoryPageState extends State<MealHistoryPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.goProfile();
+            }
+          },
+        ),
         title: const Text('Meal History'),
         centerTitle: true,
         actions: [

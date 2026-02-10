@@ -603,8 +603,8 @@ void main() {
           password: 'password123',
           rememberMe: false,
         );
-        expect(request1.props, equals(['61913042', 'password123', true]));
-        expect(request2.props, equals(['61913042', 'password123', false]));
+        expect(request1.props, equals(['61913042', null, 'password123', true, null]));
+        expect(request2.props, equals(['61913042', null, 'password123', false, null]));
         expect(request1.props, isNot(equals(request2.props)));
       });
     });

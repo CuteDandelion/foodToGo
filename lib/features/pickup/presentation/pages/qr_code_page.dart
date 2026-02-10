@@ -75,9 +75,19 @@ class _QRCodePageState extends State<QRCodePage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.goStudentDashboard();
+            }
+          },
+        ),
         title: const Text('Your QR Code'),
         centerTitle: true,
-        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Padding(

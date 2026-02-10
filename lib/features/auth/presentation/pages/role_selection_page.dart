@@ -121,7 +121,7 @@ class RoleSelectionPage extends StatelessWidget {
                     description: 'Track meals, save money, reduce waste',
                     onTap: () {
                       AppHaptics.mediumImpact();
-                      context.goLogin(role: 'student');
+                      context.goLogin();
                     },
                   ),
                 ),
@@ -137,7 +137,7 @@ class RoleSelectionPage extends StatelessWidget {
                     description: 'Manage food, prevent waste, help students',
                     onTap: () {
                       AppHaptics.mediumImpact();
-                      context.goLogin(role: 'canteen');
+                      context.goLogin();
                     },
                   ),
                 ),

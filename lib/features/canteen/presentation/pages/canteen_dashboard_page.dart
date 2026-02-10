@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme.dart';
@@ -12,7 +13,14 @@ class CanteenDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final dashboard = MockDataService().getCanteenDashboard();
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _showExitConfirmation(context);
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu),
@@ -285,6 +293,30 @@ class CanteenDashboardPage extends StatelessWidget {
         label: const Text('Update Food Status'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    ),
+    );
+  }
+
+  void _showExitConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Exit App'),
+        content: const Text('Do you want to exit the app?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CANCEL'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              SystemNavigator.pop();
+            },
+            child: const Text('EXIT'),
+          ),
+        ],
+      ),
     );
   }
 }
