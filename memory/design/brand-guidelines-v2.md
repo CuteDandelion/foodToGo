@@ -81,61 +81,132 @@ The redesigned app uses a refined green color palette that maintains the sustain
 
 ## Logo Specifications
 
-### Logo Structure (Refined)
+### Logo Structure (Approved Design - From logo.html)
 
 ```
-┌─────────────────────┐
-│                     │
-│       FOOD          │  ← Dark slate text, bold
-│        [BE]         │  ← Green badge with shadow
-│       GOOD          │  ← Dark slate text, bold
-│                     │
-└─────────────────────┘
-     Subtle border (2px)
-     Rounded corners (16px)
-     Soft shadow
+┌─────────────────────────┐
+│ ╭───────            │
+│       FOOD              │  ← Dark grey text, bold, tight line height
+│         BE              │  ← Green badge, black text, centered
+│       GOOD              │  ← Dark grey text, bold, touching FOOD
+│             ───────╯    │
+└─────────────────────────┘
+     Thick border (3px solid dark grey)
+     Very rounded corners (40px radius)
+     Longer/wider proportions
 ```
 
-### Logo Dimensions
+### Logo Dimensions (Exact from logo.html)
 
-- **Container**: Rounded rectangle with 2px border
-- **Border**: 2px solid #10B981 (primary green)
-- **Border Radius**: 16px
-- **Padding**: 12px vertical, 24px horizontal
-- **Background**: White with subtle gradient
-- **Text Size**: 26px bold for FOOD/GOOD
-- **Badge Size**: 13px bold for BE
-- **Badge Background**: Gradient from #10B981 to #059669
-- **Shadow**: 0 4px 20px -4px rgba(16, 185, 129, 0.3)
+- **Container**: Wide rounded rectangle
+- **Border**: 3px solid #242a24 (dark grey)
+- **Border Radius**: 40px (very rounded, pill-like)
+- **Padding**: 30px vertical, 45px horizontal (scaled for mobile: 20px 30px)
+- **Background**: Pure white (#ffffff)
+- **Shadow**: 0 10px 0px rgba(0, 0, 0, 0.05)
 
-### Logo Colors
+### Logo Colors (Exact from logo.html)
 
 ```css
-.logo-container {
-    background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
-    border: 2px solid #10B981;
-    border-radius: 16px;
-    padding: 12px 24px;
-    box-shadow: 0 4px 20px -4px rgba(16, 185, 129, 0.3);
+:root {
+    --bg-green: #29f094;        /* Bright green for BE badge */
+    --dark-grey: #242a24;       /* Dark grey for borders and text */
+    --white: #ffffff;           /* White background */
 }
 
-.logo-text {
-    color: #1E293B;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: 3px;
+.logo-card {
+    background-color: #ffffff;
+    padding: 30px 45px;         /* Use 20px 30px for mobile */
+    border-radius: 40px;
+    border: 3px solid #242a24;
+    box-shadow: 0 10px 0px rgba(0, 0, 0, 0.05);
 }
 
-.logo-badge {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: white;
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+.text-row {
+    color: #242a24;
+    font-size: 52px;            /* Use 36px for mobile */
+    line-height: 0.85;          /* Tight spacing so FOOD/GOOD touch */
+    letter-spacing: -2px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.be-badge {
+    background-color: #29f094;  /* Bright green */
+    color: #242a24;             /* Dark grey text (NOT white) */
+    font-size: 16px;            /* Use 14px for mobile */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
 }
 ```
+
+### Inner Decorative Brackets (L-Shapes)
+
+Two corner brackets that create an incomplete inner border:
+
+```css
+.bracket {
+    position: absolute;
+    width: 50px;                /* Use 35px for mobile */
+    height: 50px;               /* Use 35px for mobile */
+    border: 4px solid #242a24;
+}
+
+/* Top-left corner bracket */
+.bracket.top-left {
+    top: 16px;                  /* Use 12px for mobile */
+    left: 16px;                 /* Use 12px for mobile */
+    border-right: none;
+    border-bottom: none;
+    border-top-left-radius: 16px;    /* Use 12px for mobile */
+}
+
+/* Bottom-right corner bracket */
+.bracket.bottom-right {
+    bottom: 16px;               /* Use 12px for mobile */
+    right: 16px;                /* Use 12px for mobile */
+    border-left: none;
+    border-top: none;
+    border-bottom-right-radius: 16px; /* Use 12px for mobile */
+}
+```
+
+### Logo HTML Structure (Reference)
+
+```html
+<div class="logo-card">
+    <div class="bracket top-left"></div>
+    
+    <h1 class="text-row">FOOD</h1>
+    <div class="be-badge">BE</div>
+    <h1 class="text-row">GOOD</h1>
+    
+    <div class="bracket bottom-right"></div>
+</div>
+```
+
+### Logo Usage Guidelines
+
+**DO:**
+- Use the exact colors: #29f094 (green), #242a24 (dark grey), #ffffff (white)
+- Maintain the tight line-height (0.85) so FOOD and GOOD appear touching
+- Keep the BE badge with dark text on green background
+- Use the decorative corner brackets in opposite corners
+- Maintain the wide, rounded proportions
+
+**DON'T:**
+- Change the BE badge text to white
+- Remove the corner brackets
+- Make the corners less rounded
+- Change the proportions to be more square
+- Use different colors for the badge or text
+
+### Source File
+
+**Reference Implementation:** `C:\Users\justi\OneDrive\Desktop\FoodBeGood\logo.html`
+**Approved:** 2026-02-10
+**Approved By:** User
 
 ---
 
@@ -657,8 +728,11 @@ Use **Font Awesome 6.5.1** for all icons:
 
 - **Interactive Mockup V2**: `/memory/diagrams/interactive-mockup-v2.html`
 - **Original Brand Guidelines**: `/memory/design/brand-guidelines.md`
+- **Logo Reference Implementation**: `/logo.html`
+- **Unified Login Design**: `/memory/design/unified-login-mockup-v2.html`
+- **Unified Login Specification**: `/memory/design/unified-login-design.md`
 
 ---
 
-*Updated: 2025-02-04*
-*Version: 3.0 (Professional Edition - Non-Cartoonish)*
+*Updated: 2026-02-10*
+*Version: 4.0 (Approved Logo Design from logo.html)*

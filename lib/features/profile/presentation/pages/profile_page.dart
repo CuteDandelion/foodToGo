@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodbegood/config/routes.dart';
 import 'package:foodbegood/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:foodbegood/shared/services/mock_data_service.dart';
 
 /// Profile page with digital ID card
 class ProfilePage extends StatelessWidget {
@@ -23,6 +24,16 @@ class _ProfilePageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.goStudentDashboard();
+            }
+          },
+        ),
         title: const Text('My Profile'),
         centerTitle: true,
         actions: [
@@ -69,7 +80,10 @@ class _ProfilePageContent extends StatelessWidget {
             return const Center(child: Text('No profile data'));
           }
 
-          final user = state.user!;
+          final user = state.user;
+          if (user == null) {
+            return const Center(child: Text('No profile data available'));
+          }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -103,7 +117,7 @@ class _ProfilePageContent extends StatelessWidget {
 
 /// Digital ID Card widget
 class _DigitalIDCard extends StatelessWidget {
-  final dynamic user;
+  final User user;
 
   const _DigitalIDCard({required this.user});
 
@@ -570,7 +584,7 @@ class _ActionButton extends StatelessWidget {
 
 /// Account information section
 class _AccountInfo extends StatelessWidget {
-  final dynamic user;
+  final User user;
 
   const _AccountInfo({required this.user});
 

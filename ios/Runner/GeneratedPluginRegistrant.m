@@ -72,6 +72,12 @@
 @import patrol;
 #endif
 
+#if __has_include(<sensors_plus/FPPSensorsPlusPlugin.h>)
+#import <sensors_plus/FPPSensorsPlusPlugin.h>
+#else
+@import sensors_plus;
+#endif
+
 #if __has_include(<shared_preferences_foundation/SharedPreferencesPlugin.h>)
 #import <shared_preferences_foundation/SharedPreferencesPlugin.h>
 #else
@@ -98,6 +104,7 @@
   [MobileScannerPlugin registerWithRegistrar:[registry registrarForPlugin:@"MobileScannerPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
   [PatrolPlugin registerWithRegistrar:[registry registrarForPlugin:@"PatrolPlugin"]];
+  [FPPSensorsPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPSensorsPlusPlugin"]];
   [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
 }

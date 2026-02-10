@@ -14,18 +14,22 @@ abstract class AuthEvent extends Equatable {
 }
 
 class AuthLoginRequested extends AuthEvent {
-  final String studentId;
+  final String? studentId;
+  final String? email;
   final String password;
   final bool rememberMe;
+  final UserRole? role;
 
   const AuthLoginRequested({
-    required this.studentId,
+    this.studentId,
+    this.email,
     required this.password,
     this.rememberMe = false,
-  });
+    this.role,
+  }) : assert(studentId != null || email != null, 'Either studentId or email must be provided');
 
   @override
-  List<Object?> get props => [studentId, password, rememberMe];
+  List<Object?> get props => [studentId, email, password, rememberMe, role];
 }
 
 class AuthLogoutRequested extends AuthEvent {}
@@ -91,7 +95,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      final user = _mockDataService.getUserByStudentId(event.studentId);
+      dynamic user;
+
+      // Support both email and studentId login
+      if (event.email != null && event.email!.isNotEmpty) {
+        user = _mockDataService.getUserByEmail(event.email!);
+      } else if (event.studentId != null && event.studentId!.isNotEmpty) {
+        user = _mockDataService.getUserByStudentId(event.studentId!);
+      }
 
       if (user == null) {
         emit(const AuthError('User not found'));
@@ -100,6 +111,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (!_mockDataService.verifyPassword(event.password, user.passwordHash)) {
         emit(const AuthError('Invalid password'));
+        return;
+      }
+
+      // If role is specified, verify user has that role
+      // If no role specified, allow login with user's actual role
+      if (event.role != null && user.role != event.role) {
+        emit(const AuthError('Invalid role selected for this account'));
         return;
       }
 

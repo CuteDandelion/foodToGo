@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/routes.dart';
@@ -25,14 +26,22 @@ class _StudentDashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            // TODO: Open drawer
-          },
-        ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          // On back press from dashboard, show exit confirmation or navigate to login
+          _showExitConfirmation(context);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              // TODO: Open drawer
+            },
+          ),
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -483,6 +492,30 @@ class _StudentDashboardView extends StatelessWidget {
       ),
       floatingActionButton: const _PulsingFAB(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    ),
+    );
+  }
+
+  void _showExitConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Exit App'),
+        content: const Text('Do you want to exit the app?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CANCEL'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              SystemNavigator.pop();
+            },
+            child: const Text('EXIT'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -201,6 +201,136 @@ Before considering any task complete, you MUST run the full validation suite in 
   - Document any test failures and fix before marking complete
 - **Never skip**: All tests must pass before the task is considered done
 
+### Rule 10: Automatic Test Generation for New Features
+**When implementing new features or improving existing ones, you MUST automatically write relevant tests:**
+
+**Test Coverage Requirements:**
+- **New Features**: 100% of new code must have corresponding tests
+- **Improved Features**: Update existing tests and add new tests for new functionality
+- **Coverage Targets**:
+  - Domain Layer (use cases, entities): 95%+ coverage
+  - Data Layer (repositories, models): 85%+ coverage
+  - Presentation Layer (BLoC, widgets): 75%+ coverage
+  - Integration flows: Critical paths covered
+
+**Test Types to Write:**
+1. **Unit Tests** (Required)
+   - Test all public methods in use cases
+   - Test repository implementations with mocked data sources
+   - Test model serialization/deserialization
+   - Test business logic and edge cases
+   - Test error handling paths
+
+2. **Widget Tests** (Required for UI Components)
+   - Test widget rendering with different states
+   - Test user interactions (taps, inputs, navigation)
+   - Test BLoC integration with widgets
+   - Test golden files for critical UI components
+
+3. **Integration Tests** (Required for Critical Flows)
+   - Test complete user journeys
+   - Test API integration with mocked or test servers
+   - Test database operations
+   - Test state management across multiple layers
+
+**Test File Structure:**
+```
+test/
+├── features/
+│   └── feature_name/
+│       ├── domain/
+│       │   ├── usecases/
+│       │   │   └── usecase_test.dart
+│       │   └── entities/
+│       │       └── entity_test.dart
+│       ├── data/
+│       │   ├── repositories/
+│       │   │   └── repository_impl_test.dart
+│       │   ├── models/
+│       │   │   └── model_test.dart
+│       │   └── datasources/
+│       │       └── datasource_test.dart
+│       └── presentation/
+│           ├── bloc/
+│           │   └── bloc_test.dart
+│           ├── pages/
+│           │   └── page_test.dart
+│           └── widgets/
+│               └── widget_test.dart
+```
+
+**Test Writing Checklist:**
+- [ ] Write tests BEFORE or ALONGSIDE implementation (TDD preferred)
+- [ ] Use `mockito` or `mocktail` for mocking dependencies
+- [ ] Follow AAA pattern: Arrange, Act, Assert
+- [ ] Test happy path and all error scenarios
+- [ ] Test edge cases (null values, empty lists, boundary conditions)
+- [ ] Use descriptive test names: `should [expected behavior] when [condition]`
+- [ ] Group related tests using `group()` blocks
+- [ ] Verify test coverage with `flutter test --coverage`
+
+### Rule 11: Full Validation Wall (MANDATORY)
+**Before marking ANY feature implementation as complete, you MUST run the FULL validation wall:**
+
+**Validation Wall Sequence (Run in Order):**
+
+```bash
+# STEP 1: Code Generation
+flutter pub run build_runner build --delete-conflicting-outputs
+
+# STEP 2: Static Analysis
+flutter analyze
+# Fix ALL analysis errors and warnings before proceeding
+
+# STEP 3: Code Formatting
+flutter format lib/ test/ --set-exit-if-changed
+# Fix ALL formatting issues
+
+# STEP 4: Unit & Widget Tests
+flutter test
+# ALL tests must pass with 100% success rate
+
+# STEP 5: Coverage Check
+flutter test --coverage
+genhtml coverage/lcov.info -o coverage/html
+# Verify coverage meets targets from Rule 10
+
+# STEP 6: Build Verification
+flutter build apk --debug
+# Must compile without errors
+
+# STEP 7: Integration Tests (if applicable)
+flutter test integration_test/
+# OR for Patrol E2E tests
+patrol test
+
+# STEP 8: Final Verification
+flutter doctor -v
+# Ensure no environment issues
+```
+
+**Validation Wall Requirements:**
+- **NO SKIPPING**: Every step must be executed and pass
+- **SEQUENTIAL**: Run steps in order; don't skip to later steps
+- **DOCUMENT**: Record results in `/memory/development-log.md`
+- **BLOCKING**: Any failure blocks completion - fix before proceeding
+- **SINGLE SESSION**: Run all validations in one continuous session
+
+**Failure Handling:**
+- If ANY step fails, STOP and fix before continuing
+- Document failures and resolutions in development log
+- Re-run the full wall after fixes (don't just re-run the failed step)
+- For persistent failures, consult Rule 3 (invoke sub-agent)
+
+**Completion Criteria:**
+A feature is ONLY complete when:
+1. ✅ All code is written and committed
+2. ✅ All tests are written and passing
+3. ✅ Full validation wall passes 100%
+4. ✅ Coverage targets met
+5. ✅ Documentation updated in `/memory/`
+6. ✅ Code review completed (if applicable)
+
 ### Rule 9: Visual Comparison for Design Integrity
 **ALWAYS compare the design reference with the actual implementation to eliminate AI slop, poor design choices, and visual bugs:**
 - **Reference Screenshot**: Use Playwright MCP to capture a screenshot of `./index.html` (the design specification)

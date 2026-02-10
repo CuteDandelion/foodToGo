@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodBeGood - Unified Login Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Waves */
+        .wave {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .wave-1 {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        .wave-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            left: -150px;
+            animation-delay: -5s;
+        }
+
+        .wave-3 {
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Logo Section */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .logo {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+            border: 2px solid #10B981;
+            border-radius: 16px;
+            padding: 16px 28px;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            text-align: center;
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1E293B;
+            letter-spacing: 3px;
+            line-height: 1.1;
+        }
+
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            margin: 4px 0;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Login Card */
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+
+        .form-label svg {
+            width: 18px;
+            height: 18px;
+            color: #10B981;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            color: #1E293B;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #10B981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #94A3B8;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94A3B8;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: #64748B;
+        }
+
+        /* Remember Me & Forgot Password Row */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #CBD5E1;
+            border-radius: 6px;
+            cursor: pointer;
+            accent-color: #10B981;
+        }
+
+        .remember-me label {
+            font-size: 14px;
+            color: #64748B;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            font-size: 14px;
+            font-weight: 600;
+            color: #10B981;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .forgot-password:hover {
+            color: #059669;
+            text-decoration: underline;
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            width: 100%;
+            height: 52px;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+            transition: all 0.2s ease;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #E2E8F0;
+        }
+
+        .divider span {
+            padding: 0 16px;
+            font-size: 13px;
+            color: #94A3B8;
+        }
+
+        /* Role Selection */
+        .role-selection {
+            margin-bottom: 24px;
+        }
+
+        .role-label {
+            text-align: center;
+            font-size: 13px;
+            color: #94A3B8;
+            margin-bottom: 12px;
+        }
+
+        .role-toggle {
+            display: flex;
+            gap: 12px;
+        }
+
+        .role-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+        }
+
+        .role-btn:hover {
+            border-color: #10B981;
+            color: #10B981;
+        }
+
+        .role-btn.active {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            border-color: #10B981;
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .role-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Create Account Section */
+        .create-account {
+            text-align: center;
+        }
+
+        .create-account-text {
+            font-size: 14px;
+            color: #64748B;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            height: 52px;
+            background: white;
+            color: #10B981;
+            border: 2px solid #10B981;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #F0FDF4;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        /* Demo Credentials Note */
+        .demo-note {
+            margin-top: 20px;
+            padding: 16px;
+            background: #F0FDF4;
+            border-radius: 12px;
+            border: 1px solid #A7F3D0;
+        }
+
+        .demo-note-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #065F46;
+            margin-bottom: 4px;
+        }
+
+        .demo-note-text {
+            font-size: 12px;
+            color: #047857;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .login-card {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .role-toggle {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading State */
+        .btn-primary.loading {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error-message {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            color: #DC2626;
+            font-size: 14px;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        /* Design Approval Section */
+        .approval-section {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            z-index: 100;
+        }
+
+        .approval-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #1E293B;
+        }
+
+        .approval-section p {
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .approval-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .approval-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .approval-btn.approve {
+            background: #10B981;
+            color: white;
+        }
+
+        .approval-btn.approve:hover {
+            background: #059669;
+        }
+
+        .approval-btn.reject {
+            background: #F1F5F9;
+            color: #64748B;
+        }
+
+        .approval-btn.reject:hover {
+            background: #E2E8F0;
+        }
+
+        @media (max-width: 768px) {
+            .approval-section {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin: 20px auto;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Waves -->
+    <div class="wave wave-1"></div>
+    <div class="wave wave-2"></div>
+    <div class="wave wave-3"></div>
+
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-text">FOOD</div>
+                <div class="logo-badge">BE</div>
+                <div class="logo-text">GOOD</div>
+            </div>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <!-- Header -->
+            <div class="header">
+                <h1>Welcome!</h1>
+                <p>Sign in to access your account</p>
+            </div>
+
+            <!-- Error Message (Hidden by default) -->
+            <div class="error-message" id="errorMessage">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span>Invalid email or password</span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <!-- Email Field -->
+                <div class="form-group">
+                    <div class="form-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        Email
+                    </div>
+                    <input 
+                        type="email" 
+                        class="form-input" 
+                        placeholder="Enter your email"
+                        id="emailInput"
+                    >
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <div class="form-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Password
+                    </div>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            placeholder="Enter your password"
+                            id="passwordInput"
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <!-- Sign In Button -->
+                <button type="submit" class="btn-primary" id="signInBtn">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>or continue as</span>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="role-selection">
+                <div class="role-toggle">
+                    <button type="button" class="role-btn active" id="studentBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Student
+                    </button>
+                    <button type="button" class="role-btn" id="canteenBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>
+                            <path d="M7 2v20"/>
+                            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                        </svg>
+                        Canteen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Create Account -->
+            <div class="create-account">
+                <p class="create-account-text">Don't have an account?</p>
+                <button type="button" class="btn-secondary">Create Account</button>
+            </div>
+
+            <!-- Demo Credentials -->
+            <div class="demo-note">
+                <div class="demo-note-title">Demo Credentials:</div>
+                <div class="demo-note-text">
+                    Student: student@example.com / password123<br>
+                    Canteen: canteen@example.com / canteen123
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Approval Section -->
+    <div class="approval-section">
+        <h3>🎨 Design Approval</h3>
+        <p>This is the proposed unified login page design. It combines student and canteen login into a single interface with:</p>
+        <ul style="font-size: 13px; color: #64748B; margin-bottom: 16px; padding-left: 16px;">
+            <li>Email/Password authentication</li>
+            <li>Remember me checkbox</li>
+            <li>Forgot password link</li>
+            <li>Role toggle (Student/Canteen)</li>
+            <li>Create account button</li>
+        </ul>
+        <p style="font-size: 12px; color: #94A3B8; margin-bottom: 16px;">
+            Based on your screenshot with modern UX improvements.
+        </p>
+        <div class="approval-buttons">
+            <button class="approval-btn approve" onclick="approveDesign()">✓ Approve</button>
+            <button class="approval-btn reject" onclick="requestChanges()">✕ Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Password Visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('passwordInput');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Update icon
+            this.innerHTML = type === 'password' 
+                ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                   </svg>`
+                : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                   </svg>`;
+        });
+
+        // Role Toggle
+        const studentBtn = document.getElementById('studentBtn');
+        const canteenBtn = document.getElementById('canteenBtn');
+
+        studentBtn.addEventListener('click', function() {
+            this.classList.add('active');
+            canteenBtn.classList.remove('active');
+        });
+
+        canteenBtn.addEventListener('click', function() {
+            this.classList.add('active');
+            studentBtn.classList.remove('active');
+        });
+
+        // Form Submission
+        const loginForm = document.getElementById('loginForm');
+        const signInBtn = document.getElementById('signInBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            signInBtn.innerHTML = '<span class="spinner"></span>';
+            signInBtn.classList.add('loading');
+            
+            // Simulate API call
+            setTimeout(() => {
+                signInBtn.innerHTML = 'Sign In';
+                signInBtn.classList.remove('loading');
+                
+                // Show error for demo
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
+            }, 1500);
+        });
+
+        // Design Approval Functions
+        function approveDesign() {
+            alert('✅ Design Approved!\\n\\nThe unified login page will now be implemented in Flutter.');
+            document.querySelector('.approval-section').innerHTML = `
+                <h3>✅ Design Approved</h3>
+                <p style="color: #10B981; font-weight: 500;">Proceeding with Flutter implementation...</p>
+            `;
+        }
+
+        function requestChanges() {
+            const feedback = prompt('What changes would you like to see?\\n\\nExamples:\\n- Different colors\\n- Move elements\\n- Add/remove features\\n- Typography changes');
+            if (feedback) {
+                alert('📝 Feedback received:\\n\\n"' + feedback + '"\\n\\nPlease provide this feedback to the developer.');
+            }
+        }
+    </script>
+</body>
+</html>

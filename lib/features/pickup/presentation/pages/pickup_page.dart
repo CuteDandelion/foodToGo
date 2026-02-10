@@ -28,6 +28,17 @@ class _PickupPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            AppHaptics.lightImpact();
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.goStudentDashboard();
+            }
+          },
+        ),
         title: const Text('Pick Up My Meal'),
         centerTitle: true,
       ),
