@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foodbegood/features/dashboard/presentation/widgets/dashboard_header.dart';
 import 'package:foodbegood/features/dashboard/presentation/widgets/animated_countdown.dart';
 import 'package:foodbegood/features/dashboard/presentation/widgets/urgency_color.dart';
-import 'package:intl/intl.dart';
 
 void main() {
   group('DashboardHeader', () {
@@ -183,7 +182,7 @@ void main() {
   group('UrgencyColor', () {
     test('returns green when more than 1 hour remaining', () {
       // Arrange
-      final timeRemaining = const Duration(hours: 2);
+      const timeRemaining = Duration(hours: 2);
 
       // Act
       final color = UrgencyColor.getColor(timeRemaining);
@@ -194,7 +193,7 @@ void main() {
 
     test('returns interpolated color between green and yellow at 45 minutes', () {
       // Arrange
-      final timeRemaining = const Duration(minutes: 45);
+      const timeRemaining = Duration(minutes: 45);
 
       // Act
       final color = UrgencyColor.getColor(timeRemaining);
@@ -206,7 +205,7 @@ void main() {
 
     test('returns yellow at exactly 30 minutes', () {
       // Arrange
-      final timeRemaining = const Duration(minutes: 30);
+      const timeRemaining = Duration(minutes: 30);
 
       // Act
       final color = UrgencyColor.getColor(timeRemaining);
@@ -217,7 +216,7 @@ void main() {
 
     test('returns interpolated color between yellow and red at 15 minutes', () {
       // Arrange
-      final timeRemaining = const Duration(minutes: 15);
+      const timeRemaining = Duration(minutes: 15);
 
       // Act
       final color = UrgencyColor.getColor(timeRemaining);
@@ -229,19 +228,19 @@ void main() {
 
     test('returns red when less than 30 minutes remaining', () {
       // Arrange
-      final timeRemaining = const Duration(minutes: 15);
+      const timeRemaining = Duration(minutes: 15);
 
       // Act
       final color = UrgencyColor.getColor(timeRemaining);
 
       // Assert
       // Should be closer to red
-      expect(color.red, greaterThan(color.green));
+      expect(color.r, greaterThan(color.g));
     });
 
     test('returns pure red when 0 minutes remaining', () {
       // Arrange
-      final timeRemaining = Duration.zero;
+      const timeRemaining = Duration.zero;
 
       // Act
       final color = UrgencyColor.getColor(timeRemaining);
