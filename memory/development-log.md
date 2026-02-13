@@ -36,6 +36,31 @@ FoodBeGood is a mobile application designed to help university students track th
 
 ## Latest Changes
 
+### [2026-02-14] Repository Maintenance - Branch Pruning
+
+**Summary:**
+Performed routine repository maintenance to ensure codebase is up to date and remove outdated branches.
+
+**Actions Taken:**
+1. ✅ Updated `main` branch from `262c94b` to `562ee4b` (fast-forward)
+2. ✅ Deleted merged remote branch: `origin/feature/pickup-flow-redesign`
+3. ✅ Deleted local branch: `feature/pickup-flow-redesign`
+4. ✅ Pruned stale remote-tracking references
+
+**Branch Status After Cleanup:**
+```
+* main                          (up to date with origin/main)
+  remotes/origin/main           (single source of truth)
+```
+
+**Repository Hygiene:**
+- Only `main` branch remains (as per Rule 9 - Single Source of Truth)
+- All merged feature branches have been removed
+- Working tree is clean
+- No stale remote-tracking branches
+
+---
+
 ### [2026-02-13] Pickup Flow Redesign - COMPLETED
 
 **Summary:**
@@ -119,12 +144,12 @@ lib/features/pickup/
 **Pull Request:**
 - PR #21: Feature: Pickup Flow Redesign - Horizontal Categories, Food Images, Time Slot Selection
 - URL: https://github.com/CuteDandelion/foodToGo/pull/21
-- Status: Open (ready for review)
-- Branch: `feature/pickup-flow-redesign`
-- Commit: `97d45dd`
+- Status: ✅ MERGED
+- Branch: `feature/pickup-flow-redesign` (deleted after merge)
+- Commit: `562ee4b`
 
 **Next Steps:**
-- Review and merge PR #21
+- ✅ PR #21 merged successfully
 - Proceed to Feature 3: Notification System (if required)
 
 ---
