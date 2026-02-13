@@ -14,12 +14,13 @@ class ConfirmationPage extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
+        if (didPop) return;
         // Reset and go back to dashboard
         context.read<PickupBloc>().add(const PickupReset());
         context.goDashboard();
-        return false;
       },
       child: Scaffold(
         backgroundColor: isDark ? const Color(0xFF1B5E20) : const Color(0xFFE8F5E9),

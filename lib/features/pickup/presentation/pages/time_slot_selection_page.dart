@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/routes.dart';
-import '../../domain/entities/food_item.dart';
 import '../bloc/pickup_bloc.dart';
 
 /// Page for selecting pickup time slot

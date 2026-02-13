@@ -282,8 +282,8 @@ class PickupBloc extends Bloc<PickupEvent, PickupState> {
   List<TimeSlot> _generateTimeSlots(DateTime date) {
     final slots = <TimeSlot>[];
     // Canteen hours: 11:00 - 14:00, every 30 minutes
-    final startHour = 11;
-    final endHour = 14;
+    const startHour = 11;
+    const endHour = 14;
     
     for (int hour = startHour; hour < endHour; hour++) {
       for (int minute in [0, 30]) {

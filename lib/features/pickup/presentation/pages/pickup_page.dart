@@ -58,8 +58,16 @@ class _PickupPageContentState extends State<_PickupPageContent> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) async {
+        if (didPop) return;
+        final navigator = Navigator.of(context);
+        final shouldPop = await _onWillPop();
+        if (shouldPop && mounted) {
+          navigator.pop();
+        }
+      },
       child: Scaffold(
         backgroundColor: isDark ? const Color(0xFF1B5E20) : const Color(0xFFE8F5E9),
         appBar: AppBar(
@@ -68,10 +76,10 @@ class _PickupPageContentState extends State<_PickupPageContent> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () async {
-              if (await _onWillPop()) {
-                if (mounted) {
-                  Navigator.pop(context);
-                }
+              final navigator = Navigator.of(context);
+              final shouldPop = await _onWillPop();
+              if (shouldPop && mounted) {
+                navigator.pop();
               }
             },
           ),
@@ -399,9 +407,9 @@ class _PickupPageContentState extends State<_PickupPageContent> {
             children: [
               const Icon(Icons.access_time),
               const SizedBox(width: 12),
-              Text(
+              const Text(
                 'Select Pickup Time',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
