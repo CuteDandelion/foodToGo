@@ -3,60 +3,67 @@ part of 'pickup_bloc.dart';
 /// Status of pickup flow
 enum PickupStatus {
   initial,
+  loading,
   ready,
-  creating,
-  created,
+  selectingTimeSlot,
+  confirming,
+  submitted,
   error,
 }
 
 /// State for PickupBloc
 class PickupState extends Equatable {
-  final List<FoodCategory> categories;
-  final List<FoodCategory> selectedItems;
+  final List<FoodItem> foodItems;
+  final List<FoodItem> selectedItems;
+  final MainCategory selectedCategory;
+  final List<TimeSlot> availableTimeSlots;
+  final TimeSlot? selectedTimeSlot;
   final PickupStatus status;
-  final String? pickupId;
-  final String? qrCodeData;
-  final DateTime? expiresAt;
+  final PickupOrder? currentOrder;
   final String? errorMessage;
 
   const PickupState({
-    this.categories = const [],
+    this.foodItems = const [],
     this.selectedItems = const [],
+    this.selectedCategory = MainCategory.food,
+    this.availableTimeSlots = const [],
+    this.selectedTimeSlot,
     this.status = PickupStatus.initial,
-    this.pickupId,
-    this.qrCodeData,
-    this.expiresAt,
+    this.currentOrder,
     this.errorMessage,
   });
 
   PickupState copyWith({
-    List<FoodCategory>? categories,
-    List<FoodCategory>? selectedItems,
+    List<FoodItem>? foodItems,
+    List<FoodItem>? selectedItems,
+    MainCategory? selectedCategory,
+    List<TimeSlot>? availableTimeSlots,
+    TimeSlot? selectedTimeSlot,
     PickupStatus? status,
-    String? pickupId,
-    String? qrCodeData,
-    DateTime? expiresAt,
+    PickupOrder? currentOrder,
     String? errorMessage,
   }) {
     return PickupState(
-      categories: categories ?? this.categories,
+      foodItems: foodItems ?? this.foodItems,
       selectedItems: selectedItems ?? this.selectedItems,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
+      selectedTimeSlot: selectedTimeSlot ?? this.selectedTimeSlot,
       status: status ?? this.status,
-      pickupId: pickupId ?? this.pickupId,
-      qrCodeData: qrCodeData ?? this.qrCodeData,
-      expiresAt: expiresAt ?? this.expiresAt,
+      currentOrder: currentOrder ?? this.currentOrder,
       errorMessage: errorMessage,
     );
   }
 
   @override
   List<Object?> get props => [
-        categories,
+        foodItems,
         selectedItems,
+        selectedCategory,
+        availableTimeSlots,
+        selectedTimeSlot,
         status,
-        pickupId,
-        qrCodeData,
-        expiresAt,
+        currentOrder,
         errorMessage,
       ];
 }

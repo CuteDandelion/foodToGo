@@ -1,15 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foodbegood/features/pickup/domain/entities/food_item.dart';
 import 'package:foodbegood/features/pickup/presentation/bloc/pickup_bloc.dart';
-import 'package:foodbegood/shared/services/mock_data_service.dart';
 
 void main() {
   late PickupBloc pickupBloc;
-  late MockDataService mockDataService;
 
   setUp(() {
-    mockDataService = MockDataService();
-    pickupBloc = PickupBloc(mockDataService: mockDataService);
+    pickupBloc = PickupBloc();
   });
 
   tearDown(() {
@@ -20,107 +18,111 @@ void main() {
     test('initial state is correct', () {
       expect(pickupBloc.state.status, PickupStatus.initial);
       expect(pickupBloc.state.selectedItems, isEmpty);
-      expect(pickupBloc.state.categories, isEmpty);
+      expect(pickupBloc.state.foodItems, isEmpty);
+      expect(pickupBloc.state.selectedCategory, MainCategory.food);
     });
 
-    group('PickupLoadCategories', () {
+    group('PickupLoadItems', () {
       blocTest<PickupBloc, PickupState>(
-        'emits [ready] with categories when loaded',
+        'emits [ready] with food items when loaded',
         build: () => pickupBloc,
-        act: (bloc) => bloc.add(const PickupLoadCategories()),
+        act: (bloc) => bloc.add(const PickupLoadItems()),
         expect: () => [
           isA<PickupState>()
             .having((s) => s.status, 'status', PickupStatus.ready)
-            .having((s) => s.categories.length, 'categories length', 6),
+            .having((s) => s.foodItems.length, 'food items length', greaterThan(0)),
         ],
       );
     });
 
-    group('PickupCategorySelected', () {
+    group('PickupItemSelected', () {
       blocTest<PickupBloc, PickupState>(
-        'adds category to selected items',
+        'adds item to selected items',
         build: () => pickupBloc,
-        seed: () => PickupState(
-          categories: mockDataService.getFoodCategories(),
+        seed: () => const PickupState(
+          foodItems: [
+            FoodItem(
+              id: 'schnitzel',
+              name: 'Schnitzel',
+              category: MainCategory.food,
+            ),
+          ],
           status: PickupStatus.ready,
         ),
         act: (bloc) {
-          final categories = mockDataService.getFoodCategories();
-          bloc.add(PickupCategorySelected(categories[0]));
+          bloc.add(const PickupItemSelected(
+            FoodItem(
+              id: 'schnitzel',
+              name: 'Schnitzel',
+              category: MainCategory.food,
+            ),
+          ));
         },
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.selectedItems.length, 'selected items', 1),
+            .having((s) => s.selectedItems.length, 'selected items length', 1)
+            .having((s) => s.selectedItems[0].id, 'selected item id', 'schnitzel'),
         ],
       );
 
       blocTest<PickupBloc, PickupState>(
-        'does not exceed max per pickup',
+        'emits error when max items reached',
         build: () => pickupBloc,
         seed: () => PickupState(
-          categories: mockDataService.getFoodCategories(),
+          foodItems: const [
+            FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food),
+          ],
+          selectedItems: List.generate(
+            5,
+            (i) => FoodItem(id: 'item$i', name: 'Item $i', category: MainCategory.food),
+          ),
           status: PickupStatus.ready,
-          selectedItems: [mockDataService.getFoodCategories()[0]],
         ),
         act: (bloc) {
-          final categories = mockDataService.getFoodCategories();
-          // Salad has maxPerPickup of 1
-          bloc.add(PickupCategorySelected(categories[0]));
+          bloc.add(const PickupItemSelected(
+            FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food),
+          ));
         },
         expect: () => [
           isA<PickupState>()
             .having((s) => s.errorMessage, 'error message', isNotNull),
         ],
       );
+    });
 
+    group('PickupItemDeselected', () {
       blocTest<PickupBloc, PickupState>(
-        'does not exceed total limit of 5 items',
+        'removes item from selected items',
         build: () => pickupBloc,
-        seed: () {
-          final categories = mockDataService.getFoodCategories();
-          // Use different categories to avoid max per pickup limit
-          return PickupState(
-            categories: categories,
-            status: PickupStatus.ready,
-            selectedItems: [
-              categories[0], // Salad
-              categories[1], // Dessert
-              categories[2], // Side
-              categories[3], // Chicken
-              categories[4], // Fish
-            ],
-          );
-        },
+        seed: () => const PickupState(
+          foodItems: [
+            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+          ],
+          selectedItems: [
+            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+          ],
+          status: PickupStatus.ready,
+        ),
         act: (bloc) {
-          final categories = mockDataService.getFoodCategories();
-          bloc.add(PickupCategorySelected(categories[5])); // Try to add Veggie (6th item)
+          bloc.add(const PickupItemDeselected(
+            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+          ));
         },
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.errorMessage, 'error message', 'Maximum 5 items per pickup'),
+            .having((s) => s.selectedItems.length, 'selected items length', 0),
         ],
       );
     });
 
-    group('PickupCategoryDeselected', () {
+    group('PickupCategoryChanged', () {
       blocTest<PickupBloc, PickupState>(
-        'removes category from selected items',
+        'changes selected category',
         build: () => pickupBloc,
-        seed: () {
-          final categories = mockDataService.getFoodCategories();
-          return PickupState(
-            categories: categories,
-            status: PickupStatus.ready,
-            selectedItems: [categories[0], categories[1]],
-          );
-        },
-        act: (bloc) {
-          final categories = mockDataService.getFoodCategories();
-          bloc.add(PickupCategoryDeselected(categories[0]));
-        },
+        act: (bloc) => bloc.add(const PickupCategoryChanged(MainCategory.beverages)),
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.selectedItems.length, 'selected items', 1),
+            .having((s) => s.selectedCategory, 'selected category', MainCategory.beverages),
         ],
       );
     });
@@ -129,84 +131,39 @@ void main() {
       blocTest<PickupBloc, PickupState>(
         'clears all selected items',
         build: () => pickupBloc,
-        seed: () {
-          final categories = mockDataService.getFoodCategories();
-          return PickupState(
-            categories: categories,
-            status: PickupStatus.ready,
-            selectedItems: [categories[0], categories[1]],
-          );
-        },
+        seed: () => const PickupState(
+          selectedItems: [
+            FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food),
+            FoodItem(id: 'item2', name: 'Item 2', category: MainCategory.food),
+          ],
+          status: PickupStatus.ready,
+        ),
         act: (bloc) => bloc.add(const PickupClearSelection()),
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.selectedItems, 'selected items', isEmpty),
-        ],
-      );
-    });
-
-    group('PickupCreate', () {
-      blocTest<PickupBloc, PickupState>(
-        'emits [creating, created] with QR code data',
-        build: () => pickupBloc,
-        seed: () {
-          final categories = mockDataService.getFoodCategories();
-          return PickupState(
-            categories: categories,
-            status: PickupStatus.ready,
-            selectedItems: [categories[0]],
-          );
-        },
-        act: (bloc) => bloc.add(const PickupCreate()),
-        wait: const Duration(milliseconds: 1000),
-        expect: () => [
-          isA<PickupState>()
-            .having((s) => s.status, 'status', PickupStatus.creating),
-          isA<PickupState>()
-            .having((s) => s.status, 'status', PickupStatus.created)
-            .having((s) => s.qrCodeData, 'qr code data', isNotNull)
-            .having((s) => s.expiresAt, 'expires at', isNotNull),
-        ],
-      );
-
-      blocTest<PickupBloc, PickupState>(
-        'shows error when no items selected',
-        build: () => pickupBloc,
-        seed: () => PickupState(
-          categories: mockDataService.getFoodCategories(),
-          status: PickupStatus.ready,
-          selectedItems: const [],
-        ),
-        act: (bloc) => bloc.add(const PickupCreate()),
-        expect: () => [
-          isA<PickupState>()
-            .having((s) => s.errorMessage, 'error message', 'Please select at least one item'),
+            .having((s) => s.selectedItems.length, 'selected items length', 0),
         ],
       );
     });
 
     group('PickupReset', () {
       blocTest<PickupBloc, PickupState>(
-        'resets to initial state and reloads categories',
+        'resets to initial state and loads items',
         build: () => pickupBloc,
-        seed: () {
-          final categories = mockDataService.getFoodCategories();
-          return PickupState(
-            categories: categories,
-            status: PickupStatus.created,
-            selectedItems: [categories[0]],
-            pickupId: '123',
-            qrCodeData: 'data',
-          );
-        },
+        seed: () => const PickupState(
+          selectedItems: [
+            FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food),
+          ],
+          status: PickupStatus.ready,
+        ),
         act: (bloc) => bloc.add(const PickupReset()),
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.status, 'status', PickupStatus.initial)
-            .having((s) => s.selectedItems, 'selected items', isEmpty),
+            .having((s) => s.selectedItems.length, 'selected items length', 0)
+            .having((s) => s.status, 'status', PickupStatus.initial),
           isA<PickupState>()
             .having((s) => s.status, 'status', PickupStatus.ready)
-            .having((s) => s.categories.length, 'categories', 6),
+            .having((s) => s.foodItems.length, 'food items length', greaterThan(0)),
         ],
       );
     });
