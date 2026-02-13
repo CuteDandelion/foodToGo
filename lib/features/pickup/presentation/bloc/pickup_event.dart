@@ -8,29 +8,29 @@ abstract class PickupEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Load food categories
-class PickupLoadCategories extends PickupEvent {
-  const PickupLoadCategories();
+/// Load food items
+class PickupLoadItems extends PickupEvent {
+  const PickupLoadItems();
 }
 
-/// Select a food category
-class PickupCategorySelected extends PickupEvent {
-  final FoodCategory category;
+/// Select a food item
+class PickupItemSelected extends PickupEvent {
+  final FoodItem item;
 
-  const PickupCategorySelected(this.category);
+  const PickupItemSelected(this.item);
 
   @override
-  List<Object?> get props => [category];
+  List<Object?> get props => [item];
 }
 
-/// Deselect a food category
-class PickupCategoryDeselected extends PickupEvent {
-  final FoodCategory category;
+/// Deselect a food item
+class PickupItemDeselected extends PickupEvent {
+  final FoodItem item;
 
-  const PickupCategoryDeselected(this.category);
+  const PickupItemDeselected(this.item);
 
   @override
-  List<Object?> get props => [category];
+  List<Object?> get props => [item];
 }
 
 /// Clear all selections
@@ -38,12 +38,47 @@ class PickupClearSelection extends PickupEvent {
   const PickupClearSelection();
 }
 
-/// Create pickup with selected items
-class PickupCreate extends PickupEvent {
-  const PickupCreate();
+/// Change main category
+class PickupCategoryChanged extends PickupEvent {
+  final MainCategory category;
+
+  const PickupCategoryChanged(this.category);
+
+  @override
+  List<Object?> get props => [category];
+}
+
+/// Load available time slots
+class PickupLoadTimeSlots extends PickupEvent {
+  final DateTime date;
+
+  const PickupLoadTimeSlots(this.date);
+
+  @override
+  List<Object?> get props => [date];
+}
+
+/// Select a time slot
+class PickupTimeSlotSelected extends PickupEvent {
+  final TimeSlot timeSlot;
+
+  const PickupTimeSlotSelected(this.timeSlot);
+
+  @override
+  List<Object?> get props => [timeSlot];
+}
+
+/// Submit order to canteen
+class PickupSubmitToCanteen extends PickupEvent {
+  const PickupSubmitToCanteen();
 }
 
 /// Reset pickup state
 class PickupReset extends PickupEvent {
   const PickupReset();
+}
+
+/// Navigate to time slot selection
+class PickupNavigateToTimeSlot extends PickupEvent {
+  const PickupNavigateToTimeSlot();
 }

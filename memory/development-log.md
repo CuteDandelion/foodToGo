@@ -36,6 +36,175 @@ FoodBeGood is a mobile application designed to help university students track th
 
 ## Latest Changes
 
+### [2026-02-13] Pickup Flow Redesign - COMPLETED
+
+**Summary:**
+Successfully implemented the redesigned pickup flow with horizontal scrolling categories, food images, time slot selection, and confirmation screen. The QR code generation in the flow was removed as it's redundant with the dashboard swipe feature.
+
+**Phase Transition:**
+- ✅ Completed: Feature 1 - Dashboard Enhancements (merged via PR #19)
+- ✅ Completed: Feature 2 - Pickup Flow Redesign
+- ⏳ Pending: Feature 3 - Calendar Time Slot Selection (partially implemented)
+- ⏳ Pending: Feature 4 - Notification System
+
+**Key Changes:**
+
+### 1. New Workflow (Optimized)
+```
+Dashboard → Food Selection → Time Slot Selection → Confirmation → Dashboard
+```
+- ❌ Removed QR code generation from pickup flow (redundant with dashboard swipe)
+- ✅ Added confirmation/receipt screen showing order details
+- ✅ Direct request to canteen after time slot selection
+
+### 2. Horizontal Category Scrolling
+- Replaced 6-category vertical system with 3 main categories: Food, Beverages, Desserts
+- Horizontal scrolling for food items within each category
+- Tab bar for category selection with icons
+- German food items (Schnitzel, Bratwurst, Apfelstrudel, etc.)
+
+### 3. Food Images Support
+- Added `FoodItem` model with image URL and local path support
+- `FoodImageWidget` with network and local image loading
+- Fallback placeholder with food name when image unavailable
+- Shimmer loading effect for network images
+
+### 4. Time Slot Selection
+- Calendar view with 7-day selection
+- Time slots every 30 minutes (11:00-14:00)
+- Availability indicators
+- Selected items summary at top
+
+### 5. Confirmation Screen
+- Success animation with checkmark
+- Receipt card showing order details
+- Order ID, items, pickup time, location
+- Canteen confirmation message
+- "Back to Dashboard" and "View QR Code" buttons
+
+### 6. Enhanced UX Features
+- Back button warning when items selected
+- Touch to unselect items in container
+- Swipe to delete in container
+- Visual feedback for selections
+- Item count indicator (max 5 items)
+
+**Files Created:**
+```
+lib/features/pickup/
+├── domain/entities/
+│   └── food_item.dart                    # FoodItem, TimeSlot, PickupOrder models
+├── presentation/
+│   ├── pages/
+│   │   ├── pickup_page.dart              # Redesigned with horizontal scrolling
+│   │   ├── time_slot_selection_page.dart # Calendar + time slots
+│   │   └── confirmation_page.dart        # Receipt/confirmation screen
+│   ├── widgets/
+│   │   ├── horizontal_category_tabs.dart # Category tab bar
+│   │   ├── food_item_card.dart           # Food item card with image
+│   │   └── food_image_widget.dart        # Image loading with fallback
+│   └── bloc/
+│       ├── pickup_bloc.dart              # Updated with new events/states
+│       ├── pickup_event.dart             # New events
+│       └── pickup_state.dart             # New states
+```
+
+**Files Modified:**
+- `lib/config/routes.dart` - Added time slot and confirmation routes
+
+**Build Status:**
+- ✅ Debug APK built successfully
+- ✅ No compilation errors
+
+**Next Steps:**
+- Write widget tests for new components
+- Create PR for review
+- Merge to main
+
+---
+
+### [2026-02-13] Next Phase Started: Pickup Flow Redesign - IN PROGRESS
+
+**Summary:**
+Started implementation of Feature 2 from PROMPT.md - Pickup Flow Redesign. Created new feature branch and GitHub issue to track work.
+
+**Phase Transition:**
+- ✅ Completed: Feature 1 - Dashboard Enhancements (merged via PR #19)
+- 🔄 Started: Feature 2 - Pickup Flow Redesign
+- ⏳ Pending: Feature 3 - Calendar Time Slot Selection
+- ⏳ Pending: Feature 4 - Notification System
+
+**Git Workflow:**
+```bash
+# Merged dashboard enhancements
+git checkout main
+git pull origin main
+git branch -d feature/dashboard-enhancements
+git push origin --delete feature/dashboard-enhancements
+
+# Created new feature branch
+git checkout -b feature/pickup-flow-redesign
+git push -u origin feature/pickup-flow-redesign
+```
+
+**GitHub Issue Created:**
+- Issue #20: Feature: Pickup Flow Redesign - Horizontal Categories, Food Images, Time Slot Selection
+- Labels: enhancement, feature
+- URL: https://github.com/CuteDandelion/foodToGo/issues/20
+
+**Feature 2 Requirements:**
+1. Remove redundant summary bar above "Confirm Pickup"
+2. Horizontal category scrolling (Food/Beverages/Desserts)
+3. Food images (German delicacies placeholders)
+4. Touch to unselect items in container
+5. Back button warning when selection will be lost
+6. New workflow: Food → Time Slot → QR Code
+
+**Files to be Modified:**
+- `lib/features/pickup/presentation/pages/pickup_page.dart` - Complete redesign
+- `lib/features/pickup/presentation/bloc/pickup_bloc.dart` - Add time slot logic
+- `lib/config/routes.dart` - Add time slot route
+
+**New Files to Create:**
+- `lib/features/pickup/presentation/pages/time_slot_selection_page.dart`
+- `lib/features/pickup/presentation/widgets/horizontal_category_tabs.dart`
+- `lib/features/pickup/presentation/widgets/food_item_card.dart`
+- `lib/features/pickup/presentation/widgets/food_image_widget.dart`
+
+---
+
+### [2026-02-13] Dashboard Enhancements Feature Completed - MERGED
+
+**Summary:**
+Successfully completed and merged the dashboard enhancements feature (Feature 1 from PROMPT.md) via PR #19.
+
+**Pull Request:**
+- PR #19: feat(dashboard): implement dashboard enhancements
+- Status: ✅ Merged
+- Commit: 262c94b5086969ca2c0fe104ea3269a826ea1525
+
+**Features Implemented:**
+- Dashboard header with date, time, and dynamic greeting
+- Pop-up card animations with vibrant gradients
+- Animated countdown with color-coded urgency (Green → Yellow → Red)
+- Flame animation for streak card
+- Beating heart animation for social impact card
+- Swipe to QR code with PageView
+- Light/dark mode background gradients
+
+**Files Changed:**
+- Modified: `lib/config/theme.dart`
+- Modified: `lib/features/dashboard/presentation/pages/student_dashboard_page.dart`
+- Created: 6 new widget files in `lib/features/dashboard/presentation/widgets/`
+- Created: `test/features/dashboard/presentation/widgets/dashboard_widgets_test.dart`
+
+**Testing:**
+- ✅ 22 new widget tests added
+- ✅ All tests passing
+- ✅ Flutter analyze passes
+
+---
+
 ### [2026-02-10] Git Branch Cleanup - COMPLETED
 
 **Summary:**

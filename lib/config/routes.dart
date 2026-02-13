@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/presentation/pages/unified_login_page.dart';
 import '../features/canteen/presentation/pages/canteen_dashboard_page.dart';
 import '../features/dashboard/presentation/pages/student_dashboard_page.dart';
+import '../features/pickup/presentation/pages/confirmation_page.dart';
 import '../features/pickup/presentation/pages/pickup_page.dart';
 import '../features/pickup/presentation/pages/qr_code_page.dart';
+import '../features/pickup/presentation/pages/time_slot_selection_page.dart';
 import '../features/profile/presentation/pages/meal_history_page.dart';
 import '../features/profile/presentation/pages/profile_page.dart';
 import '../features/settings/presentation/pages/settings_page.dart';
@@ -18,6 +20,8 @@ class RoutePaths {
   static const String studentDashboard = '/student/dashboard';
   static const String canteenDashboard = '/canteen/dashboard';
   static const String pickup = '/pickup';
+  static const String timeSlot = '/pickup/time-slot';
+  static const String confirmation = '/pickup/confirmation';
   static const String qrCode = '/qr-code';
   static const String profile = '/profile';
   static const String settings = '/settings';
@@ -168,7 +172,25 @@ class AppRouter {
         ),
       ),
 
-      // QR Code
+      // Time Slot Selection
+      GoRoute(
+        path: RoutePaths.timeSlot,
+        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+          key: state.pageKey,
+          child: const TimeSlotSelectionPage(),
+        ),
+      ),
+
+      // Confirmation Page
+      GoRoute(
+        path: RoutePaths.confirmation,
+        pageBuilder: (context, state) => AppPageTransitions.scaleFade(
+          key: state.pageKey,
+          child: const ConfirmationPage(),
+        ),
+      ),
+
+      // QR Code (kept for dashboard swipe access)
       GoRoute(
         path: RoutePaths.qrCode,
         pageBuilder: (context, state) {
@@ -231,6 +253,9 @@ extension GoRouterExtension on BuildContext {
   void goStudentDashboard() => go(RoutePaths.studentDashboard);
   void goCanteenDashboard() => go(RoutePaths.canteenDashboard);
   void goPickup() => go(RoutePaths.pickup);
+  void goTimeSlot() => go(RoutePaths.timeSlot);
+  void goConfirmation() => go(RoutePaths.confirmation);
+  void goDashboard() => go(RoutePaths.studentDashboard);
   void goQRCode({
     required String pickupId,
     String? qrData,
