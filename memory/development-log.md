@@ -116,10 +116,16 @@ lib/features/pickup/
 - ✅ Debug APK built successfully
 - ✅ No compilation errors
 
+**Pull Request:**
+- PR #21: Feature: Pickup Flow Redesign - Horizontal Categories, Food Images, Time Slot Selection
+- URL: https://github.com/CuteDandelion/foodToGo/pull/21
+- Status: Open (ready for review)
+- Branch: `feature/pickup-flow-redesign`
+- Commit: `97d45dd`
+
 **Next Steps:**
-- Write widget tests for new components
-- Create PR for review
-- Merge to main
+- Review and merge PR #21
+- Proceed to Feature 3: Notification System (if required)
 
 ---
 
