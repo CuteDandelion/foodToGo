@@ -314,4 +314,25 @@ class AppTheme {
       ),
     );
   }
+
+  /// Background gradients for dashboard
+  static LinearGradient get lightBackgroundGradient => const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFFE8F5E9), // Light green
+          Color(0xFFFFFFFF), // White
+        ],
+        stops: [0.0, 0.6],
+      );
+
+  static LinearGradient get darkBackgroundGradient => const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF1B5E20), // Dark green
+          Color(0xFF0D3318), // Darker green
+        ],
+        stops: [0.0, 1.0],
+      );
 }
