@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../config/routes.dart';
 
 /// Swipeable dashboard with QR code access on left swipe
@@ -41,7 +42,7 @@ class _SwipeableDashboardState extends State<SwipeableDashboard> {
     setState(() {
       _currentPage = page;
     });
-    
+
     // Provide haptic feedback when switching pages
     if (page == 1) {
       HapticFeedback.lightImpact();
@@ -76,20 +77,20 @@ class _SwipeableDashboardState extends State<SwipeableDashboard> {
         // Swipe hint indicator
         if (_currentPage == 0)
           Positioned(
-            right: 16,
+            right: 16.w,
             top: MediaQuery.of(context).size.height * 0.3,
             child: _SwipeHint(),
           ),
         // Page indicator
         Positioned(
-          bottom: 100,
+          bottom: 100.h,
           left: 0,
           right: 0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildPageIndicator(0),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               _buildPageIndicator(1),
             ],
           ),
@@ -102,13 +103,13 @@ class _SwipeableDashboardState extends State<SwipeableDashboard> {
     final isActive = _currentPage == page;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      width: isActive ? 24 : 8,
-      height: 8,
+      width: isActive ? 24.w : 8.w,
+      height: 8.h,
       decoration: BoxDecoration(
         color: isActive
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(4.r),
       ),
     );
   }
@@ -160,14 +161,14 @@ class _SwipeHintState extends State<_SwipeHint>
             children: [
               Icon(
                 Icons.arrow_forward_ios,
-                size: 20,
+                size: 20.w,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4.h),
               Text(
                 'QR Code',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
                 ),
@@ -196,8 +197,9 @@ class _QRCodeQuickAccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasActivePickup = pickupId != null && qrData != null && expiresAt != null;
-    
+    final hasActivePickup =
+        pickupId != null && qrData != null && expiresAt != null;
+
     if (!hasActivePickup) {
       return _NoActivePickup(onBack: onBack);
     }
@@ -209,30 +211,30 @@ class _QRCodeQuickAccess extends StatelessWidget {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.r),
               child: Row(
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: onBack,
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Quick QR Access',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 48), // Balance the back button
+                  SizedBox(width: 48.w), // Balance the back button
                 ],
               ),
             ),
-            
+
             const Spacer(),
-            
+
             // QR Code display
             GestureDetector(
               onTap: () {
@@ -240,15 +242,14 @@ class _QRCodeQuickAccess extends StatelessWidget {
                   pickupId: pickupId!,
                   qrData: qrData!,
                   expiresAt: expiresAt!,
-                  items: const [],
                 );
               },
               child: Container(
-                margin: const EdgeInsets.all(32),
-                padding: const EdgeInsets.all(24),
+                margin: EdgeInsets.all(32.r),
+                padding: EdgeInsets.all(24.r),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.r),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.1),
@@ -261,25 +262,25 @@ class _QRCodeQuickAccess extends StatelessWidget {
                   children: [
                     // QR Code placeholder
                     Container(
-                      width: 200,
-                      height: 200,
+                      width: 200.w,
+                      height: 200.h,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Icon(
                           Icons.qr_code_2,
-                          size: 150,
+                          size: 150.w,
                           color: Colors.black87,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     Text(
                       'Tap to view full QR Code',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: Colors.grey.shade600,
                       ),
                     ),
@@ -287,18 +288,21 @@ class _QRCodeQuickAccess extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const Spacer(),
-            
+
             // Instructions
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.r),
               child: Text(
                 'Show this QR code to the canteen staff',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  fontSize: 16.sp,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -323,68 +327,72 @@ class _NoActivePickup extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.r),
               child: Row(
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: onBack,
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Quick QR Access',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 48),
+                  SizedBox(width: 48.w),
                 ],
               ),
             ),
             const Spacer(),
             Icon(
               Icons.qr_code_scanner_outlined,
-              size: 80,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+              size: 80.w,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
             Text(
               'No Active Pickup',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               'Create a pickup to get your QR code',
               style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                fontSize: 14.sp,
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
             ),
-            const SizedBox(height: 32),
-            Builder(
-              builder: (context) {
-                return ElevatedButton.icon(
-                  onPressed: () {
-                    onBack();
-                    // Navigate to pickup after a short delay
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      if (context.mounted) {
-                        context.goPickup();
-                      }
-                    });
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Create Pickup'),
-                );
-              }
-            ),
+            SizedBox(height: 32.h),
+            Builder(builder: (context) {
+              return ElevatedButton.icon(
+                onPressed: () {
+                  onBack();
+                  // Navigate to pickup after a short delay
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (context.mounted) {
+                      context.goPickup();
+                    }
+                  });
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Create Pickup'),
+              );
+            }),
             const Spacer(),
           ],
         ),

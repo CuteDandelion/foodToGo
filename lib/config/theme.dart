@@ -12,6 +12,15 @@ class AppTheme {
   static const Color primaryDark = Color(0xFF059669);
   static const Color primaryAccent = Color(0xFF6EE7B7);
 
+  // Login Page Specific Colors (from brand guidelines)
+  static const Color loginBackground = Color(0xFF29f094); // Bright green
+  static const Color loginCardBorder = Color(0xFF242a24); // Dark grey
+  static const Color loginTextPrimary = Color(0xFF242a24); // Dark grey
+  static const Color loginTextSecondary = Color(0xFF666666); // Medium grey
+  static const Color loginTextMuted = Color(0xFF999999); // Light grey
+  static const Color loginDivider = Color(0xFFE0E0E0); // Very light grey
+  static const Color loginCheckboxUnchecked = Color(0xFFCCCCCC); // Light grey
+
   // Semantic Colors
   static const Color success = Color(0xFF10B981);
   static const Color warning = Color(0xFFF59E0B);
@@ -39,6 +48,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Inter',
       brightness: Brightness.light,
       colorScheme: const ColorScheme.light(
         primary: primary,
@@ -71,6 +81,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Inter',
       brightness: Brightness.dark,
       colorScheme: const ColorScheme.dark(
         primary: primary,
@@ -252,7 +263,7 @@ class AppTheme {
       ),
       hintStyle: TextStyle(
         fontSize: 14.sp,
-        color: lightTextSecondary.withAlpha(128),
+        color: lightTextSecondary.withValues(alpha: 0.5),
       ),
     );
   }
@@ -314,6 +325,19 @@ class AppTheme {
       ),
     );
   }
+
+  /// Gradient for metric icon backgrounds
+  static LinearGradient iconBackgroundGradient(bool isDark) => LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: isDark
+            ? const [Color(0xFF064E3B), Color(0xFF065F46)]
+            : const [Color(0xFFECFDF5), Color(0xFFD1FAE5)],
+      );
+
+  // Pickup page background colors
+  static const Color pickupBackgroundLight = Color(0xFFE8F5E9);
+  static const Color pickupBackgroundDark = Color(0xFF1B5E20);
 
   /// Background gradients for dashboard
   static LinearGradient get lightBackgroundGradient => const LinearGradient(

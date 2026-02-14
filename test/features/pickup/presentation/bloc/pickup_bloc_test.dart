@@ -29,8 +29,9 @@ void main() {
         act: (bloc) => bloc.add(const PickupLoadItems()),
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.status, 'status', PickupStatus.ready)
-            .having((s) => s.foodItems.length, 'food items length', greaterThan(0)),
+              .having((s) => s.status, 'status', PickupStatus.ready)
+              .having((s) => s.foodItems.length, 'food items length',
+                  greaterThan(0)),
         ],
       );
     });
@@ -60,8 +61,9 @@ void main() {
         },
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.selectedItems.length, 'selected items length', 1)
-            .having((s) => s.selectedItems[0].id, 'selected item id', 'schnitzel'),
+              .having((s) => s.selectedItems.length, 'selected items length', 1)
+              .having((s) => s.selectedItems[0].id, 'selected item id',
+                  'schnitzel'),
         ],
       );
 
@@ -74,7 +76,8 @@ void main() {
           ],
           selectedItems: List.generate(
             5,
-            (i) => FoodItem(id: 'item$i', name: 'Item $i', category: MainCategory.food),
+            (i) => FoodItem(
+                id: 'item$i', name: 'Item $i', category: MainCategory.food),
           ),
           status: PickupStatus.ready,
         ),
@@ -85,7 +88,7 @@ void main() {
         },
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.errorMessage, 'error message', isNotNull),
+              .having((s) => s.errorMessage, 'error message', isNotNull),
         ],
       );
     });
@@ -96,21 +99,30 @@ void main() {
         build: () => pickupBloc,
         seed: () => const PickupState(
           foodItems: [
-            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+            FoodItem(
+                id: 'schnitzel',
+                name: 'Schnitzel',
+                category: MainCategory.food),
           ],
           selectedItems: [
-            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+            FoodItem(
+                id: 'schnitzel',
+                name: 'Schnitzel',
+                category: MainCategory.food),
           ],
           status: PickupStatus.ready,
         ),
         act: (bloc) {
           bloc.add(const PickupItemDeselected(
-            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+            FoodItem(
+                id: 'schnitzel',
+                name: 'Schnitzel',
+                category: MainCategory.food),
           ));
         },
         expect: () => [
-          isA<PickupState>()
-            .having((s) => s.selectedItems.length, 'selected items length', 0),
+          isA<PickupState>().having(
+              (s) => s.selectedItems.length, 'selected items length', 0),
         ],
       );
     });
@@ -119,10 +131,11 @@ void main() {
       blocTest<PickupBloc, PickupState>(
         'changes selected category',
         build: () => pickupBloc,
-        act: (bloc) => bloc.add(const PickupCategoryChanged(MainCategory.beverages)),
+        act: (bloc) =>
+            bloc.add(const PickupCategoryChanged(MainCategory.beverages)),
         expect: () => [
-          isA<PickupState>()
-            .having((s) => s.selectedCategory, 'selected category', MainCategory.beverages),
+          isA<PickupState>().having((s) => s.selectedCategory,
+              'selected category', MainCategory.beverages),
         ],
       );
     });
@@ -140,8 +153,8 @@ void main() {
         ),
         act: (bloc) => bloc.add(const PickupClearSelection()),
         expect: () => [
-          isA<PickupState>()
-            .having((s) => s.selectedItems.length, 'selected items length', 0),
+          isA<PickupState>().having(
+              (s) => s.selectedItems.length, 'selected items length', 0),
         ],
       );
     });
@@ -159,11 +172,12 @@ void main() {
         act: (bloc) => bloc.add(const PickupReset()),
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.selectedItems.length, 'selected items length', 0)
-            .having((s) => s.status, 'status', PickupStatus.initial),
+              .having((s) => s.selectedItems.length, 'selected items length', 0)
+              .having((s) => s.status, 'status', PickupStatus.initial),
           isA<PickupState>()
-            .having((s) => s.status, 'status', PickupStatus.ready)
-            .having((s) => s.foodItems.length, 'food items length', greaterThan(0)),
+              .having((s) => s.status, 'status', PickupStatus.ready)
+              .having((s) => s.foodItems.length, 'food items length',
+                  greaterThan(0)),
         ],
       );
     });

@@ -61,7 +61,8 @@ class FoodImageWidget extends StatelessWidget {
         height: height,
         fit: BoxFit.cover,
         placeholder: (context, url) => _buildShimmer(borderRadius, isDark),
-        errorWidget: (context, url, error) => _buildPlaceholder(borderRadius, isDark),
+        errorWidget: (context, url, error) =>
+            _buildPlaceholder(borderRadius, isDark),
       ),
     );
   }

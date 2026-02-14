@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodbegood/shared/services/mock_data_service.dart';
 
-export 'package:foodbegood/shared/services/mock_data_service.dart' show User, Profile;
+export 'package:foodbegood/shared/services/mock_data_service.dart'
+    show User, Profile;
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -18,6 +19,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileLoad>(_onLoad);
     on<ProfileUpdate>(_onUpdate);
     on<ProfilePhotoUpdate>(_onPhotoUpdate);
+    on<ProfileMealHistoryLoad>(_onMealHistoryLoad);
     on<ProfileClear>(_onClear);
   }
 
@@ -31,7 +33,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       // For Phase 1 local-first, use mock user directly
       // In production, this would get current user ID from storage
       final user = _mockDataService.getUserByStudentId('61913042');
-      
+
       if (user == null) {
         emit(state.copyWith(
           status: ProfileStatus.error,
@@ -128,6 +130,31 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(state.copyWith(
         status: ProfileStatus.error,
         errorMessage: 'Failed to update photo: $e',
+      ));
+    }
+  }
+
+  Future<void> _onMealHistoryLoad(
+    ProfileMealHistoryLoad event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(state.copyWith(
+      isMealHistoryLoading: true,
+      mealHistoryErrorMessage: null,
+    ));
+
+    try {
+      final userId = event.userId ?? state.user?.id ?? '1';
+      final history = _mockDataService.getMealHistory(userId);
+      emit(state.copyWith(
+        isMealHistoryLoading: false,
+        mealHistory: history,
+        mealHistoryErrorMessage: null,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        isMealHistoryLoading: false,
+        mealHistoryErrorMessage: 'Failed to load meal history: $e',
       ));
     }
   }

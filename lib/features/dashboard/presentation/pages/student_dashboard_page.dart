@@ -1,9 +1,13 @@
+import 'dart:math' show sin, pi;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foodbegood/features/auth/presentation/bloc/auth_bloc.dart';
 import '../../../../config/routes.dart';
 import '../../../../config/theme.dart';
+import '../../../../shared/services/mock_data_service.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../../shared/widgets/animated_progress.dart';
 import '../../../../shared/widgets/animations.dart';
@@ -55,7 +59,12 @@ class _StudentDashboardView extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                // TODO: Open drawer
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Menu is coming soon'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
               },
             ),
             title: _buildLogo(context),
@@ -70,7 +79,12 @@ class _StudentDashboardView extends StatelessWidget {
               custom_icons.AnimatedIconButton(
                 icon: Icons.notifications_outlined,
                 onPressed: () {
-                  // TODO: Show notifications
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('No new notifications'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                 },
               ),
               SizedBox(width: 8.w),
@@ -80,7 +94,8 @@ class _StudentDashboardView extends StatelessWidget {
             dashboardContent: _buildDashboardContent(context),
           ),
           floatingActionButton: const _PulsingFAB(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
         ),
       ),
     );
@@ -125,6 +140,12 @@ class _StudentDashboardView extends StatelessWidget {
   }
 
   Widget _buildDashboardContent(BuildContext context) {
+    final authState = context.watch<AuthBloc>().state;
+    final userName = authState is AuthAuthenticated
+        ? (MockDataService().getUserById(authState.userId)?.profile.firstName ??
+            'Student')
+        : 'Student';
+
     return RefreshIndicator(
       onRefresh: () async {
         context.read<DashboardBloc>().add(const DashboardRefreshed());
@@ -151,30 +172,34 @@ class _StudentDashboardView extends StatelessWidget {
                 children: [
                   // Dashboard Header with date/time and greeting
                   DashboardHeader(
-                    userName: 'Zain',
+                    userName: userName,
                     testTime: DateTime.now(),
                   ),
                   SizedBox(height: 24.h),
 
                   // Total Meals Card with pop-up animation
-                  _PopUpMetricCard(
+                  PopUpAnimation(
                     index: 0,
-                    icon: custom_icons.FoodIcons.meals,
-                    iconColor: Colors.white,
-                    title: 'Total Meals',
-                    value: data.totalMeals,
-                    subtitle: 'Meals Saved',
-                    progress: data.monthlyGoalProgress,
-                    isHighlight: true,
-                    isLarge: true,
+                    child: _MetricCard(
+                      icon: custom_icons.FoodIcons.meals,
+                      iconColor: Colors.white,
+                      title: 'Total Meals',
+                      value: data.totalMeals,
+                      subtitle: 'Meals Saved',
+                      progress: data.monthlyGoalProgress,
+                      isHighlight: true,
+                    ),
                   ),
 
                   SizedBox(height: 16.h),
 
                   // Money Saved Card with enhanced animations
-                  _PopUpCard(
+                  PopUpAnimation(
                     index: 1,
-                    child: _buildMoneySavedCard(context, data),
+                    child: AppCard(
+                      variant: CardVariant.branded,
+                      child: _buildMoneySavedCard(context, data),
+                    ),
                   ),
 
                   SizedBox(height: 16.h),
@@ -183,23 +208,27 @@ class _StudentDashboardView extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: _PopUpStatCard(
+                        child: PopUpAnimation(
                           index: 2,
-                          icon: custom_icons.FoodIcons.chart,
-                          iconColor: const Color(0xFFF59E0B),
-                          title: '${data.monthlyAverage} Avg meal/Month',
-                          value: data.monthlyAverage,
-                          subtitle: 'Top ${data.percentile}%',
+                          child: _StatCard(
+                            icon: custom_icons.FoodIcons.chart,
+                            iconColor: AppTheme.warning,
+                            title: '${data.monthlyAverage} Avg meal/Month',
+                            value: data.monthlyAverage,
+                            subtitle: 'Top ${data.percentile}%',
+                          ),
                         ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
-                        child: _PopUpStatCard(
+                        child: PopUpAnimation(
                           index: 3,
-                          iconWidget: const FlameAnimation(size: 28),
-                          title: 'Day Streak',
-                          value: data.currentStreak.toDouble(),
-                          subtitle: '🔥 Keep it going!',
+                          child: _StatCard(
+                            iconWidget: const FlameAnimation(size: 28),
+                            title: 'Day Streak',
+                            value: data.currentStreak.toDouble(),
+                            subtitle: '🔥 Keep it going!',
+                          ),
                         ),
                       ),
                     ],
@@ -209,17 +238,22 @@ class _StudentDashboardView extends StatelessWidget {
 
                   // Next Pickup Card with animated countdown
                   if (data.nextPickup != null)
-                    _PopUpCard(
+                    PopUpAnimation(
                       index: 4,
-                      child: _buildNextPickupCard(context, data),
+                      child: AppCard(
+                        child: _buildNextPickupCard(context, data),
+                      ),
                     ),
 
                   SizedBox(height: 16.h),
 
                   // Social Impact Card with beating heart
-                  _PopUpCard(
+                  PopUpAnimation(
                     index: 5,
-                    child: _buildSocialImpactCard(context, data),
+                    child: AppCard(
+                      variant: CardVariant.dark,
+                      child: _buildSocialImpactCard(context, data),
+                    ),
                   ),
 
                   SizedBox(height: 100.h), // Space for FAB
@@ -235,6 +269,7 @@ class _StudentDashboardView extends StatelessWidget {
   }
 
   Widget _buildMoneySavedCard(BuildContext context, dynamic data) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -243,7 +278,7 @@ class _StudentDashboardView extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                gradient: AppTheme.iconBackgroundGradient(isDark),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
@@ -269,7 +304,10 @@ class _StudentDashboardView extends StatelessWidget {
                     'vs Last Month',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -298,7 +336,7 @@ class _StudentDashboardView extends StatelessWidget {
                 label: 'Last Month',
                 value: data.moneySaved.lastMonth,
                 progress: data.moneySaved.lastMonth / 100,
-                color: Colors.grey,
+                color: AppTheme.lightTextSecondary,
               ),
             ),
           ],
@@ -306,7 +344,7 @@ class _StudentDashboardView extends StatelessWidget {
         SizedBox(height: 16.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: data.moneySaved.breakdown.entries.map((entry) {
+          children: data.moneySaved.breakdown.entries.map<Widget>((entry) {
             return Column(
               children: [
                 Text(
@@ -318,10 +356,15 @@ class _StudentDashboardView extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  entry.key,
+                  entry.key.toUpperCase(),
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -360,12 +403,13 @@ class _StudentDashboardView extends StatelessWidget {
   }
 
   Widget _buildNextPickupCard(BuildContext context, dynamic data) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Container(
           padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+            gradient: AppTheme.iconBackgroundGradient(isDark),
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Icon(
@@ -391,7 +435,10 @@ class _StudentDashboardView extends StatelessWidget {
                 data.nextPickup!.location,
                 style: TextStyle(
                   fontSize: 13.sp,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -418,7 +465,7 @@ class _StudentDashboardView extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Colors.white,
               ),
             ),
           ],
@@ -428,7 +475,7 @@ class _StudentDashboardView extends StatelessWidget {
           'Together with ${data.socialImpact.studentsHelped} other students, you\'ve helped save food and reduce waste in your community.',
           style: TextStyle(
             fontSize: 13.sp,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             height: 1.5,
           ),
         ),
@@ -438,8 +485,7 @@ class _StudentDashboardView extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(
               top: BorderSide(
-                color: Theme.of(context).dividerTheme.color ??
-                    Colors.grey.withValues(alpha: 0.2),
+                color: Colors.white.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -455,14 +501,16 @@ class _StudentDashboardView extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF10B981),
+                        color: AppTheme.primaryLight,
                       ),
                     ),
                     Text(
-                      'Students Helped',
+                      'STUDENTS HELPED',
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                        color: Colors.white.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -479,14 +527,16 @@ class _StudentDashboardView extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF10B981),
+                        color: AppTheme.primaryLight,
                       ),
                     ),
                     Text(
-                      'Avg Saved/Student',
+                      'AVG SAVED/STUDENT',
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                        color: Colors.white.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -523,217 +573,13 @@ class _StudentDashboardView extends StatelessWidget {
   }
 }
 
-/// Pop-up metric card with enhanced animation
-class _PopUpMetricCard extends StatelessWidget {
-  final int index;
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final int value;
-  final String subtitle;
-  final double progress;
-  final bool isHighlight;
-  final bool isLarge;
-
-  const _PopUpMetricCard({
-    required this.index,
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.value,
-    required this.subtitle,
-    required this.progress,
-    this.isHighlight = false,
-    this.isLarge = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 600 + (index * 100)),
-      curve: Curves.elasticOut,
-      builder: (context, animationValue, child) {
-        final delayedValue = (animationValue - (index * 0.1)).clamp(0.0, 1.0);
-
-        return Opacity(
-          opacity: delayedValue,
-          child: Transform.translate(
-            offset: Offset(0, 50 * (1 - delayedValue)),
-            child: Transform.scale(
-              scale: 0.8 + (0.2 * delayedValue),
-              child: child,
-            ),
-          ),
-        );
-      },
-      child: AppCard(
-        variant: isHighlight ? CardVariant.highlight : CardVariant.default_,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(8.r),
-                  decoration: BoxDecoration(
-                    color: isHighlight
-                        ? Colors.white.withValues(alpha: 0.2)
-                        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 24.w,
-                    color: isHighlight ? iconColor : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                    color: isHighlight ? Colors.white : Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.h),
-            AnimatedCounter(
-              target: value,
-              style: TextStyle(
-                fontSize: 36.sp,
-                fontWeight: FontWeight.w800,
-                color: isHighlight ? Colors.white : Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: isHighlight
-                    ? Colors.white.withValues(alpha: 0.8)
-                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
-            ),
-            if (isHighlight) ...[
-              SizedBox(height: 8.h),
-              Text(
-                '${(progress * 100).toInt()}% of monthly goal',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Colors.white.withValues(alpha: 0.7),
-                ),
-              ),
-            ],
-            SizedBox(height: 12.h),
-            AnimatedProgressBar(
-              progress: progress,
-              height: 8,
-              color: isHighlight ? Colors.white : Theme.of(context).colorScheme.primary,
-              backgroundColor: isHighlight ? Colors.white.withValues(alpha: 0.3) : null,
-              showGlow: isHighlight,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Pop-up stat card with enhanced animation
-class _PopUpStatCard extends StatelessWidget {
-  final int index;
-  final IconData? icon;
-  final Widget? iconWidget;
-  final Color? iconColor;
-  final String title;
-  final num value;
-  final String? subtitle;
-
-  const _PopUpStatCard({
-    required this.index,
-    this.icon,
-    this.iconWidget,
-    this.iconColor,
-    required this.title,
-    required this.value,
-    this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 600 + (index * 100)),
-      curve: Curves.elasticOut,
-      builder: (context, animationValue, child) {
-        final delayedValue = (animationValue - (index * 0.1)).clamp(0.0, 1.0);
-
-        return Opacity(
-          opacity: delayedValue,
-          child: Transform.translate(
-            offset: Offset(0, 50 * (1 - delayedValue)),
-            child: Transform.scale(
-              scale: 0.8 + (0.2 * delayedValue),
-              child: child,
-            ),
-          ),
-        );
-      },
-      child: AppCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (iconWidget != null)
-              iconWidget!
-            else if (icon != null)
-              Icon(
-                icon,
-                size: 28.w,
-                color: iconColor,
-              ),
-            SizedBox(height: 12.h),
-            AnimatedCounter(
-              target: value,
-              style: TextStyle(
-                fontSize: 28.sp,
-                fontWeight: FontWeight.w700,
-                color: iconColor ?? Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
-              ),
-            ),
-            if (subtitle != null) ...[
-              SizedBox(height: 4.h),
-              Text(
-                subtitle!,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Pop-up card wrapper with enhanced animation
-class _PopUpCard extends StatelessWidget {
+/// Reusable pop-up animation wrapper with staggered entrance
+class PopUpAnimation extends StatelessWidget {
   final int index;
   final Widget child;
 
-  const _PopUpCard({
+  const PopUpAnimation({
+    super.key,
     required this.index,
     required this.child,
   });
@@ -758,7 +604,192 @@ class _PopUpCard extends StatelessWidget {
           ),
         );
       },
-      child: AppCard(child: child),
+      child: child,
+    );
+  }
+}
+
+/// Pop-up metric card content
+class _MetricCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final int value;
+  final String subtitle;
+  final double progress;
+  final bool isHighlight;
+
+  const _MetricCard({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.value,
+    required this.subtitle,
+    required this.progress,
+    this.isHighlight = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return AppCard(
+      variant: isHighlight ? CardVariant.highlight : CardVariant.default_,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  color:
+                      isHighlight ? Colors.white.withValues(alpha: 0.2) : null,
+                  gradient: isHighlight
+                      ? null
+                      : AppTheme.iconBackgroundGradient(isDark),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  icon,
+                  size: 24.w,
+                  color: isHighlight
+                      ? iconColor
+                      : Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w700,
+                  color: isHighlight
+                      ? Colors.white
+                      : Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          AnimatedCounter(
+            target: value,
+            style: TextStyle(
+              fontSize: 36.sp,
+              fontWeight: FontWeight.w800,
+              color: isHighlight
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          Text(
+            subtitle.toUpperCase(),
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+              color: isHighlight
+                  ? Colors.white.withValues(alpha: 0.8)
+                  : Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
+            ),
+          ),
+          if (isHighlight) ...[
+            SizedBox(height: 8.h),
+            Text(
+              '${(progress * 100).toInt()}% of monthly goal',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.white.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+          SizedBox(height: 12.h),
+          AnimatedProgressBar(
+            progress: progress,
+            height: 8,
+            color: isHighlight
+                ? Colors.white
+                : Theme.of(context).colorScheme.primary,
+            backgroundColor:
+                isHighlight ? Colors.white.withValues(alpha: 0.3) : null,
+            showGlow: isHighlight,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Pop-up stat card content
+class _StatCard extends StatelessWidget {
+  final IconData? icon;
+  final Widget? iconWidget;
+  final Color? iconColor;
+  final String title;
+  final num value;
+  final String? subtitle;
+
+  const _StatCard({
+    this.icon,
+    this.iconWidget,
+    this.iconColor,
+    required this.title,
+    required this.value,
+    this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (iconWidget != null)
+            iconWidget!
+          else if (icon != null)
+            Icon(
+              icon,
+              size: 28.w,
+              color: iconColor,
+            ),
+          SizedBox(height: 12.h),
+          AnimatedCounter(
+            target: value,
+            style: TextStyle(
+              fontSize: 28.sp,
+              fontWeight: FontWeight.w700,
+              color: iconColor ?? Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          Text(
+            title.toUpperCase(),
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.8),
+            ),
+          ),
+          if (subtitle != null) ...[
+            SizedBox(height: 4.h),
+            Text(
+              subtitle!,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.5),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -781,7 +812,7 @@ class _TrendIndicator extends StatelessWidget {
         Icon(
           isPositive ? Icons.arrow_upward : Icons.arrow_downward,
           size: 16.w,
-          color: isPositive ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+          color: isPositive ? AppTheme.primary : AppTheme.error,
         ),
         SizedBox(width: 4.w),
         Text(
@@ -789,7 +820,7 @@ class _TrendIndicator extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: isPositive ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+            color: isPositive ? AppTheme.primary : AppTheme.error,
           ),
         ),
       ],
@@ -823,7 +854,10 @@ class _ComparisonBar extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
             ),
             Text(
@@ -883,38 +917,41 @@ class _PulsingFABState extends State<_PulsingFAB>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50.r),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF10B981).withValues(
-                  alpha: 0.3 + 0.2 * _controller.value,
-                ),
-                blurRadius: 20 + 10 * _controller.value,
-                spreadRadius: 2 + 2 * _controller.value,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
+        return Transform.translate(
+          offset: Offset(0, -5 * sin(_controller.value * pi)),
           child: Container(
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF10B981), Color(0xFF059669)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
               borderRadius: BorderRadius.circular(50.r),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.primary.withValues(
+                    alpha: 0.3 + 0.2 * _controller.value,
+                  ),
+                  blurRadius: 20 + 10 * _controller.value,
+                  spreadRadius: 2 + 2 * _controller.value,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                AppHaptics.mediumImpact();
-                context.goPickup();
-              },
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              icon: const Icon(custom_icons.FoodIcons.pickup),
-              label: const Text('Pickup My Meal'),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppTheme.primary, AppTheme.primaryDark],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(50.r),
+              ),
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  AppHaptics.mediumImpact();
+                  context.goPickup();
+                },
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                icon: const Icon(custom_icons.FoodIcons.pickup),
+                label: const Text('Pickup My Meal'),
+              ),
             ),
           ),
         );
@@ -937,7 +974,7 @@ class _DashboardShimmer extends StatelessWidget {
           width: 120.w,
           height: 16.h,
           decoration: BoxDecoration(
-            color: Colors.grey.shade200,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(4.r),
           ),
         ),
@@ -946,7 +983,7 @@ class _DashboardShimmer extends StatelessWidget {
           width: 150.w,
           height: 28.h,
           decoration: BoxDecoration(
-            color: Colors.grey.shade200,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(4.r),
           ),
         ),
@@ -960,7 +997,7 @@ class _DashboardShimmer extends StatelessWidget {
                 width: double.infinity,
                 height: 120.h,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(20.r),
                 ),
               ),

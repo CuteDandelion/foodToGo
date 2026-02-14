@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/routes.dart';
+import '../../../../config/theme.dart';
 import '../../domain/entities/user_role.dart';
 import '../bloc/auth_bloc.dart';
 
@@ -140,7 +141,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       child: Scaffold(
         body: Container(
           // Solid background color that matches the logo PNG background
-          color: const Color(0xFF29f094),
+          color: AppTheme.loginBackground,
           child: Stack(
             children: [
               // Smooth animated bubble background (no gyroscope)
@@ -154,7 +155,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.w, vertical: 20.h),
                         child: Column(
                           children: [
                             SizedBox(height: 40.h),
@@ -276,7 +278,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       child: ClipRRect(
         borderRadius: BorderRadius.circular(40.r),
         child: Image.asset(
-          'assets/icons/Screenshot 2026-02-10 161900.png',
+          'assets/icons/app_logo.png',
           fit: BoxFit.cover,
         ),
       ),
@@ -308,7 +310,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: const Color(0xFF242a24), width: 2.5),
+        border: Border.all(color: AppTheme.loginCardBorder, width: 2.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.12),
@@ -331,7 +333,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     style: TextStyle(
                       fontSize: 28.sp,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF242a24),
+                      color: AppTheme.loginTextPrimary,
                     ),
                   ),
                   SizedBox(height: 6.h),
@@ -339,7 +341,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     'Sign in to continue',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: const Color(0xFF666666),
+                      color: AppTheme.loginTextSecondary,
                     ),
                   ),
                 ],
@@ -389,19 +391,19 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                           borderRadius: BorderRadius.circular(4.r),
                           border: Border.all(
                             color: _rememberMe
-                                ? const Color(0xFF29f094)
-                                : const Color(0xFFCCCCCC),
+                                ? AppTheme.loginBackground
+                                : AppTheme.loginCheckboxUnchecked,
                             width: 2,
                           ),
                           color: _rememberMe
-                              ? const Color(0xFF29f094)
+                              ? AppTheme.loginBackground
                               : Colors.transparent,
                         ),
                         child: _rememberMe
                             ? Icon(
                                 Icons.check,
                                 size: 14.w,
-                                color: const Color(0xFF242a24),
+                                color: AppTheme.loginTextPrimary,
                               )
                             : null,
                       ),
@@ -410,7 +412,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                         'Remember me',
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: const Color(0xFF666666),
+                          color: AppTheme.loginTextSecondary,
                         ),
                       ),
                     ],
@@ -424,7 +426,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF29f094),
+                      color: AppTheme.loginBackground,
                     ),
                   ),
                 ),
@@ -441,17 +443,17 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     padding: EdgeInsets.all(12.r),
                     margin: EdgeInsets.only(bottom: 16.h),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEF4444).withValues(alpha: 0.1),
+                      color: AppTheme.error.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                        color: AppTheme.error.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
                       children: [
                         Icon(
                           Icons.error_outline,
-                          color: const Color(0xFFEF4444),
+                          color: AppTheme.error,
                           size: 20.w,
                         ),
                         SizedBox(width: 8.w),
@@ -460,7 +462,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                             state.message,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              color: const Color(0xFFEF4444),
+                              color: AppTheme.error,
                             ),
                           ),
                         ),
@@ -489,19 +491,19 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
             Row(
               children: [
                 const Expanded(
-                    child: Divider(color: Color(0xFFE0E0E0), thickness: 1)),
+                    child: Divider(color: AppTheme.loginDivider, thickness: 1)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   child: Text(
                     'or',
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: const Color(0xFF999999),
+                      color: AppTheme.loginTextMuted,
                     ),
                   ),
                 ),
                 const Expanded(
-                    child: Divider(color: Color(0xFFE0E0E0), thickness: 1)),
+                    child: Divider(color: AppTheme.loginDivider, thickness: 1)),
               ],
             ),
 
@@ -519,10 +521,10 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
             Container(
               padding: EdgeInsets.all(14.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF29f094).withValues(alpha: 0.1),
+                color: AppTheme.loginBackground.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: const Color(0xFF29f094).withValues(alpha: 0.3),
+                  color: AppTheme.loginBackground.withValues(alpha: 0.3),
                 ),
               ),
               child: Column(
@@ -533,7 +535,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF00C853),
+                      color: AppTheme.primaryDark,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -542,14 +544,14 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     'Student: student@example.com / password123',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: const Color(0xFF242a24),
+                      color: AppTheme.loginTextPrimary,
                     ),
                   ),
                   Text(
                     'Canteen: canteen@example.com / canteen123',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: const Color(0xFF242a24),
+                      color: AppTheme.loginTextPrimary,
                     ),
                   ),
                 ],
@@ -575,40 +577,41 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       validator: validator,
       style: const TextStyle(
         fontSize: 16,
-        color: Color(0xFF242a24), // Fixed color - not affected by dark mode
+        color: AppTheme
+            .loginTextPrimary, // Fixed color - not affected by dark mode
       ),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(
           fontSize: 16,
-          color: Color(0xFF999999), // Fixed hint color
+          color: AppTheme.loginTextMuted, // Fixed hint color
         ),
         prefixIcon: Icon(
           prefixIcon,
-          color: const Color(0xFF999999),
+          color: AppTheme.loginTextMuted,
           size: 22,
         ),
         border: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFFE0E0E0),
+            color: AppTheme.loginDivider,
             width: 2.w,
           ),
         ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFFE0E0E0),
+            color: AppTheme.loginDivider,
             width: 2.w,
           ),
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFF29f094),
+            color: AppTheme.loginBackground,
             width: 2.w,
           ),
         ),
         errorBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFFEF4444),
+            color: AppTheme.error,
             width: 2.w,
           ),
         ),
@@ -639,40 +642,41 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       },
       style: const TextStyle(
         fontSize: 16,
-        color: Color(0xFF242a24), // Fixed color - not affected by dark mode
+        color: AppTheme
+            .loginTextPrimary, // Fixed color - not affected by dark mode
       ),
       decoration: InputDecoration(
         hintText: 'Password',
         hintStyle: const TextStyle(
           fontSize: 16,
-          color: Color(0xFF999999), // Fixed hint color
+          color: AppTheme.loginTextMuted, // Fixed hint color
         ),
         prefixIcon: const Icon(
           Icons.lock_outline,
-          color: Color(0xFF999999),
+          color: AppTheme.loginTextMuted,
           size: 22,
         ),
         border: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFFE0E0E0),
+            color: AppTheme.loginDivider,
             width: 2.w,
           ),
         ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFFE0E0E0),
+            color: AppTheme.loginDivider,
             width: 2.w,
           ),
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFF29f094),
+            color: AppTheme.loginBackground,
             width: 2.w,
           ),
         ),
         errorBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: const Color(0xFFEF4444),
+            color: AppTheme.error,
             width: 2.w,
           ),
         ),
@@ -687,7 +691,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
           },
           child: Icon(
             _obscurePassword ? Icons.visibility_off : Icons.visibility,
-            color: const Color(0xFF999999),
+            color: AppTheme.loginTextMuted,
             size: 20.w,
           ),
         ),
@@ -712,12 +716,13 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF29f094),
-            foregroundColor: const Color(0xFF242a24),
+            backgroundColor: AppTheme.loginBackground,
+            foregroundColor: AppTheme.loginTextPrimary,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(999.r),
-              side: const BorderSide(color: Color(0xFF242a24), width: 2.5),
+              side:
+                  const BorderSide(color: AppTheme.loginCardBorder, width: 2.5),
             ),
           ),
           child: isLoading
@@ -726,7 +731,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                   height: 24.h,
                   child: const CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF242a24)),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        AppTheme.loginTextPrimary),
                   ),
                 )
               : Text(
@@ -734,7 +740,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF242a24),
+                    color: AppTheme.loginTextPrimary,
                   ),
                 ),
         ),
@@ -756,8 +762,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
             backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF29f094),
-            side: const BorderSide(color: Color(0xFF29f094), width: 2),
+            foregroundColor: AppTheme.loginBackground,
+            side: const BorderSide(color: AppTheme.loginBackground, width: 2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(999.r),
             ),
@@ -767,7 +773,7 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF29f094),
+              color: AppTheme.loginBackground,
             ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../domain/entities/food_item.dart';
 import 'food_image_widget.dart';
 
@@ -31,15 +32,15 @@ class FoodItemCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        width: 110,
-        margin: const EdgeInsets.only(right: 12),
+        width: 110.w,
+        margin: EdgeInsets.only(right: 12.w),
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary.withValues(alpha: 0.15)
               : isDark
                   ? Colors.grey[850]
                   : Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
@@ -64,10 +65,10 @@ class FoodItemCard extends StatelessWidget {
             // Selection indicator
             if (isSelected && selectionCount != null)
               Positioned(
-                top: 8,
-                right: 8,
+                top: 8.h,
+                right: 8.w,
                 child: Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: EdgeInsets.all(4.r),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
@@ -76,30 +77,30 @@ class FoodItemCard extends StatelessWidget {
                     '$selectionCount',
                     style: TextStyle(
                       color: theme.colorScheme.onPrimary,
-                      fontSize: 10,
+                      fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            
+
             // Food image
             FoodImageWidget(
               imageUrl: foodItem.imageUrl,
               localImagePath: foodItem.localImagePath,
               foodName: foodItem.name,
-              width: 70,
-              height: 70,
+              width: 70.w,
+              height: 70.h,
             ),
-            const SizedBox(height: 8),
-            
+            SizedBox(height: 8.h),
+
             // Food name
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
               child: Text(
                 foodItem.name,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: isSelected
                       ? theme.colorScheme.primary
@@ -110,40 +111,40 @@ class FoodItemCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            
+
             // Subcategory if available
             if (foodItem.subCategory != null)
               Padding(
-                padding: const EdgeInsets.only(top: 2),
+                padding: EdgeInsets.only(top: 2.h),
                 child: Text(
                   foodItem.subCategory!,
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 10.sp,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-            
+
             // Selection indicator dot
-            const SizedBox(height: 6),
+            SizedBox(height: 6.h),
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: isSelected ? 24 : 8,
-              height: 8,
+              width: isSelected ? 24.w : 8.w,
+              height: 8.h,
               decoration: BoxDecoration(
                 color: isSelected
                     ? theme.colorScheme.primary
                     : isDark
                         ? Colors.grey[700]
                         : Colors.grey[300],
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(4.r),
               ),
               child: isSelected
-                  ? const Icon(
+                  ? Icon(
                       Icons.check,
-                      size: 6,
+                      size: 6.w,
                       color: Colors.white,
                     )
                   : null,

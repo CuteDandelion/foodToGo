@@ -32,55 +32,22 @@
 
 ## 2. Screen Specifications
 
-### 2.1 Role Selection Screen
+### 2.1 Unified Login Screen (REPLACES Role Selection + Separate Logins)
+
+**Note:** The Role Selection screen has been removed. Users now authenticate through a unified login page that handles both Student and Canteen roles automatically based on their credentials.
 
 **Layout:**
 ```
 ┌─────────────────────────┐
 │                         │
-│      [LOGO]             │
-│                         │
-│  Welcome                │
-│  Select your role       │
+│      [LOGO]             │  ← FOOD + BE + GOOD with corner brackets
 │                         │
 │  ┌───────────────────┐  │
-│  │ [Student Icon]    │  │
-│  │ Student           │  │
-│  │ Track meals...    │  │
-│  └───────────────────┘  │
-│                         │
-│  ┌───────────────────┐  │
-│  │ [Canteen Icon]    │  │
-│  │ Canteen Staff     │  │
-│  │ Manage food...    │  │
-│  └───────────────────┘  │
-│                         │
-└─────────────────────────┘
-```
-
-**Components:**
-- Refined logo with gradient badge
-- Two role cards with icons and descriptions
-- Clean, professional typography
-- Subtle hover animations
-
----
-
-### 2.2 Student Login Screen
-
-**Layout:**
-```
-┌─────────────────────────┐
-│  ←                      │
-│                         │
-│      [LOGO]             │
-│                         │
-│  ┌───────────────────┐  │
-│  │ Student Login     │  │
+│  │ Student / Canteen │  │  ← Role toggle buttons
 │  │                   │  │
-│  │ Student ID        │  │
+│  │ Email             │  │
 │  │ ┌───────────────┐ │  │
-│  │ │               │ │  │
+│  │ │ student@...   │ │  │
 │  │ └───────────────┘ │  │
 │  │                   │  │
 │  │ Password          │  │
@@ -89,6 +56,7 @@
 │  │ └───────────────┘ │  │
 │  │                   │  │
 │  │ ☑ Remember me     │  │
+│  │ [Forgot Password] │  │
 │  │                   │  │
 │  │ ┌───────────────┐ │  │
 │  │ │  Sign In      │ │  │
@@ -100,11 +68,24 @@
 ```
 
 **Features:**
+- Single login form for all users
+- Email-based authentication (not Student ID)
+- Role is determined automatically from user credentials
 - Clean input fields with focus states
 - Remember me checkbox
-- Forgot password link
-- Create account option
-- Gradient background
+- Forgot password link (placeholder)
+- Create account option (placeholder)
+- Animated bubble background with gyroscope sensitivity
+- Logo popup animation on page load
+- Haptic feedback throughout
+
+**Test Credentials:**
+- Student: student@example.com / password123
+- Canteen: canteen@example.com / canteen123
+
+**Background:**
+- Light green gradient (#00E676 → #00C853 → #00B248)
+- 12 animated bubbles with parallax effect
 
 ---
 
@@ -292,51 +273,163 @@
 
 ---
 
-### 2.5 Select Meal Screen
+### 2.5 Pickup Flow - Food Selection (REVISED)
 
 **Layout:**
 ```
 ┌─────────────────────────┐
 │ ←       Select Meal     │
 ├─────────────────────────┤
-│  Step 1 of 2            │
-│  Choose your meal       │
+│  Choose your items      │
+│                         │
+│  [Food] [Beverages]    │  ← Horizontal category tabs
+│  [Desserts]             │
 │                         │
 │  ┌──┐ ┌──┐ ┌──┐        │
-│  │🌱│ │🍰│ │🍗│        │
+│  │🍖│ │🍖│ │🍖│        │  ← Horizontal scrolling
+│  │ ✓ │ │   │ │   │        │     within category
 │  └──┘ └──┘ └──┘        │
-│  Salad Dessert Side    │
-│  Bar                   │
+│  Schnitzel Bratwurst  │
+│  €4.50  €3.80          │
 │                        │
 │  ┌──┐ ┌──┐ ┌──┐        │
-│  │🍽️│ │🍽️│ │🍽️│        │
-│  │✓ │ │  │ │  │        │
+│  │🍰│ │🍰│ │🍰│        │
+│  │   │ │ ✓ │ │   │        │
 │  └──┘ └──┘ └──┘        │
-│  Main Main  Main       │
-│   1    2     3         │
+│  Strudel  Kuchen  ...  │
 │                        │
-│  Your Selection        │
-│  [tags with X buttons] │
+│  ┌─────────────────────┐
+│  │ Your Selection (3/5)│
+│  │ [Schnitzel ×1  ✕]  │
+│  │ [Kuchen ×1     ✕]  │
+│  │ [Cola ×1       ✕]  │
+│  │ ████████░░ 60%     │
+│  └─────────────────────┘
 │                        │
-│  ┌───────────────────┐ │
-│  │ 📊 Impact Preview │ │
-│  │ €6.50  1.2kg 0.8kg│ │
-│  └───────────────────┘ │
-│                        │
-│  [Confirm Selection]   │
+│  [Continue to Time Slot]│
 └────────────────────────┘
 ```
 
 **Features:**
-- 6 meal categories in grid
-- Selection toggles with visual feedback
-- Selected items as removable tags
-- Impact preview (value, food saved, CO2)
-- Confirm button
+- 3 main categories: Food, Beverages, Desserts (horizontal tabs)
+- Horizontal scrolling food items within each category
+- Food images with shimmer loading
+- Selection limit: 5 items max
+- Touch to unselect items
+- Visual feedback for selection
+- Animated container showing selected items
 
 ---
 
-### 2.6 Student Profile Screen with QR Code
+### 2.6 Time Slot Selection Screen (NEW)
+
+**Layout:**
+```
+┌─────────────────────────┐
+│ ←     Select Time      │
+├─────────────────────────┤
+│  Pickup: Schnitzel x1  │
+│         Kuchen x1       │
+│                         │
+│  Today    Tomorrow      │
+│  ┌─────────────────────┐│
+│  │ Mon 16  │ Tue 17   ││
+│  └─────────────────────┘│
+│                         │
+│  11:00 ░░░░░░░░░ 14:00 │
+│  ┌────┐ ┌────┐ ┌────┐  │
+│  │11:00│ │11:30│ │12:00│  ← Time slot buttons
+│  │ ■   │ │ ■   │ │ ■   │     ■ Available
+│  └────┘ └────┘ └────┘     □ Unavailable
+│                         │
+│  ┌────┐ ┌────┐ ┌────┐  │
+│  │12:30│ │13:00│ │13:30│  │
+│  │ ■   │ │ □   │ │ ■   │  │
+│  └────┘ └────┘ └────┘  │
+│                         │
+│  [Confirm Pickup]      │
+└────────────────────────┘
+```
+
+**Features:**
+- Calendar view with 7-day selection
+- Time slots every 30 minutes (11:00-14:00)
+- Availability indicators
+- Selected items summary at top
+
+---
+
+### 2.7 Confirmation Screen (NEW)
+
+**Layout:**
+```
+┌─────────────────────────┐
+│                         │
+│         ✓               │
+│    Order Confirmed!     │
+│                         │
+│  ┌───────────────────┐  │
+│  │ Order #ABC123      │  │
+│  │ Schnitzel x1      │  │
+│  │ Kuchen x1          │  │
+│  │ Cola x1            │  │
+│  │                     │  │
+│  │ Pickup: 12:30 Today │  │
+│  │ Location: Mensa     │  │
+│  └───────────────────┘  │
+│                         │
+│  [View QR Code]         │
+│  [Back to Dashboard]    │
+└─────────────────────────┘
+```
+
+**Features:**
+- Success animation with checkmark
+- Receipt card with order details
+- Order ID, items, pickup time, location
+- Navigation to QR code or dashboard
+
+---
+
+### 2.8 QR Code Screen (UPDATED)
+
+**Layout:**
+```
+┌─────────────────────────┐
+│ ←                       │
+│                         │
+│     █████████████       │
+│     █████████████       │
+│     ██        ██       │
+│     ██ ██  ██ ██       │
+│     ██ ██  ██ ██       │
+│     ██        ██       │
+│     █████████████       │
+│     █████████████       │
+│                         │
+│  Pickup ID: #ABC123     │
+│  Student: Zain          │
+│                         │
+│  ┌───────────────────┐  │
+│  │ ⏱ Expires in     │  │
+│  │    04:59          │  │  ← Countdown timer
+│  └───────────────────┘  │     (warning at <60s)
+│                         │
+│  [Back to Dashboard]    │
+└─────────────────────────┘
+```
+
+**Features:**
+- Custom QR code with deterministic pattern
+- Pickup ID display
+- Student name display
+- Countdown timer (5-minute expiration)
+- Warning state when <60 seconds remain
+- Order summary when data provided
+
+---
+
+### 2.9 Student Profile Screen with QR Code
 
 **Layout:**
 ```
@@ -944,5 +1037,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ---
 
-*Design documentation updated for Professional Edition - February 2025*
-*Version: 3.0 with Enhanced Metrics and Dark Mode*
+*Design documentation updated for Professional Edition - February 2026*
+*Version: 3.1 with Unified Login, Pickup Flow Redesign, and Time Slot Selection*
+
+**Key Changes from V3.0:**
+- Removed Role Selection screen (replaced with unified login)
+- Updated login to use email-based authentication
+- Redesigned pickup flow with horizontal category tabs
+- Added time slot selection screen
+- Added confirmation screen
+- Updated QR code page with countdown timer and warning state

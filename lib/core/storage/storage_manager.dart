@@ -26,7 +26,7 @@ class StorageManager {
 
     // Initialize Hive
     await Hive.initFlutter();
-    
+
     // Register adapters here when needed
     // Hive.registerAdapter(UserProfileAdapter());
     // Hive.registerAdapter(SettingsAdapter());
@@ -187,7 +187,8 @@ class SQLiteStorage {
     await db.execute('CREATE INDEX idx_profiles_user_id ON profiles(user_id)');
     await db.execute('CREATE INDEX idx_pickups_user_id ON pickups(user_id)');
     await db.execute('CREATE INDEX idx_pickups_status ON pickups(status)');
-    await db.execute('CREATE INDEX idx_meal_history_user_id ON meal_history(user_id)');
+    await db.execute(
+        'CREATE INDEX idx_meal_history_user_id ON meal_history(user_id)');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -257,7 +258,7 @@ class SQLiteStorage {
 
   Future<void> clear() async {
     if (_database == null) return;
-    
+
     await _database!.delete('meal_history');
     await _database!.delete('pickups');
     await _database!.delete('profiles');
@@ -320,10 +321,11 @@ class SharedPrefsStorage {
     await _prefs?.setStringList(key, value);
   }
 
-  Future<T?> getObject<T>(String key, T Function(Map<String, dynamic>) fromJson) async {
+  Future<T?> getObject<T>(
+      String key, T Function(Map<String, dynamic>) fromJson) async {
     final jsonString = _prefs?.getString(key);
     if (jsonString == null) return null;
-    
+
     try {
       final json = jsonDecode(jsonString) as Map<String, dynamic>;
       return fromJson(json);
@@ -332,7 +334,8 @@ class SharedPrefsStorage {
     }
   }
 
-  Future<void> setObject<T>(String key, T object, Map<String, dynamic> Function(T) toJson) async {
+  Future<void> setObject<T>(
+      String key, T object, Map<String, dynamic> Function(T) toJson) async {
     final json = toJson(object);
     final jsonString = jsonEncode(json);
     await _prefs?.setString(key, jsonString);

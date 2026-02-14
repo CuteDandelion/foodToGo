@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foodbegood/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:foodbegood/shared/services/mock_data_service.dart';
 import '../../../../config/routes.dart';
+import '../../../../config/theme.dart';
 import '../bloc/theme_bloc.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -9,6 +12,17 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthBloc>().state;
+    final mockDataService = MockDataService();
+    final user = authState is AuthAuthenticated
+        ? mockDataService.getUserById(authState.userId)
+        : null;
+    final userName = user?.profile.fullName ?? 'Student';
+    final roleLabel =
+        authState is AuthAuthenticated && authState.role == UserRole.canteen
+            ? 'Canteen Staff'
+            : 'Student';
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -35,7 +49,10 @@ class SettingsPage extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50.r,
-                  backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.1),
                   child: Icon(
                     Icons.person,
                     size: 50.w,
@@ -44,14 +61,17 @@ class SettingsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  'Zain Ul Ebad',
+                  userName,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Text(
-                  'Student at MRU',
+                  '$roleLabel at MRU',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
+                      ),
                 ),
               ],
             ),
@@ -94,7 +114,10 @@ class SettingsPage extends StatelessWidget {
                 secondary: Container(
                   padding: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Icon(
@@ -130,7 +153,7 @@ class SettingsPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () => _showSignOutDialog(context),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEF4444),
+              backgroundColor: AppTheme.error,
               foregroundColor: Colors.white,
               minimumSize: Size(double.infinity, 56.h),
             ),
@@ -145,7 +168,10 @@ class SettingsPage extends StatelessWidget {
               'FoodBeGood v1.0.0',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.4),
               ),
             ),
           ),
@@ -171,7 +197,7 @@ class SettingsPage extends StatelessWidget {
               context.goLogin();
             },
             style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFFEF4444),
+              backgroundColor: AppTheme.error,
             ),
             child: const Text('SIGN OUT'),
           ),
@@ -212,7 +238,10 @@ class SettingsPage extends StatelessWidget {
               subtitle,
               style: TextStyle(
                 fontSize: 13.sp,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
             )
           : null,

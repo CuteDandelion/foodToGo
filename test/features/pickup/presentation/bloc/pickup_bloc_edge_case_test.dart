@@ -4,7 +4,7 @@ import 'package:foodbegood/features/pickup/domain/entities/food_item.dart';
 import 'package:foodbegood/features/pickup/presentation/bloc/pickup_bloc.dart';
 
 /// Edge Case Tests for PickupBloc
-/// 
+///
 /// These tests cover boundary conditions, error scenarios, and
 /// unusual situations in the pickup flow.
 void main() {
@@ -19,7 +19,6 @@ void main() {
   });
 
   group('PickupBloc Edge Cases', () {
-    
     group('Edge Case: Empty and Null States', () {
       test('initial state has all default values', () {
         expect(pickupBloc.state.status, PickupStatus.initial);
@@ -38,7 +37,7 @@ void main() {
           status: PickupStatus.ready,
           selectedItems: [],
         );
-        
+
         // Deselecting from empty should keep it empty
         expect(state.selectedItems, isEmpty);
       });
@@ -51,7 +50,7 @@ void main() {
           status: PickupStatus.ready,
           selectedItems: [],
         );
-        
+
         expect(state.selectedItems, isEmpty);
       });
     });
@@ -61,10 +60,13 @@ void main() {
         'prevents adding more than 5 items total',
         build: () => pickupBloc,
         seed: () => PickupState(
-          foodItems: const [FoodItem(id: 'new', name: 'New', category: MainCategory.food)],
+          foodItems: const [
+            FoodItem(id: 'new', name: 'New', category: MainCategory.food)
+          ],
           selectedItems: List.generate(
             5,
-            (i) => FoodItem(id: 'item$i', name: 'Item $i', category: MainCategory.food),
+            (i) => FoodItem(
+                id: 'item$i', name: 'Item $i', category: MainCategory.food),
           ),
           status: PickupStatus.ready,
         ),
@@ -72,8 +74,8 @@ void main() {
           FoodItem(id: 'new', name: 'New', category: MainCategory.food),
         )),
         expect: () => [
-          isA<PickupState>()
-            .having((s) => s.errorMessage, 'error message', contains('Maximum 5 items')),
+          isA<PickupState>().having((s) => s.errorMessage, 'error message',
+              contains('Maximum 5 items')),
         ],
       );
 
@@ -81,19 +83,29 @@ void main() {
         'prevents adding more than 2 of same item',
         build: () => pickupBloc,
         seed: () => const PickupState(
-          foodItems: [FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food)],
+          foodItems: [
+            FoodItem(
+                id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food)
+          ],
           selectedItems: [
-            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
-            FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+            FoodItem(
+                id: 'schnitzel',
+                name: 'Schnitzel',
+                category: MainCategory.food),
+            FoodItem(
+                id: 'schnitzel',
+                name: 'Schnitzel',
+                category: MainCategory.food),
           ],
           status: PickupStatus.ready,
         ),
         act: (bloc) => bloc.add(const PickupItemSelected(
-          FoodItem(id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
+          FoodItem(
+              id: 'schnitzel', name: 'Schnitzel', category: MainCategory.food),
         )),
         expect: () => [
-          isA<PickupState>()
-            .having((s) => s.errorMessage, 'error message', contains('Maximum 2')),
+          isA<PickupState>().having(
+              (s) => s.errorMessage, 'error message', contains('Maximum 2')),
         ],
       );
     });
@@ -109,10 +121,14 @@ void main() {
           bloc.add(const PickupCategoryChanged(MainCategory.food));
         },
         expect: () => [
-          isA<PickupState>().having((s) => s.selectedCategory, 'category', MainCategory.food),
-          isA<PickupState>().having((s) => s.selectedCategory, 'category', MainCategory.beverages),
-          isA<PickupState>().having((s) => s.selectedCategory, 'category', MainCategory.desserts),
-          isA<PickupState>().having((s) => s.selectedCategory, 'category', MainCategory.food),
+          isA<PickupState>()
+              .having((s) => s.selectedCategory, 'category', MainCategory.food),
+          isA<PickupState>().having(
+              (s) => s.selectedCategory, 'category', MainCategory.beverages),
+          isA<PickupState>().having(
+              (s) => s.selectedCategory, 'category', MainCategory.desserts),
+          isA<PickupState>()
+              .having((s) => s.selectedCategory, 'category', MainCategory.food),
         ],
       );
     });
@@ -123,7 +139,8 @@ void main() {
         build: () => pickupBloc,
         act: (bloc) => bloc.add(const PickupLoadItems()),
         expect: () => [
-          isA<PickupState>().having((s) => s.status, 'status', PickupStatus.ready),
+          isA<PickupState>()
+              .having((s) => s.status, 'status', PickupStatus.ready),
         ],
       );
 
@@ -131,7 +148,9 @@ void main() {
         'maintains state immutability',
         build: () => pickupBloc,
         seed: () => const PickupState(
-          foodItems: [FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food)],
+          foodItems: [
+            FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food)
+          ],
           selectedItems: [],
           status: PickupStatus.ready,
         ),
@@ -150,10 +169,13 @@ void main() {
         'clears error message on successful action',
         build: () => pickupBloc,
         seed: () => PickupState(
-          foodItems: const [FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food)],
+          foodItems: const [
+            FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food)
+          ],
           selectedItems: List.generate(
             5,
-            (i) => FoodItem(id: 'item$i', name: 'Item $i', category: MainCategory.food),
+            (i) => FoodItem(
+                id: 'item$i', name: 'Item $i', category: MainCategory.food),
           ),
           errorMessage: 'Previous error',
           status: PickupStatus.ready,
@@ -163,8 +185,8 @@ void main() {
         )),
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.errorMessage, 'error message', isNull)
-            .having((s) => s.selectedItems.length, 'selected items', 4),
+              .having((s) => s.errorMessage, 'error message', isNull)
+              .having((s) => s.selectedItems.length, 'selected items', 4),
         ],
       );
     });
@@ -174,7 +196,9 @@ void main() {
         'reset clears all selected items and loads fresh',
         build: () => pickupBloc,
         seed: () => const PickupState(
-          foodItems: [FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food)],
+          foodItems: [
+            FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food)
+          ],
           selectedItems: [
             FoodItem(id: 'item1', name: 'Item 1', category: MainCategory.food),
             FoodItem(id: 'item2', name: 'Item 2', category: MainCategory.food),
@@ -185,11 +209,11 @@ void main() {
         act: (bloc) => bloc.add(const PickupReset()),
         expect: () => [
           isA<PickupState>()
-            .having((s) => s.selectedItems.length, 'selected items', 0)
-            .having((s) => s.status, 'status', PickupStatus.initial),
+              .having((s) => s.selectedItems.length, 'selected items', 0)
+              .having((s) => s.status, 'status', PickupStatus.initial),
           isA<PickupState>()
-            .having((s) => s.status, 'status', PickupStatus.ready)
-            .having((s) => s.foodItems.length, 'food items', greaterThan(0)),
+              .having((s) => s.status, 'status', PickupStatus.ready)
+              .having((s) => s.foodItems.length, 'food items', greaterThan(0)),
         ],
       );
     });

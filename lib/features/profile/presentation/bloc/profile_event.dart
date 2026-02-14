@@ -46,6 +46,16 @@ class ProfilePhotoUpdate extends ProfileEvent {
   List<Object?> get props => [photoPath];
 }
 
+/// Load meal history for profile user
+class ProfileMealHistoryLoad extends ProfileEvent {
+  final String? userId;
+
+  const ProfileMealHistoryLoad({this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}
+
 /// Clear profile state
 class ProfileClear extends ProfileEvent {
   const ProfileClear();

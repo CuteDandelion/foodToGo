@@ -78,10 +78,14 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => mockDataService.getUserByStudentId('61913042')).called(1);
-          verify(() => mockDataService.verifyPassword('password123', any())).called(1);
-          verify(() => mockPrefs.setString(AppConstants.storageKeyUserId, '1')).called(1);
-          verify(() => mockPrefs.setString(AppConstants.storageKeyToken, any(that: contains('mock_token')))).called(1);
+          verify(() => mockDataService.getUserByStudentId('61913042'))
+              .called(1);
+          verify(() => mockDataService.verifyPassword('password123', any()))
+              .called(1);
+          verify(() => mockPrefs.setString(AppConstants.storageKeyUserId, '1'))
+              .called(1);
+          verify(() => mockPrefs.setString(AppConstants.storageKeyToken,
+              any(that: contains('mock_token')))).called(1);
         },
       );
 
@@ -101,7 +105,8 @@ void main() {
           const AuthError('User not found'),
         ],
         verify: (_) {
-          verify(() => mockDataService.getUserByStudentId('invalid_id')).called(1);
+          verify(() => mockDataService.getUserByStudentId('invalid_id'))
+              .called(1);
           verifyNever(() => mockDataService.verifyPassword(any(), any()));
         },
       );
@@ -124,8 +129,10 @@ void main() {
           const AuthError('Invalid password'),
         ],
         verify: (_) {
-          verify(() => mockDataService.getUserByStudentId('61913042')).called(1);
-          verify(() => mockDataService.verifyPassword('wrongpassword', any())).called(1);
+          verify(() => mockDataService.getUserByStudentId('61913042'))
+              .called(1);
+          verify(() => mockDataService.verifyPassword('wrongpassword', any()))
+              .called(1);
           verifyNever(() => mockPrefs.setString(any(), any()));
         },
       );
@@ -171,8 +178,10 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => mockPrefs.setString(AppConstants.storageKeyUserId, '1')).called(1);
-          verify(() => mockPrefs.setString(AppConstants.storageKeyToken, any())).called(1);
+          verify(() => mockPrefs.setString(AppConstants.storageKeyUserId, '1'))
+              .called(1);
+          verify(() => mockPrefs.setString(AppConstants.storageKeyToken, any()))
+              .called(1);
         },
       );
     });
@@ -194,8 +203,10 @@ void main() {
         act: (bloc) => bloc.add(AuthLogoutRequested()),
         expect: () => [AuthUnauthenticated()],
         verify: (_) {
-          verify(() => mockPrefs.remove(AppConstants.storageKeyUserId)).called(1);
-          verify(() => mockPrefs.remove(AppConstants.storageKeyToken)).called(1);
+          verify(() => mockPrefs.remove(AppConstants.storageKeyUserId))
+              .called(1);
+          verify(() => mockPrefs.remove(AppConstants.storageKeyToken))
+              .called(1);
         },
       );
     });
@@ -217,8 +228,7 @@ void main() {
         setUp: () {
           when(() => mockPrefs.getString(AppConstants.storageKeyUserId))
               .thenAnswer((_) async => '1');
-          when(() => mockDataService.getUserById('1'))
-              .thenReturn(testUser);
+          when(() => mockDataService.getUserById('1')).thenReturn(testUser);
         },
         build: () => authBloc,
         act: (bloc) => bloc.add(AuthCheckRequested()),
@@ -229,7 +239,8 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => mockPrefs.getString(AppConstants.storageKeyUserId)).called(1);
+          verify(() => mockPrefs.getString(AppConstants.storageKeyUserId))
+              .called(1);
           verify(() => mockDataService.getUserById('1')).called(1);
         },
       );
@@ -250,8 +261,7 @@ void main() {
         setUp: () {
           when(() => mockPrefs.getString(AppConstants.storageKeyUserId))
               .thenAnswer((_) async => '999');
-          when(() => mockDataService.getUserById('999'))
-              .thenReturn(null);
+          when(() => mockDataService.getUserById('999')).thenReturn(null);
         },
         build: () => authBloc,
         act: (bloc) => bloc.add(AuthCheckRequested()),

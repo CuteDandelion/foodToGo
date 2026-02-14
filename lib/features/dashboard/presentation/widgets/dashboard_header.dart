@@ -29,25 +29,34 @@ class DashboardHeader extends StatelessWidget {
             Icon(
               Icons.calendar_today_outlined,
               size: 16.w,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.6),
             ),
             SizedBox(width: 8.w),
-              Flexible(
-                child: Text(
-                  dateFormat.format(now),
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                  overflow: TextOverflow.ellipsis,
+            Flexible(
+              child: Text(
+                dateFormat.format(now),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-              const Spacer(),
+            ),
+            const Spacer(),
             Icon(
               Icons.access_time_outlined,
               size: 16.w,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.6),
             ),
             SizedBox(width: 8.w),
             Text(
@@ -55,7 +64,10 @@ class DashboardHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.8),
               ),
             ),
           ],

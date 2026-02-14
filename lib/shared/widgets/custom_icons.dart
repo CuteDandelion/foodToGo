@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../config/theme.dart';
 import 'animations.dart';
 
 /// Custom food category icons to replace emoji
@@ -137,19 +139,19 @@ class FoodCategoryIcons {
   static Color getColor(String categoryName) {
     final name = categoryName.toLowerCase();
     if (name.contains('salad') || name.contains('green')) {
-      return const Color(0xFF10B981);
+      return AppTheme.primary;
     } else if (name.contains('dessert') || name.contains('sweet')) {
-      return const Color(0xFFF59E0B);
+      return AppTheme.warning;
     } else if (name.contains('side') || name.contains('rice')) {
       return const Color(0xFF8B5CF6);
     } else if (name.contains('chicken') || name.contains('meat')) {
       return const Color(0xFFF97316);
     } else if (name.contains('fish') || name.contains('seafood')) {
-      return const Color(0xFF3B82F6);
+      return AppTheme.info;
     } else if (name.contains('veggie') || name.contains('vegetable')) {
       return const Color(0xFF22C55E);
     } else if (name.contains('fruit')) {
-      return const Color(0xFFEC4899);
+      return AppTheme.social;
     } else if (name.contains('drink') || name.contains('beverage')) {
       return const Color(0xFF06B6D4);
     } else if (name.contains('snack')) {
@@ -157,7 +159,7 @@ class FoodCategoryIcons {
     } else if (name.contains('bread')) {
       return const Color(0xFFD97706);
     }
-    return const Color(0xFF10B981);
+    return AppTheme.primary;
   }
 }
 
@@ -263,8 +265,8 @@ class IconContainer extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: backgroundColor ??
-            theme.colorScheme.primary.withValues(alpha: 0.1),
+        color:
+            backgroundColor ?? theme.colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Center(

@@ -73,8 +73,8 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final progressColor = widget.color ?? theme.colorScheme.primary;
-    final bgColor = widget.backgroundColor ??
-        progressColor.withValues(alpha: 0.2);
+    final bgColor =
+        widget.backgroundColor ?? progressColor.withValues(alpha: 0.2);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular((widget.height / 2).r),
@@ -164,8 +164,7 @@ class SegmentedProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final progressColor = color ?? theme.colorScheme.primary;
-    final bgColor = backgroundColor ??
-        progressColor.withValues(alpha: 0.2);
+    final bgColor = backgroundColor ?? progressColor.withValues(alpha: 0.2);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -319,9 +318,7 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
               color: progressColor,
               gradientColors: widget.gradientColors,
             ),
-            child: widget.child != null
-                ? Center(child: widget.child)
-                : null,
+            child: widget.child != null ? Center(child: widget.child) : null,
           );
         },
       ),

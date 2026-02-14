@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/routes.dart';
+import '../../../../config/theme.dart';
+import '../../../../shared/widgets/shimmer_loading.dart';
 import '../../domain/entities/food_item.dart';
 import '../bloc/pickup_bloc.dart';
 import '../widgets/food_item_card.dart';
 import '../widgets/horizontal_category_tabs.dart';
 
 /// Redesigned pickup page with horizontal scrolling categories
-class PickupPage extends StatelessWidget {
+class PickupPage extends StatefulWidget {
   const PickupPage({super.key});
 
   @override
+  State<PickupPage> createState() => _PickupPageState();
+}
+
+class _PickupPageState extends State<PickupPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Load items when page is first shown
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<PickupBloc>().add(const PickupLoadItems());
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PickupBloc()..add(const PickupLoadItems()),
-      child: const _PickupPageContent(),
-    );
+    return const _PickupPageContent();
   }
 }
 
@@ -68,71 +84,78 @@ class _PickupPageContentState extends State<_PickupPageContent> {
           navigator.pop();
         }
       },
-      child: Scaffold(
-        backgroundColor: isDark ? const Color(0xFF1B5E20) : const Color(0xFFE8F5E9),
-        appBar: AppBar(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? AppTheme.darkBackgroundGradient
+              : AppTheme.lightBackgroundGradient,
+        ),
+        child: Scaffold(
           backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () async {
-              final navigator = Navigator.of(context);
-              final shouldPop = await _onWillPop();
-              if (shouldPop && mounted) {
-                navigator.pop();
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () async {
+                final navigator = Navigator.of(context);
+                final shouldPop = await _onWillPop();
+                if (shouldPop && mounted) {
+                  navigator.pop();
+                }
+              },
+            ),
+            title: const Text(
+              'Pick Up My Meal',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            centerTitle: true,
+          ),
+          body: BlocConsumer<PickupBloc, PickupState>(
+            listener: (context, state) {
+              if (state.errorMessage != null) {
+                HapticFeedback.vibrate();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage!),
+                    backgroundColor: theme.colorScheme.error,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
               }
             },
-          ),
-          title: const Text(
-            'Pick Up My Meal',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          centerTitle: true,
-        ),
-        body: BlocConsumer<PickupBloc, PickupState>(
-          listener: (context, state) {
-            if (state.errorMessage != null) {
-              HapticFeedback.vibrate();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage!),
-                  backgroundColor: theme.colorScheme.error,
-                  behavior: SnackBarBehavior.floating,
-                ),
+            builder: (context, state) {
+              if (state.status == PickupStatus.initial ||
+                  state.status == PickupStatus.loading) {
+                return const _PickupLoadingState();
+              }
+
+              return Column(
+                children: [
+                  // Category tabs
+                  HorizontalCategoryTabs(
+                    selectedCategory: state.selectedCategory,
+                    onCategorySelected: (category) {
+                      HapticFeedback.lightImpact();
+                      context
+                          .read<PickupBloc>()
+                          .add(PickupCategoryChanged(category));
+                    },
+                  ),
+                  SizedBox(height: 16.h),
+
+                  // Food items list (horizontal scrolling)
+                  _buildFoodItemsList(context, state),
+
+                  // Selected items container
+                  _buildSelectedItemsContainer(context, state),
+
+                  // Continue button
+                  _buildContinueButton(context, state),
+                ],
               );
-            }
-          },
-          builder: (context, state) {
-            if (state.status == PickupStatus.initial ||
-                state.status == PickupStatus.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            return Column(
-              children: [
-                // Category tabs
-                HorizontalCategoryTabs(
-                  selectedCategory: state.selectedCategory,
-                  onCategorySelected: (category) {
-                    HapticFeedback.lightImpact();
-                    context
-                        .read<PickupBloc>()
-                        .add(PickupCategoryChanged(category));
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Food items list (horizontal scrolling)
-                _buildFoodItemsList(context, state),
-
-                // Selected items container
-                _buildSelectedItemsContainer(context, state),
-
-                // Continue button
-                _buildContinueButton(context, state),
-              ],
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -144,28 +167,27 @@ class _PickupPageContentState extends State<_PickupPageContent> {
         .toList();
 
     return Container(
-      height: 180,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: 180.h,
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             state.selectedCategory.displayName,
-            style: const TextStyle(
-              fontSize: 18,
+            style: TextStyle(
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: filteredItems.length,
               itemBuilder: (context, index) {
                 final item = filteredItems[index];
-                final selectionCount = state.selectedItems
-                    .where((i) => i.id == item.id)
-                    .length;
+                final selectionCount =
+                    state.selectedItems.where((i) => i.id == item.id).length;
                 final isSelected = selectionCount > 0;
 
                 return FoodItemCard(
@@ -180,9 +202,7 @@ class _PickupPageContentState extends State<_PickupPageContent> {
                           .add(PickupItemDeselected(item));
                     } else {
                       // Select
-                      context
-                          .read<PickupBloc>()
-                          .add(PickupItemSelected(item));
+                      context.read<PickupBloc>().add(PickupItemSelected(item));
                     }
                   },
                 );
@@ -199,11 +219,11 @@ class _PickupPageContentState extends State<_PickupPageContent> {
 
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.all(16.r),
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.circular(20),
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
@@ -224,11 +244,11 @@ class _PickupPageContentState extends State<_PickupPageContent> {
                       Icons.shopping_basket,
                       color: theme.colorScheme.primary,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Text(
                       'Your Container',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -236,27 +256,28 @@ class _PickupPageContentState extends State<_PickupPageContent> {
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
                     color: state.selectedItems.length >= 5
-                        ? Colors.red.withValues(alpha: 0.1)
+                        ? AppTheme.error.withValues(alpha: 0.1)
                         : theme.colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
                     '${state.selectedItems.length}/5',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: state.selectedItems.length >= 5
-                          ? Colors.red
+                          ? AppTheme.error
                           : theme.colorScheme.primary,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             if (state.selectedItems.isEmpty)
               Expanded(
                 child: Center(
@@ -265,23 +286,17 @@ class _PickupPageContentState extends State<_PickupPageContent> {
                     children: [
                       Icon(
                         Icons.touch_app,
-                        size: 48,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                        size: 48.r,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12.h),
                       Text(
                         'Tap items above to add them',
                         style: TextStyle(
-                          fontSize: 14,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Tap items here to remove them',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                          fontSize: 14.sp,
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.5),
                         ),
                       ),
                     ],
@@ -290,76 +305,25 @@ class _PickupPageContentState extends State<_PickupPageContent> {
               )
             else
               Expanded(
-                child: ListView.builder(
-                  itemCount: state.selectedItems.length,
-                  itemBuilder: (context, index) {
-                    final item = state.selectedItems[index];
-                    return Dismissible(
-                      key: Key('${item.id}_$index'),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (_) {
-                        HapticFeedback.lightImpact();
-                        context
-                            .read<PickupBloc>()
-                            .add(PickupItemDeselected(item));
-                      },
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ),
-                      ),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: Text(
-                              item.category.icon,
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          item.name,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        subtitle: Text(
-                          item.category.displayName,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.close, size: 20),
-                          onPressed: () {
-                            HapticFeedback.lightImpact();
-                            context
-                                .read<PickupBloc>()
-                                .add(PickupItemDeselected(item));
-                          },
-                        ),
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          context
-                              .read<PickupBloc>()
-                              .add(PickupItemDeselected(item));
-                        },
-                      ),
-                    );
-                  },
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    spacing: 8.w,
+                    runSpacing: 8.h,
+                    children: state.selectedItems
+                        .asMap()
+                        .entries
+                        .map((entry) => _SelectedItemTag(
+                              emoji: entry.value.category.icon,
+                              name: entry.value.name,
+                              onRemove: () {
+                                HapticFeedback.lightImpact();
+                                context.read<PickupBloc>().add(
+                                      PickupItemDeselected(entry.value),
+                                    );
+                              },
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
           ],
@@ -373,9 +337,9 @@ class _PickupPageContentState extends State<_PickupPageContent> {
     final canContinue = state.selectedItems.isNotEmpty;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -389,16 +353,18 @@ class _PickupPageContentState extends State<_PickupPageContent> {
           onPressed: canContinue
               ? () {
                   HapticFeedback.mediumImpact();
-                  context.read<PickupBloc>().add(const PickupNavigateToTimeSlot());
+                  context
+                      .read<PickupBloc>()
+                      .add(const PickupNavigateToTimeSlot());
                   context.goTimeSlot();
                 }
               : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,
             foregroundColor: theme.colorScheme.onPrimary,
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: 16.h),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             disabledBackgroundColor: Colors.grey[300],
           ),
@@ -406,18 +372,18 @@ class _PickupPageContentState extends State<_PickupPageContent> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.access_time),
-              const SizedBox(width: 12),
-              const Text(
+              SizedBox(width: 12.w),
+              Text(
                 'Select Pickup Time',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               if (canContinue)
                 Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: EdgeInsets.all(4.r),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
@@ -425,7 +391,7 @@ class _PickupPageContentState extends State<_PickupPageContent> {
                   child: Text(
                     '${state.selectedItems.length}',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onPrimary,
                     ),
@@ -434,6 +400,114 @@ class _PickupPageContentState extends State<_PickupPageContent> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Loading state for pickup page with shimmer effect
+class _PickupLoadingState extends StatelessWidget {
+  const _PickupLoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Category tabs shimmer
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: Row(
+            children: List.generate(
+              3,
+              (index) => Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: index < 2 ? 8.w : 0),
+                  child: const ShimmerListItem(),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 16.h),
+
+        // Food items shimmer
+        Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            itemCount: 4,
+            itemBuilder: (context, index) => const ShimmerListItem(),
+          ),
+        ),
+
+        // Selected items container shimmer
+        Container(
+          margin: EdgeInsets.all(16.r),
+          padding: EdgeInsets.all(16.r),
+          child: const ShimmerMetricCard(),
+        ),
+      ],
+    );
+  }
+}
+
+/// Pill-shaped tag for a selected food item
+class _SelectedItemTag extends StatelessWidget {
+  final String emoji;
+  final String name;
+  final VoidCallback onRemove;
+
+  const _SelectedItemTag({
+    required this.emoji,
+    required this.name,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: isDark ? AppTheme.darkBorder : AppTheme.lightBorder,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(emoji, style: TextStyle(fontSize: 16.sp)),
+          SizedBox(width: 6.w),
+          Text(
+            name,
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          SizedBox(width: 6.w),
+          GestureDetector(
+            onTap: onRemove,
+            child: Container(
+              width: 18.r,
+              height: 18.r,
+              decoration: const BoxDecoration(
+                color: AppTheme.error,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.close,
+                size: 11.r,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../config/theme.dart';
 import 'animations.dart';
 
 /// Enhanced button with gradient background and animations
@@ -80,11 +82,12 @@ class _GradientButtonState extends State<GradientButton>
 
   @override
   Widget build(BuildContext context) {
-    final isDisabled = widget.disabled || widget.isLoading || widget.onPressed == null;
+    final isDisabled =
+        widget.disabled || widget.isLoading || widget.onPressed == null;
     final colors = widget.gradientColors ??
         const [
-          Color(0xFF10B981),
-          Color(0xFF059669),
+          AppTheme.primary,
+          AppTheme.primaryDark,
         ];
 
     Widget buttonContent = Container(

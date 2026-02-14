@@ -16,6 +16,9 @@ class ProfileState extends Equatable {
   final int totalMeals;
   final double monthlyAverage;
   final int currentStreak;
+  final List<Map<String, dynamic>> mealHistory;
+  final bool isMealHistoryLoading;
+  final String? mealHistoryErrorMessage;
   final String? errorMessage;
 
   const ProfileState({
@@ -24,6 +27,9 @@ class ProfileState extends Equatable {
     this.totalMeals = 0,
     this.monthlyAverage = 0,
     this.currentStreak = 0,
+    this.mealHistory = const [],
+    this.isMealHistoryLoading = false,
+    this.mealHistoryErrorMessage,
     this.errorMessage,
   });
 
@@ -33,6 +39,9 @@ class ProfileState extends Equatable {
     int? totalMeals,
     double? monthlyAverage,
     int? currentStreak,
+    List<Map<String, dynamic>>? mealHistory,
+    bool? isMealHistoryLoading,
+    String? mealHistoryErrorMessage,
     String? errorMessage,
   }) {
     return ProfileState(
@@ -41,6 +50,9 @@ class ProfileState extends Equatable {
       totalMeals: totalMeals ?? this.totalMeals,
       monthlyAverage: monthlyAverage ?? this.monthlyAverage,
       currentStreak: currentStreak ?? this.currentStreak,
+      mealHistory: mealHistory ?? this.mealHistory,
+      isMealHistoryLoading: isMealHistoryLoading ?? this.isMealHistoryLoading,
+      mealHistoryErrorMessage: mealHistoryErrorMessage,
       errorMessage: errorMessage,
     );
   }
@@ -52,6 +64,9 @@ class ProfileState extends Equatable {
         totalMeals,
         monthlyAverage,
         currentStreak,
+        mealHistory,
+        isMealHistoryLoading,
+        mealHistoryErrorMessage,
         errorMessage,
       ];
 }

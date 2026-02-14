@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../../config/theme.dart';
+
 /// Utility class for getting urgency-based colors for countdown timers
 class UrgencyColor {
-  static const Color _green = Color(0xFF10B981);
-  static const Color _yellow = Color(0xFFF59E0B);
-  static const Color _red = Color(0xFFEF4444);
+  static const Color _green = AppTheme.primary;
+  static const Color _yellow = AppTheme.warning;
+  static const Color _red = AppTheme.error;
 
   /// Returns a color based on time remaining
   /// - Green: > 1 hour

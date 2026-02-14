@@ -23,6 +23,9 @@ void main() {
       expect(profileBloc.state.totalMeals, 0);
       expect(profileBloc.state.monthlyAverage, 0);
       expect(profileBloc.state.currentStreak, 0);
+      expect(profileBloc.state.mealHistory, isEmpty);
+      expect(profileBloc.state.isMealHistoryLoading, isFalse);
+      expect(profileBloc.state.mealHistoryErrorMessage, isNull);
     });
 
     group('ProfileLoad', () {
@@ -32,12 +35,13 @@ void main() {
         act: (bloc) => bloc.add(const ProfileLoad()),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.loading),
+              .having((s) => s.status, 'status', ProfileStatus.loading),
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.loaded)
-            .having((s) => s.user, 'user', isNotNull)
-            .having((s) => s.totalMeals, 'total meals', greaterThan(0))
-            .having((s) => s.monthlyAverage, 'monthly average', greaterThan(0)),
+              .having((s) => s.status, 'status', ProfileStatus.loaded)
+              .having((s) => s.user, 'user', isNotNull)
+              .having((s) => s.totalMeals, 'total meals', greaterThan(0))
+              .having(
+                  (s) => s.monthlyAverage, 'monthly average', greaterThan(0)),
         ],
       );
 
@@ -46,11 +50,12 @@ void main() {
         build: () => profileBloc,
         act: (bloc) => bloc.add(const ProfileLoad()),
         expect: () => [
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.loading),
           isA<ProfileState>()
-            .having((s) => s.user?.studentId, 'student ID', '61913042')
-            .having((s) => s.user?.profile.firstName, 'first name', 'Zain')
-            .having((s) => s.user?.profile.lastName, 'last name', 'Ul Ebad'),
+              .having((s) => s.status, 'status', ProfileStatus.loading),
+          isA<ProfileState>()
+              .having((s) => s.user?.studentId, 'student ID', '61913042')
+              .having((s) => s.user?.profile.firstName, 'first name', 'Zain')
+              .having((s) => s.user?.profile.lastName, 'last name', 'Ul Ebad'),
         ],
       );
     });
@@ -76,11 +81,11 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.loaded)
-            .having((s) => s.user?.profile.firstName, 'first name', 'Updated')
-            .having((s) => s.user?.profile.lastName, 'last name', 'Name'),
+              .having((s) => s.status, 'status', ProfileStatus.loaded)
+              .having((s) => s.user?.profile.firstName, 'first name', 'Updated')
+              .having((s) => s.user?.profile.lastName, 'last name', 'Name'),
         ],
       );
 
@@ -103,10 +108,12 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.department, 'department', 'Updated Department')
-            .having((s) => s.user?.profile.firstName, 'first name', 'Zain'), // Unchanged
+              .having((s) => s.user?.profile.department, 'department',
+                  'Updated Department')
+              .having((s) => s.user?.profile.firstName, 'first name',
+                  'Zain'), // Unchanged
         ],
       );
     });
@@ -129,9 +136,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
-          isA<ProfileState>()
-            .having((s) => s.user?.profile.photoPath, 'photo path', '/path/to/photo.jpg'),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
+          isA<ProfileState>().having((s) => s.user?.profile.photoPath,
+              'photo path', '/path/to/photo.jpg'),
         ],
       );
     });
@@ -153,9 +160,26 @@ void main() {
         act: (bloc) => bloc.add(const ProfileClear()),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.initial)
-            .having((s) => s.user, 'user', isNull)
-            .having((s) => s.totalMeals, 'total meals', 0),
+              .having((s) => s.status, 'status', ProfileStatus.initial)
+              .having((s) => s.user, 'user', isNull)
+              .having((s) => s.totalMeals, 'total meals', 0),
+        ],
+      );
+    });
+
+    group('ProfileMealHistoryLoad', () {
+      blocTest<ProfileBloc, ProfileState>(
+        'emits loading and then meal history data',
+        build: () => profileBloc,
+        act: (bloc) => bloc.add(const ProfileMealHistoryLoad(userId: '1')),
+        expect: () => [
+          isA<ProfileState>()
+              .having((s) => s.isMealHistoryLoading, 'loading', isTrue)
+              .having((s) => s.mealHistoryErrorMessage, 'error', isNull),
+          isA<ProfileState>()
+              .having((s) => s.isMealHistoryLoading, 'loading', isFalse)
+              .having((s) => s.mealHistory, 'history', isNotEmpty)
+              .having((s) => s.mealHistoryErrorMessage, 'error', isNull),
         ],
       );
     });
@@ -163,7 +187,7 @@ void main() {
     group('State Properties', () {
       test('ProfileState should be equatable', () {
         final user = mockDataService.getUserByStudentId('61913042')!;
-        
+
         final state1 = ProfileState(
           status: ProfileStatus.loaded,
           user: user,
@@ -171,7 +195,7 @@ void main() {
           monthlyAverage: 12.3,
           currentStreak: 5,
         );
-        
+
         final state2 = ProfileState(
           status: ProfileStatus.loaded,
           user: user,
@@ -185,7 +209,7 @@ void main() {
 
       test('ProfileState copyWith should work correctly', () {
         final user = mockDataService.getUserByStudentId('61913042')!;
-        
+
         final state = ProfileState(
           status: ProfileStatus.loaded,
           user: user,
@@ -220,6 +244,15 @@ void main() {
         const event1 = ProfilePhotoUpdate('/path/1');
         const event2 = ProfilePhotoUpdate('/path/1');
         const event3 = ProfilePhotoUpdate('/path/2');
+
+        expect(event1, equals(event2));
+        expect(event1, isNot(equals(event3)));
+      });
+
+      test('ProfileMealHistoryLoad should be equatable', () {
+        const event1 = ProfileMealHistoryLoad(userId: '1');
+        const event2 = ProfileMealHistoryLoad(userId: '1');
+        const event3 = ProfileMealHistoryLoad(userId: '2');
 
         expect(event1, equals(event2));
         expect(event1, isNot(equals(event3)));

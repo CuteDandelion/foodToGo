@@ -28,10 +28,10 @@ This document outlines the recommended technology stack for building the FoodBeG
 ### 1.2 Flutter Specifics
 
 ```yaml
-# Recommended Flutter version
-flutter: ">=3.16.0 <4.0.0"
+# Current Flutter version (as of Feb 2026)
+flutter: "3.27.3"
 
-dart: ">=3.2.0 <4.0.0"
+dart: ">=3.5.0 <4.0.0"
 ```
 
 **Key Dependencies:**
@@ -39,6 +39,8 @@ dart: ">=3.2.0 <4.0.0"
 ```yaml
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   
   # Navigation
@@ -48,14 +50,18 @@ dependencies:
   flutter_bloc: ^8.1.3
   equatable: ^2.0.5
   
-  # HTTP Client
+  # Networking
   dio: ^5.4.0
   retrofit: ^4.0.3
   
   # Local Storage
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  sqflite: ^2.3.0
   shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.0.0
+  path_provider: ^2.1.2
+  path: ^1.8.3
   
   # UI Components
   flutter_screenutil: ^5.9.0
@@ -67,6 +73,7 @@ dependencies:
   camera: ^0.10.5+9
   mobile_scanner: ^3.5.5
   qr_flutter: ^4.1.0
+  image_picker: ^1.0.7
   
   # Firebase
   firebase_core: ^2.24.2
@@ -74,24 +81,31 @@ dependencies:
   firebase_analytics: ^10.8.0
   firebase_crashlytics: ^3.4.9
   
-  # Location
-  geolocator: ^10.1.0
-  
   # Charts & Visualization
   fl_chart: ^0.66.0
   
   # Internationalization
-  flutter_localizations:
-    sdk: flutter
-  intl: ^0.18.1
+  intl: ^0.19.0
   
   # Security
   flutter_secure_storage: ^9.0.0
   local_auth: ^2.1.8
   
-  # Image Processing
-  image_picker: ^1.0.7
-  image_cropper: ^5.0.1
+  # Utils
+  intl: ^0.19.0
+  logger: ^2.0.2
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  uuid: ^4.2.1
+  crypto: ^3.0.3
+  dartz: ^0.10.1
+  
+  # Sensors
+  sensors_plus: ^4.0.2
+  
+  # Dependency Injection
+  get_it: ^7.6.4
+  injectable: ^2.3.2
 ```
 
 **Navigation:**
@@ -606,7 +620,8 @@ version: 1.0.0+1
 publish_to: 'none'
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: "3.27.3"
 
 dependencies:
   flutter:
@@ -625,11 +640,14 @@ dependencies:
   dio: ^5.4.0
   retrofit: ^4.0.3
   
-  # Storage
+  # Local Storage
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  sqflite: ^2.3.0
   shared_preferences: ^2.2.2
   flutter_secure_storage: ^9.0.0
+  path_provider: ^2.1.2
+  path: ^1.8.3
   
   # UI
   flutter_screenutil: ^5.9.0
@@ -653,13 +671,25 @@ dependencies:
   fl_chart: ^0.66.0
   
   # Utils
-  intl: ^0.18.1
+  intl: ^0.19.0
   logger: ^2.0.2
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
+  uuid: ^4.2.1
+  crypto: ^3.0.3
+  dartz: ^0.10.1
+  
+  # Sensors
+  sensors_plus: ^4.0.2
+  
+  # Dependency Injection
+  get_it: ^7.6.4
+  injectable: ^2.3.2
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   flutter_lints: ^3.0.1
   very_good_analysis: ^5.1.0
@@ -670,6 +700,7 @@ dev_dependencies:
   hive_generator: ^2.0.1
   mocktail: ^1.0.1
   bloc_test: ^9.1.5
+  injectable_generator: ^2.4.1
   patrol: ^3.0.0
 
 flutter:
@@ -679,8 +710,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/fonts/
-    - .env
   
   fonts:
     - family: Inter
@@ -847,9 +876,10 @@ flutter:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 3.0.0 | 2026-02-14 | Updated to Flutter 3.27.3, added sensors_plus, sqflite, dependency injection |
 | 2.0.0 | 2025-02-04 | Migrated from React Native to Flutter as primary mobile framework |
 | 1.0.0 | 2025-02-04 | Initial technology stack documentation with React Native |
 
 ---
 
-*Technology stack updated to use Flutter as the primary mobile framework - February 2025*
+*Technology stack updated to Flutter 3.27.3 - February 2026*

@@ -7,7 +7,7 @@ import 'package:foodbegood/shared/services/mock_data_service.dart';
 class MockMockDataService extends Mock implements MockDataService {}
 
 /// Edge Case Tests for DashboardBloc
-/// 
+///
 /// These tests cover boundary conditions, error scenarios, and
 /// unusual situations in the dashboard functionality.
 void main() {
@@ -261,7 +261,7 @@ void main() {
         expect: () => [
           DashboardLoading(),
           isA<DashboardLoadSuccess>()
-            .having((s) => s.data.nextPickup, 'nextPickup', isNull),
+              .having((s) => s.data.nextPickup, 'nextPickup', isNull),
         ],
       );
 
@@ -293,8 +293,10 @@ void main() {
         act: (bloc) => bloc.add(const DashboardLoaded()),
         expect: () => [
           DashboardLoading(),
-          isA<DashboardLoadSuccess>()
-            .having((s) => s.data.moneySaved.breakdown.isEmpty, 'breakdown empty', isTrue),
+          isA<DashboardLoadSuccess>().having(
+              (s) => s.data.moneySaved.breakdown.isEmpty,
+              'breakdown empty',
+              isTrue),
         ],
       );
     });
@@ -381,7 +383,7 @@ void main() {
         expect: () => [
           DashboardLoading(),
           isA<DashboardError>()
-            .having((s) => s.message, 'message', contains('TypeError')),
+              .having((s) => s.message, 'message', contains('TypeError')),
         ],
       );
 
@@ -395,8 +397,8 @@ void main() {
         act: (bloc) => bloc.add(const DashboardLoaded()),
         expect: () => [
           DashboardLoading(),
-          isA<DashboardError>()
-            .having((s) => s.message, 'message', contains('Invalid argument')),
+          isA<DashboardError>().having(
+              (s) => s.message, 'message', contains('Invalid argument')),
         ],
       );
 
@@ -411,7 +413,7 @@ void main() {
         expect: () => [
           DashboardLoading(),
           isA<DashboardError>()
-            .having((s) => s.message, 'message', contains('Bad state')),
+              .having((s) => s.message, 'message', contains('Bad state')),
         ],
       );
     });
@@ -510,7 +512,7 @@ void main() {
         const event1 = DashboardLoaded(userId: 'user1');
         const event2 = DashboardLoaded(userId: 'user1');
         const event3 = DashboardLoaded(userId: 'user2');
-        
+
         expect(event1, equals(event2));
         expect(event1, isNot(equals(event3)));
       });

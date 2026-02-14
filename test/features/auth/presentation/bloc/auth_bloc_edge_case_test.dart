@@ -13,7 +13,7 @@ class MockStorageManager extends Mock implements StorageManager {}
 class MockSharedPrefsStorage extends Mock implements SharedPrefsStorage {}
 
 /// Edge Case Tests for AuthBloc
-/// 
+///
 /// These tests cover boundary conditions, error scenarios, and
 /// unusual but possible situations that the auth system should handle.
 void main() {
@@ -44,8 +44,7 @@ void main() {
       blocTest<AuthBloc, AuthState>(
         'handles empty student ID',
         setUp: () {
-          when(() => mockDataService.getUserByStudentId(''))
-              .thenReturn(null);
+          when(() => mockDataService.getUserByStudentId('')).thenReturn(null);
         },
         build: () => authBloc,
         act: (bloc) => bloc.add(const AuthLoginRequested(
@@ -87,8 +86,7 @@ void main() {
       blocTest<AuthBloc, AuthState>(
         'handles both empty student ID and password',
         setUp: () {
-          when(() => mockDataService.getUserByStudentId(''))
-              .thenReturn(null);
+          when(() => mockDataService.getUserByStudentId('')).thenReturn(null);
         },
         build: () => authBloc,
         act: (bloc) => bloc.add(const AuthLoginRequested(
@@ -106,7 +104,8 @@ void main() {
       blocTest<AuthBloc, AuthState>(
         'handles SQL injection attempt in student ID',
         setUp: () {
-          when(() => mockDataService.getUserByStudentId("'; DROP TABLE users; --"))
+          when(() =>
+                  mockDataService.getUserByStudentId("'; DROP TABLE users; --"))
               .thenReturn(null);
         },
         build: () => authBloc,
@@ -149,8 +148,8 @@ void main() {
           );
           when(() => mockDataService.getUserByStudentId('61913042'))
               .thenReturn(testUser);
-          when(() => mockDataService.verifyPassword('<script>alert("xss")</script>', any()))
-              .thenReturn(false);
+          when(() => mockDataService.verifyPassword(
+              '<script>alert("xss")</script>', any())).thenReturn(false);
         },
         build: () => authBloc,
         act: (bloc) => bloc.add(const AuthLoginRequested(
@@ -375,8 +374,6 @@ void main() {
         act: (bloc) => bloc.add(AuthCheckRequested()),
         expect: () => [AuthUnauthenticated()],
       );
-
-
     });
 
     group('Edge Case: Rapid Operations', () {
@@ -438,8 +435,7 @@ void main() {
               .thenReturn(true);
           when(() => mockPrefs.setString(any(), any()))
               .thenAnswer((_) async => {});
-          when(() => mockPrefs.remove(any()))
-              .thenAnswer((_) async => {});
+          when(() => mockPrefs.remove(any())).thenAnswer((_) async => {});
         },
         build: () => authBloc,
         seed: () => const AuthAuthenticated(
@@ -543,8 +539,7 @@ void main() {
         setUp: () {
           when(() => mockPrefs.getString(AppConstants.storageKeyUserId))
               .thenAnswer((_) async => '   ');
-          when(() => mockDataService.getUserById('   '))
-              .thenReturn(null);
+          when(() => mockDataService.getUserById('   ')).thenReturn(null);
         },
         build: () => authBloc,
         act: (bloc) => bloc.add(AuthCheckRequested()),
@@ -603,8 +598,10 @@ void main() {
           password: 'password123',
           rememberMe: false,
         );
-        expect(request1.props, equals(['61913042', null, 'password123', true, null]));
-        expect(request2.props, equals(['61913042', null, 'password123', false, null]));
+        expect(request1.props,
+            equals(['61913042', null, 'password123', true, null]));
+        expect(request2.props,
+            equals(['61913042', null, 'password123', false, null]));
         expect(request1.props, isNot(equals(request2.props)));
       });
     });

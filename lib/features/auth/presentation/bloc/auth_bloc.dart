@@ -26,7 +26,8 @@ class AuthLoginRequested extends AuthEvent {
     required this.password,
     this.rememberMe = false,
     this.role,
-  }) : assert(studentId != null || email != null, 'Either studentId or email must be provided');
+  }) : assert(studentId != null || email != null,
+            'Either studentId or email must be provided');
 
   @override
   List<Object?> get props => [studentId, email, password, rememberMe, role];
@@ -123,7 +124,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       // Store session
       await _storage.prefs.setString(AppConstants.storageKeyUserId, user.id);
-      await _storage.prefs.setString(AppConstants.storageKeyToken, 'mock_token_${user.id}');
+      await _storage.prefs
+          .setString(AppConstants.storageKeyToken, 'mock_token_${user.id}');
 
       emit(AuthAuthenticated(
         userId: user.id,
@@ -148,7 +150,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      final userId = await _storage.prefs.getString(AppConstants.storageKeyUserId);
+      final userId =
+          await _storage.prefs.getString(AppConstants.storageKeyUserId);
 
       if (userId != null) {
         final user = _mockDataService.getUserById(userId);

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/routes.dart';
+import '../../../../config/theme.dart';
 import '../bloc/pickup_bloc.dart';
 
 /// Page for selecting pickup time slot
@@ -14,59 +16,66 @@ class TimeSlotSelectionPage extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1B5E20) : const Color(0xFFE8F5E9),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Select Pickup Time',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: isDark
+            ? AppTheme.darkBackgroundGradient
+            : AppTheme.lightBackgroundGradient,
       ),
-      body: BlocConsumer<PickupBloc, PickupState>(
-        listener: (context, state) {
-          if (state.status == PickupStatus.submitted) {
-            // Navigate to confirmation page
-            context.goConfirmation();
-          }
-        },
-        builder: (context, state) {
-          return Column(
-            children: [
-              // Selected items summary
-              _buildSelectedItemsSummary(context, state),
-              
-              // Calendar
-              _buildCalendar(context, state),
-              
-              // Time slots
-              Expanded(
-                child: _buildTimeSlots(context, state),
-              ),
-              
-              // Confirm button
-              _buildConfirmButton(context, state),
-            ],
-          );
-        },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Select Pickup Time',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+        body: BlocConsumer<PickupBloc, PickupState>(
+          listener: (context, state) {
+            if (state.status == PickupStatus.submitted) {
+              // Navigate to confirmation page
+              context.goConfirmation();
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                // Selected items summary
+                _buildSelectedItemsSummary(context, state),
+
+                // Calendar
+                _buildCalendar(context, state),
+
+                // Time slots
+                Expanded(
+                  child: _buildTimeSlots(context, state),
+                ),
+
+                // Confirm button
+                _buildConfirmButton(context, state),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget _buildSelectedItemsSummary(BuildContext context, PickupState state) {
     final theme = Theme.of(context);
-    
+
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -84,27 +93,28 @@ class TimeSlotSelectionPage extends StatelessWidget {
                 Icons.shopping_bag_outlined,
                 color: theme.colorScheme.primary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               Text(
                 'Selected Items (${state.selectedItems.length})',
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: 8.w,
+            runSpacing: 8.h,
             children: state.selectedItems.map((item) {
               return Chip(
                 label: Text(
                   item.name,
-                  style: const TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12.sp),
                 ),
-                backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                backgroundColor:
+                    theme.colorScheme.primary.withValues(alpha: 0.1),
                 side: BorderSide.none,
               );
             }).toList(),
@@ -120,14 +130,14 @@ class TimeSlotSelectionPage extends StatelessWidget {
     final days = List.generate(7, (index) => now.add(Duration(days: index)));
 
     return Container(
-      height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: 100.h,
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: days.length,
         itemBuilder: (context, index) {
           final day = days[index];
-          final isSelected = state.availableTimeSlots.isNotEmpty && 
+          final isSelected = state.availableTimeSlots.isNotEmpty &&
               state.availableTimeSlots.first.date.day == day.day;
           final isToday = day.day == now.day;
 
@@ -138,15 +148,15 @@ class TimeSlotSelectionPage extends StatelessWidget {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: 70,
-              margin: const EdgeInsets.only(right: 12),
+              width: 70.w,
+              margin: EdgeInsets.only(right: 12.w),
               decoration: BoxDecoration(
                 color: isSelected
                     ? theme.colorScheme.primary
                     : isToday
                         ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                        : theme.cardColor,
-                borderRadius: BorderRadius.circular(16),
+                        : theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(16.r),
                 border: isToday && !isSelected
                     ? Border.all(color: theme.colorScheme.primary, width: 2)
                     : null,
@@ -157,30 +167,30 @@ class TimeSlotSelectionPage extends StatelessWidget {
                   Text(
                     DateFormat('EEE').format(day),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                       color: isSelected
                           ? theme.colorScheme.onPrimary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                   Text(
                     '${day.day}',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
                       color: isSelected
                           ? theme.colorScheme.onPrimary
                           : theme.colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                   if (isToday)
                     Text(
                       'Today',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
                         color: isSelected
                             ? theme.colorScheme.onPrimary
@@ -210,14 +220,14 @@ class TimeSlotSelectionPage extends StatelessWidget {
           children: [
             Icon(
               Icons.access_time,
-              size: 48,
+              size: 48.r,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Text(
               'No available time slots',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
@@ -227,26 +237,26 @@ class TimeSlotSelectionPage extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Available Times',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Expanded(
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 2.5,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+                crossAxisSpacing: 12.w,
+                mainAxisSpacing: 12.h,
               ),
               itemCount: state.availableTimeSlots.length,
               itemBuilder: (context, index) {
@@ -269,14 +279,15 @@ class TimeSlotSelectionPage extends StatelessWidget {
                       color: isSelected
                           ? theme.colorScheme.primary
                           : isAvailable
-                              ? theme.cardColor
+                              ? theme.colorScheme.surface
                               : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       border: isSelected
                           ? null
                           : Border.all(
                               color: isAvailable
-                                  ? theme.colorScheme.primary.withValues(alpha: 0.3)
+                                  ? theme.colorScheme.primary
+                                      .withValues(alpha: 0.3)
                                   : Colors.grey[400]!,
                             ),
                     ),
@@ -287,7 +298,7 @@ class TimeSlotSelectionPage extends StatelessWidget {
                           Text(
                             slot.time,
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                               color: isSelected
                                   ? theme.colorScheme.onPrimary
@@ -300,10 +311,12 @@ class TimeSlotSelectionPage extends StatelessWidget {
                             Text(
                               '${slot.availableSpots} spots',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 10.sp,
                                 color: isSelected
-                                    ? theme.colorScheme.onPrimary.withValues(alpha: 0.8)
-                                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                    ? theme.colorScheme.onPrimary
+                                        .withValues(alpha: 0.8)
+                                    : theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
                               ),
                             ),
                         ],
@@ -324,9 +337,9 @@ class TimeSlotSelectionPage extends StatelessWidget {
     final canConfirm = state.selectedTimeSlot != null;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -346,9 +359,9 @@ class TimeSlotSelectionPage extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,
             foregroundColor: theme.colorScheme.onPrimary,
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: 16.h),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             disabledBackgroundColor: Colors.grey[300],
           ),
@@ -356,23 +369,23 @@ class TimeSlotSelectionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (state.status == PickupStatus.confirming)
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: const CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
               else
                 const Icon(Icons.send),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               Text(
                 state.status == PickupStatus.confirming
                     ? 'Sending to Canteen...'
                     : 'Send to Canteen',
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),

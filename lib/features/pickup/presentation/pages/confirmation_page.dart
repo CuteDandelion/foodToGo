@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/routes.dart';
+import '../../../../config/theme.dart';
+import '../../../../shared/widgets/app_card.dart';
+import '../../domain/entities/food_item.dart';
 import '../bloc/pickup_bloc.dart';
 
 /// Confirmation page showing receipt after order submission
@@ -20,35 +24,42 @@ class ConfirmationPage extends StatelessWidget {
         if (didPop) return;
         // Reset and go back to dashboard
         context.read<PickupBloc>().add(const PickupReset());
-        context.goDashboard();
+        context.goStudentDashboard();
       },
-      child: Scaffold(
-        backgroundColor: isDark ? const Color(0xFF1B5E20) : const Color(0xFFE8F5E9),
-        body: BlocBuilder<PickupBloc, PickupState>(
-          builder: (context, state) {
-            final order = state.currentOrder;
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? AppTheme.darkBackgroundGradient
+              : AppTheme.lightBackgroundGradient,
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: BlocBuilder<PickupBloc, PickupState>(
+            builder: (context, state) {
+              final order = state.currentOrder;
 
-            if (order == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
+              if (order == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            return SafeArea(
-              child: Column(
-                children: [
-                  // Success animation/icon
-                  _buildSuccessHeader(context),
-                  
-                  // Receipt card
-                  Expanded(
-                    child: _buildReceiptCard(context, order),
-                  ),
-                  
-                  // Action buttons
-                  _buildActionButtons(context),
-                ],
-              ),
-            );
-          },
+              return SafeArea(
+                child: Column(
+                  children: [
+                    // Success animation/icon
+                    _buildSuccessHeader(context),
+
+                    // Receipt card
+                    Expanded(
+                      child: _buildReceiptCard(context, order),
+                    ),
+
+                    // Action buttons
+                    _buildActionButtons(context),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -58,7 +69,7 @@ class ConfirmationPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24.r),
       child: Column(
         children: [
           // Success checkmark with animation
@@ -70,42 +81,42 @@ class ConfirmationPage extends StatelessWidget {
               return Transform.scale(
                 scale: value,
                 child: Container(
-                  width: 100,
-                  height: 100,
+                  width: 100.w,
+                  height: 100.h,
                   decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: AppTheme.primary,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withValues(alpha: 0.4),
+                        color: AppTheme.primary.withValues(alpha: 0.4),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.check,
                     color: Colors.white,
-                    size: 60,
+                    size: 60.r,
                   ),
                 ),
               );
             },
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.h),
           Text(
             'Order Confirmed!',
             style: TextStyle(
-              fontSize: 28,
+              fontSize: 28.sp,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Text(
             'Your order has been sent to the canteen',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 16.sp,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
@@ -114,211 +125,210 @@ class ConfirmationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildReceiptCard(BuildContext context, order) {
+  Widget _buildReceiptCard(BuildContext context, PickupOrder order) {
     final theme = Theme.of(context);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Card(
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Order ID
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Order #${order.id.substring(order.id.length - 6)}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.primary,
-                      ),
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      child: AppCard(
+        padding: EdgeInsets.all(24.r),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Order ID
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Order #${order.id.substring(order.id.length - 6)}',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.primary,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                            size: 14,
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            'Confirmed',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(height: 32),
-                
-                // Items
-                Text(
-                  'Items',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
-                ),
-                const SizedBox(height: 12),
-                ...order.items.map((item) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            item.name,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        if (item.subCategory != null)
-                          Text(
-                            item.subCategory!,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                            ),
-                          ),
-                      ],
-                    ),
-                  );
-                }),
-                const Divider(height: 32),
-                
-                // Pickup time
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      color: theme.colorScheme.primary,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Pickup Time',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${DateFormat('EEEE, MMM d').format(order.timeSlot.date)} at ${order.timeSlot.time}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                
-                // Location
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: theme.colorScheme.primary,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Location',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Mensa Viadrina',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(height: 32),
-                
-                // Canteen message
-                if (order.canteenMessage != null)
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppTheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.info_outline,
-                          color: theme.colorScheme.primary,
-                          size: 20,
+                          Icons.check_circle,
+                          color: AppTheme.primary,
+                          size: 14.r,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            order.canteenMessage!,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                            ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          'Confirmed',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.primary,
                           ),
                         ),
                       ],
                     ),
                   ),
-              ],
-            ),
+                ],
+              ),
+              Divider(height: 32.h),
+
+              // Items
+              Text(
+                'Items',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+              SizedBox(height: 12.h),
+              ...order.items.map((item) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 8.h),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 8.w,
+                        height: 8.h,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Text(
+                          item.name,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      if (item.subCategory != null)
+                        Text(
+                          item.subCategory!,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.5),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              }),
+              Divider(height: 32.h),
+
+              // Pickup time
+              Row(
+                children: [
+                  Icon(
+                    Icons.access_time,
+                    color: theme.colorScheme.primary,
+                    size: 24.r,
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Pickup Time',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          '${DateFormat('EEEE, MMM d').format(order.timeSlot.date)} at ${order.timeSlot.time}',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+
+              // Location
+              Row(
+                children: [
+                  Icon(
+                    Icons.location_on,
+                    color: theme.colorScheme.primary,
+                    size: 24.r,
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Location',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Mensa Viadrina',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Divider(height: 32.h),
+
+              // Canteen message
+              if (order.canteenMessage != null)
+                Container(
+                  padding: EdgeInsets.all(16.r),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: theme.colorScheme.primary,
+                        size: 20.r,
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Text(
+                          order.canteenMessage!,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.8),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
         ),
       ),
@@ -327,9 +337,10 @@ class ConfirmationPage extends StatelessWidget {
 
   Widget _buildActionButtons(BuildContext context) {
     final theme = Theme.of(context);
+    final order = context.select((PickupBloc bloc) => bloc.state.currentOrder);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       child: SafeArea(
         child: Column(
           children: [
@@ -338,60 +349,70 @@ class ConfirmationPage extends StatelessWidget {
               onPressed: () {
                 HapticFeedback.mediumImpact();
                 context.read<PickupBloc>().add(const PickupReset());
-                context.goDashboard();
+                context.goStudentDashboard();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: theme.colorScheme.onPrimary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                minimumSize: const Size(double.infinity, 56),
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                minimumSize: Size(double.infinity, 56.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.home),
-                  SizedBox(width: 12),
+                  const Icon(Icons.home),
+                  SizedBox(width: 12.w),
                   Text(
                     'Back to Dashboard',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 12),
-            
+            SizedBox(height: 12.h),
+
             // View QR code button
             OutlinedButton(
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                // Navigate to dashboard with QR code accessible via swipe
-                context.read<PickupBloc>().add(const PickupReset());
-                context.goDashboard();
-              },
+              onPressed: order == null
+                  ? null
+                  : () {
+                      HapticFeedback.lightImpact();
+                      final pickupTime =
+                          '${DateFormat('EEEE, MMM d').format(order.timeSlot.date)} at ${order.timeSlot.time}';
+                      context.goQRCode(
+                        pickupId: order.id,
+                        studentName: 'Zain Ul Ebad',
+                        orderItems:
+                            order.items.map((item) => item.name).toList(),
+                        pickupTime: pickupTime,
+                        expiresAt:
+                            DateTime.now().add(const Duration(minutes: 5)),
+                      );
+                    },
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.colorScheme.primary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                minimumSize: const Size(double.infinity, 56),
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                minimumSize: Size(double.infinity, 56.h),
                 side: BorderSide(color: theme.colorScheme.primary),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.qr_code),
-                  SizedBox(width: 12),
+                  const Icon(Icons.qr_code),
+                  SizedBox(width: 12.w),
                   Text(
-                    'View QR Code (Swipe on Dashboard)',
+                    'View QR Code',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

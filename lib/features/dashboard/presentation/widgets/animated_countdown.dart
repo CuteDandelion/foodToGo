@@ -80,7 +80,10 @@ class _AnimatedCountdownState extends State<AnimatedCountdown> {
             widget.label!,
             style: TextStyle(
               fontSize: 11.sp,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.5),
             ),
           ),
       ],
