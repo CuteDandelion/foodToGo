@@ -10,7 +10,7 @@ class MockStorageManager extends Mock implements StorageManager {}
 class MockSharedPrefsStorage extends Mock implements SharedPrefsStorage {}
 
 /// Edge Case Tests for ThemeBloc
-/// 
+///
 /// These tests cover boundary conditions, error scenarios, and
 /// unusual situations in the theme management functionality.
 void main() {
@@ -160,7 +160,8 @@ void main() {
           bloc.add(ThemeToggled()); // false -> true
           bloc.add(const ThemeChanged(false)); // explicit false
           bloc.add(ThemeToggled()); // false -> true
-          bloc.add(const ThemeChanged(true)); // explicit true (no change - not emitted)
+          bloc.add(const ThemeChanged(
+              true)); // explicit true (no change - not emitted)
         },
         expect: () => [
           const ThemeState(isDarkMode: true),

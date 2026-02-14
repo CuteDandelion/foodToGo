@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../config/theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Shimmer loading card for dashboard metrics
@@ -16,16 +17,16 @@ class ShimmerMetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: isHighlight 
-          ? Colors.green.shade300 
+      baseColor: isHighlight
+          ? AppTheme.primary.withValues(alpha: 0.7)
           : Theme.of(context).colorScheme.surfaceContainerHighest,
-      highlightColor: isHighlight 
-          ? Colors.green.shade200 
+      highlightColor: isHighlight
+          ? AppTheme.primary.withValues(alpha: 0.5)
           : Theme.of(context).colorScheme.surfaceContainerLowest,
       child: Container(
         padding: EdgeInsets.all(20.r),
         decoration: BoxDecoration(
-          color: isHighlight ? Colors.green : Colors.white,
+          color: isHighlight ? AppTheme.primary : Colors.white,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
@@ -208,7 +209,8 @@ class DashboardShimmer extends StatelessWidget {
           // Header shimmer
           Shimmer.fromColors(
             baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-            highlightColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+            highlightColor:
+                Theme.of(context).colorScheme.surfaceContainerLowest,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -233,15 +235,15 @@ class DashboardShimmer extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24.h),
-          
+
           // Large metric card
           const ShimmerMetricCard(isLarge: true, isHighlight: true),
           SizedBox(height: 16.h),
-          
+
           // Money saved card
           const ShimmerMetricCard(isLarge: true),
           SizedBox(height: 16.h),
-          
+
           // Stats grid
           Row(
             children: [
@@ -251,11 +253,11 @@ class DashboardShimmer extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          
+
           // Next pickup card
           const ShimmerMetricCard(),
           SizedBox(height: 16.h),
-          
+
           // Social impact card
           const ShimmerMetricCard(isHighlight: true),
           SizedBox(height: 100.h), // Space for FAB

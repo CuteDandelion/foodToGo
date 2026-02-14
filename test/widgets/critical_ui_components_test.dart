@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foodbegood/app.dart';
 import 'package:foodbegood/config/routes.dart';
-import 'package:foodbegood/features/auth/presentation/pages/login_page.dart';
-import 'package:foodbegood/features/auth/presentation/pages/role_selection_page.dart';
 import 'package:foodbegood/shared/widgets/app_button.dart';
 import 'package:foodbegood/shared/widgets/app_card.dart';
 import 'package:foodbegood/shared/widgets/app_input.dart';
 
 /// Widget Tests for Critical UI Components
-/// 
+///
 /// These tests verify that key UI components render correctly
 /// and respond to user interactions as expected.
 void main() {
@@ -208,10 +206,12 @@ void main() {
       );
 
       final container = tester.widget<Container>(
-        find.descendant(
-          of: find.byType(AppCard),
-          matching: find.byType(Container),
-        ).last,
+        find
+            .descendant(
+              of: find.byType(AppCard),
+              matching: find.byType(Container),
+            )
+            .last,
       );
       expect(container.padding, equals(const EdgeInsets.all(32)));
     });
@@ -317,7 +317,8 @@ void main() {
         ),
       );
 
-      final textField = tester.widget<TextFormField>(find.byType(TextFormField));
+      final textField =
+          tester.widget<TextFormField>(find.byType(TextFormField));
       expect(textField.enabled, isFalse);
     });
 
@@ -338,113 +339,12 @@ void main() {
     });
   });
 
-  group('RoleSelectionPage Widget Tests', () {
-    testWidgets('Role selection page renders correctly', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: RoleSelectionPage(),
-        ),
-      );
-
-      expect(find.text('Welcome!'), findsOneWidget);
-      expect(find.text('Select your role to continue'), findsOneWidget);
-      expect(find.text('Student'), findsOneWidget);
-      expect(find.text('Canteen Staff'), findsOneWidget);
-    });
-
-    testWidgets('Student card is tappable', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: AppRouter.router,
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(find.text('Student'), findsOneWidget);
-    });
-
-    testWidgets('Canteen Staff card is tappable', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: AppRouter.router,
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(find.text('Canteen Staff'), findsOneWidget);
-    });
-  });
-
-  group('LoginPage Widget Tests', () {
-    testWidgets('Student login page renders correctly', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: LoginPage(role: 'student'),
-        ),
-      );
-
-      expect(find.text('Student Login'), findsOneWidget);
-      expect(find.text('Student ID'), findsOneWidget);
-      expect(find.text('Password'), findsOneWidget);
-      expect(find.text('Sign In'), findsOneWidget);
-    });
-
-    testWidgets('Canteen login page renders correctly', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: LoginPage(role: 'canteen'),
-        ),
-      );
-
-      expect(find.text('Canteen Login'), findsOneWidget);
-      expect(find.text('Staff ID'), findsOneWidget);
-      expect(find.text('Password'), findsOneWidget);
-    });
-
-    testWidgets('Login form accepts input', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: LoginPage(role: 'student'),
-        ),
-      );
-
-      await tester.enterText(find.byType(TextField).first, '61913042');
-      await tester.enterText(find.byType(TextField).last, 'password123');
-      await tester.pump();
-
-      expect(find.text('61913042'), findsOneWidget);
-      expect(find.text('password123'), findsOneWidget);
-    });
-
-    testWidgets('Sign In button is present', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: LoginPage(role: 'student'),
-        ),
-      );
-
-      expect(find.text('Sign In'), findsOneWidget);
-    });
-
-    testWidgets('Remember me checkbox is present', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: LoginPage(role: 'student'),
-        ),
-      );
-
-      expect(find.byType(CheckboxListTile), findsOneWidget);
-    });
-  });
-
   group('FoodBeGoodApp Widget Tests', () {
     testWidgets('App renders without errors', (tester) async {
       await tester.pumpWidget(const FoodBeGoodApp());
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      // Should show role selection page
+      // Should show unified login page
       expect(find.text('Welcome!'), findsOneWidget);
     });
 
@@ -475,7 +375,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Should start at role selection
+      // Should start at unified login
       expect(find.text('Welcome!'), findsOneWidget);
     });
   });

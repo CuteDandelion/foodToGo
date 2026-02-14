@@ -43,7 +43,8 @@ void main() {
         final hashedPassword = _hashPassword(password);
 
         // Act
-        final result = mockDataService.verifyPassword(wrongPassword, hashedPassword);
+        final result =
+            mockDataService.verifyPassword(wrongPassword, hashedPassword);
 
         // Assert
         expect(result, isFalse);
@@ -87,8 +88,10 @@ void main() {
       test('should be case insensitive', () {
         // Act
         final user = mockDataService.getUserByStudentId('61913042');
-        final userUpper = mockDataService.getUserByStudentId('61913042'.toUpperCase());
-        final userLower = mockDataService.getUserByStudentId('61913042'.toLowerCase());
+        final userUpper =
+            mockDataService.getUserByStudentId('61913042'.toUpperCase());
+        final userLower =
+            mockDataService.getUserByStudentId('61913042'.toLowerCase());
 
         // Assert
         expect(user?.id, equals(userUpper?.id));

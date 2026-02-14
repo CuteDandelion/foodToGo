@@ -67,7 +67,8 @@ void main() {
           DashboardLoadSuccess(testDashboardData),
         ],
         verify: (_) {
-          verify(() => mockDataService.getDashboardForUser('user_123')).called(1);
+          verify(() => mockDataService.getDashboardForUser('user_123'))
+              .called(1);
         },
       );
 
@@ -98,7 +99,8 @@ void main() {
         act: (bloc) => bloc.add(const DashboardLoaded(userId: 'user_123')),
         expect: () => [
           DashboardLoading(),
-          const DashboardError('Failed to load dashboard: Exception: Database error'),
+          const DashboardError(
+              'Failed to load dashboard: Exception: Database error'),
         ],
       );
     });
@@ -131,7 +133,8 @@ void main() {
         act: (bloc) => bloc.add(const DashboardRefreshed()),
         expect: () => [
           DashboardLoading(),
-          const DashboardError('Failed to refresh dashboard: Exception: Network error'),
+          const DashboardError(
+              'Failed to refresh dashboard: Exception: Network error'),
         ],
       );
 

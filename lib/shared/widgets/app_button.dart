@@ -58,7 +58,8 @@ class _AppButtonState extends State<AppButton> {
 
   @override
   Widget build(BuildContext context) {
-    final isDisabled = widget.disabled || widget.isLoading || widget.onPressed == null;
+    final isDisabled =
+        widget.disabled || widget.isLoading || widget.onPressed == null;
 
     return AnimatedScale(
       scale: _isPressed ? 0.95 : 1.0,
@@ -70,10 +71,12 @@ class _AppButtonState extends State<AppButton> {
         child: widget.variant == ButtonVariant.gradient
             ? _buildGradientButton(isDisabled)
             : ElevatedButton(
-                onPressed: isDisabled ? null : () {
-                  AppHaptics.mediumImpact();
-                  widget.onPressed?.call();
-                },
+                onPressed: isDisabled
+                    ? null
+                    : () {
+                        AppHaptics.mediumImpact();
+                        widget.onPressed?.call();
+                      },
                 style: _getButtonStyle(context),
                 child: widget.isLoading
                     ? _buildLoadingIndicator()
@@ -86,8 +89,8 @@ class _AppButtonState extends State<AppButton> {
   Widget _buildGradientButton(bool isDisabled) {
     final colors = widget.gradientColors ??
         const [
-          Color(0xFF10B981),
-          Color(0xFF059669),
+          AppTheme.primary,
+          AppTheme.primaryDark,
         ];
 
     return GestureDetector(
@@ -158,9 +161,12 @@ class _AppButtonState extends State<AppButton> {
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
-            side: BorderSide(color: theme.dividerTheme.color ?? AppTheme.lightBorder, width: 2),
+            side: BorderSide(
+                color: theme.dividerTheme.color ?? AppTheme.lightBorder,
+                width: 2),
           ),
-          disabledBackgroundColor: theme.cardTheme.color?.withValues(alpha: 0.5),
+          disabledBackgroundColor:
+              theme.cardTheme.color?.withValues(alpha: 0.5),
           disabledForegroundColor: AppTheme.primary.withValues(alpha: 0.5),
         );
       case ButtonVariant.ghost:
@@ -195,7 +201,8 @@ class _AppButtonState extends State<AppButton> {
       child: CircularProgressIndicator(
         strokeWidth: 2,
         valueColor: AlwaysStoppedAnimation<Color>(
-          widget.variant == ButtonVariant.primary || widget.variant == ButtonVariant.gradient
+          widget.variant == ButtonVariant.primary ||
+                  widget.variant == ButtonVariant.gradient
               ? Colors.white
               : AppTheme.primary,
         ),
@@ -214,7 +221,9 @@ class _AppButtonState extends State<AppButton> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(widget.icon, size: 20.w, color: isDisabled ? textColor.withValues(alpha: 0.7) : textColor),
+          Icon(widget.icon,
+              size: 20.w,
+              color: isDisabled ? textColor.withValues(alpha: 0.7) : textColor),
           SizedBox(width: 8.w),
           Text(
             widget.text,

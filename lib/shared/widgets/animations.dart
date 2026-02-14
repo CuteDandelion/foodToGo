@@ -235,8 +235,9 @@ class StaggeredAnimation extends StatelessWidget {
       builder: (context, value, child) {
         final delayMs = delay.inMilliseconds * index;
         final adjustedValue = value.clamp(0.0, 1.0);
-        final delayedValue = (adjustedValue - (delayMs / duration.inMilliseconds))
-            .clamp(0.0, 1.0);
+        final delayedValue =
+            (adjustedValue - (delayMs / duration.inMilliseconds))
+                .clamp(0.0, 1.0);
 
         return Opacity(
           opacity: delayedValue,

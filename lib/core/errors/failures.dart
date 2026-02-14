@@ -25,19 +25,19 @@ class CacheFailure extends Failure {
 class AuthFailure extends Failure {
   const AuthFailure(super.message, {super.code});
 
-  factory AuthFailure.userNotFound() => 
+  factory AuthFailure.userNotFound() =>
       const AuthFailure('User not found', code: 'USER_NOT_FOUND');
-  
-  factory AuthFailure.invalidCredentials() => 
+
+  factory AuthFailure.invalidCredentials() =>
       const AuthFailure('Invalid credentials', code: 'INVALID_CREDENTIALS');
-  
-  factory AuthFailure.invalidToken() => 
+
+  factory AuthFailure.invalidToken() =>
       const AuthFailure('Invalid token', code: 'INVALID_TOKEN');
-  
-  factory AuthFailure.sessionExpired() => 
+
+  factory AuthFailure.sessionExpired() =>
       const AuthFailure('Session expired', code: 'SESSION_EXPIRED');
-  
-  factory AuthFailure.unknown(String error) => 
+
+  factory AuthFailure.unknown(String error) =>
       AuthFailure('Authentication error: $error', code: 'AUTH_ERROR');
 }
 

@@ -24,25 +24,25 @@ class User {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'studentId': studentId,
-    'email': email,
-    'passwordHash': passwordHash,
-    'role': role.name,
-    'profile': profile.toJson(),
-  };
+        'id': id,
+        'studentId': studentId,
+        'email': email,
+        'passwordHash': passwordHash,
+        'role': role.name,
+        'profile': profile.toJson(),
+      };
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json['id'] as String,
-    studentId: json['studentId'] as String,
-    email: json['email'] as String?,
-    passwordHash: json['passwordHash'] as String,
-    role: UserRole.values.firstWhere(
-      (e) => e.name == json['role'],
-      orElse: () => UserRole.student,
-    ),
-    profile: Profile.fromJson(json['profile'] as Map<String, dynamic>),
-  );
+        id: json['id'] as String,
+        studentId: json['studentId'] as String,
+        email: json['email'] as String?,
+        passwordHash: json['passwordHash'] as String,
+        role: UserRole.values.firstWhere(
+          (e) => e.name == json['role'],
+          orElse: () => UserRole.student,
+        ),
+        profile: Profile.fromJson(json['profile'] as Map<String, dynamic>),
+      );
 }
 
 /// Profile model
@@ -62,20 +62,20 @@ class Profile {
   });
 
   Map<String, dynamic> toJson() => {
-    'firstName': firstName,
-    'lastName': lastName,
-    'photoPath': photoPath,
-    'department': department,
-    'yearOfStudy': yearOfStudy,
-  };
+        'firstName': firstName,
+        'lastName': lastName,
+        'photoPath': photoPath,
+        'department': department,
+        'yearOfStudy': yearOfStudy,
+      };
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
-    firstName: json['firstName'] as String,
-    lastName: json['lastName'] as String,
-    photoPath: json['photoPath'] as String?,
-    department: json['department'] as String?,
-    yearOfStudy: json['yearOfStudy'] as int?,
-  );
+        firstName: json['firstName'] as String,
+        lastName: json['lastName'] as String,
+        photoPath: json['photoPath'] as String?,
+        department: json['department'] as String?,
+        yearOfStudy: json['yearOfStudy'] as int?,
+      );
 
   String get fullName => '$firstName $lastName';
 }
@@ -105,30 +105,32 @@ class DashboardData {
   });
 
   Map<String, dynamic> toJson() => {
-    'totalMeals': totalMeals,
-    'monthlyGoal': monthlyGoal,
-    'monthlyGoalProgress': monthlyGoalProgress,
-    'moneySaved': moneySaved.toJson(),
-    'monthlyAverage': monthlyAverage,
-    'percentile': percentile,
-    'currentStreak': currentStreak,
-    'nextPickup': nextPickup?.toJson(),
-    'socialImpact': socialImpact.toJson(),
-  };
+        'totalMeals': totalMeals,
+        'monthlyGoal': monthlyGoal,
+        'monthlyGoalProgress': monthlyGoalProgress,
+        'moneySaved': moneySaved.toJson(),
+        'monthlyAverage': monthlyAverage,
+        'percentile': percentile,
+        'currentStreak': currentStreak,
+        'nextPickup': nextPickup?.toJson(),
+        'socialImpact': socialImpact.toJson(),
+      };
 
   factory DashboardData.fromJson(Map<String, dynamic> json) => DashboardData(
-    totalMeals: json['totalMeals'] as int,
-    monthlyGoal: json['monthlyGoal'] as int,
-    monthlyGoalProgress: json['monthlyGoalProgress'] as double,
-    moneySaved: MoneySaved.fromJson(json['moneySaved'] as Map<String, dynamic>),
-    monthlyAverage: json['monthlyAverage'] as double,
-    percentile: json['percentile'] as int,
-    currentStreak: json['currentStreak'] as int,
-    nextPickup: json['nextPickup'] != null
-        ? NextPickup.fromJson(json['nextPickup'] as Map<String, dynamic>)
-        : null,
-    socialImpact: SocialImpact.fromJson(json['socialImpact'] as Map<String, dynamic>),
-  );
+        totalMeals: json['totalMeals'] as int,
+        monthlyGoal: json['monthlyGoal'] as int,
+        monthlyGoalProgress: json['monthlyGoalProgress'] as double,
+        moneySaved:
+            MoneySaved.fromJson(json['moneySaved'] as Map<String, dynamic>),
+        monthlyAverage: json['monthlyAverage'] as double,
+        percentile: json['percentile'] as int,
+        currentStreak: json['currentStreak'] as int,
+        nextPickup: json['nextPickup'] != null
+            ? NextPickup.fromJson(json['nextPickup'] as Map<String, dynamic>)
+            : null,
+        socialImpact:
+            SocialImpact.fromJson(json['socialImpact'] as Map<String, dynamic>),
+      );
 }
 
 /// Money saved model
@@ -148,20 +150,20 @@ class MoneySaved {
   double get difference => thisMonth - lastMonth;
 
   Map<String, dynamic> toJson() => {
-    'thisMonth': thisMonth,
-    'lastMonth': lastMonth,
-    'trend': trend,
-    'breakdown': breakdown,
-  };
+        'thisMonth': thisMonth,
+        'lastMonth': lastMonth,
+        'trend': trend,
+        'breakdown': breakdown,
+      };
 
   factory MoneySaved.fromJson(Map<String, dynamic> json) => MoneySaved(
-    thisMonth: json['thisMonth'] as double,
-    lastMonth: json['lastMonth'] as double,
-    trend: json['trend'] as double,
-    breakdown: (json['breakdown'] as Map<String, dynamic>).map(
-      (k, v) => MapEntry(k, v as double),
-    ),
-  );
+        thisMonth: json['thisMonth'] as double,
+        lastMonth: json['lastMonth'] as double,
+        trend: json['trend'] as double,
+        breakdown: (json['breakdown'] as Map<String, dynamic>).map(
+          (k, v) => MapEntry(k, v as double),
+        ),
+      );
 }
 
 /// Next pickup model
@@ -177,7 +179,7 @@ class NextPickup {
   String get formattedTime {
     final now = DateTime.now();
     final difference = time.difference(now);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}d ${difference.inHours % 24}h';
     } else if (difference.inHours > 0) {
@@ -188,14 +190,14 @@ class NextPickup {
   }
 
   Map<String, dynamic> toJson() => {
-    'location': location,
-    'time': time.toIso8601String(),
-  };
+        'location': location,
+        'time': time.toIso8601String(),
+      };
 
   factory NextPickup.fromJson(Map<String, dynamic> json) => NextPickup(
-    location: json['location'] as String,
-    time: DateTime.parse(json['time'] as String),
-  );
+        location: json['location'] as String,
+        time: DateTime.parse(json['time'] as String),
+      );
 }
 
 /// Social impact model
@@ -209,14 +211,14 @@ class SocialImpact {
   });
 
   Map<String, dynamic> toJson() => {
-    'studentsHelped': studentsHelped,
-    'avgMoneySavedPerStudent': avgMoneySavedPerStudent,
-  };
+        'studentsHelped': studentsHelped,
+        'avgMoneySavedPerStudent': avgMoneySavedPerStudent,
+      };
 
   factory SocialImpact.fromJson(Map<String, dynamic> json) => SocialImpact(
-    studentsHelped: json['studentsHelped'] as int,
-    avgMoneySavedPerStudent: json['avgMoneySavedPerStudent'] as double,
-  );
+        studentsHelped: json['studentsHelped'] as int,
+        avgMoneySavedPerStudent: json['avgMoneySavedPerStudent'] as double,
+      );
 }
 
 /// Canteen dashboard model
@@ -248,32 +250,63 @@ class CanteenDashboard {
   });
 
   Map<String, dynamic> toJson() => {
-    'totalMealsSaved': totalMealsSaved,
-    'dailyAverage': dailyAverage,
-    'weeklyTotal': weeklyTotal,
-    'monthlyTrend': monthlyTrend,
-    'foodWastePrevented': foodWastePrevented,
-    'wasteReduction': wasteReduction,
-    'canteenSavings': canteenSavings,
-    'studentsHelped': studentsHelped,
-    'studentsTrend': studentsTrend,
-    'studentSavingsTotal': studentSavingsTotal,
-    'urgentRequests': urgentRequests,
-  };
+        'totalMealsSaved': totalMealsSaved,
+        'dailyAverage': dailyAverage,
+        'weeklyTotal': weeklyTotal,
+        'monthlyTrend': monthlyTrend,
+        'foodWastePrevented': foodWastePrevented,
+        'wasteReduction': wasteReduction,
+        'canteenSavings': canteenSavings,
+        'studentsHelped': studentsHelped,
+        'studentsTrend': studentsTrend,
+        'studentSavingsTotal': studentSavingsTotal,
+        'urgentRequests': urgentRequests,
+      };
 
-  factory CanteenDashboard.fromJson(Map<String, dynamic> json) => CanteenDashboard(
-    totalMealsSaved: json['totalMealsSaved'] as int,
-    dailyAverage: json['dailyAverage'] as int,
-    weeklyTotal: json['weeklyTotal'] as int,
-    monthlyTrend: json['monthlyTrend'] as double,
-    foodWastePrevented: json['foodWastePrevented'] as double,
-    wasteReduction: json['wasteReduction'] as double,
-    canteenSavings: json['canteenSavings'] as double,
-    studentsHelped: json['studentsHelped'] as int,
-    studentsTrend: json['studentsTrend'] as double,
-    studentSavingsTotal: json['studentSavingsTotal'] as double,
-    urgentRequests: json['urgentRequests'] as int,
-  );
+  factory CanteenDashboard.fromJson(Map<String, dynamic> json) =>
+      CanteenDashboard(
+        totalMealsSaved: json['totalMealsSaved'] as int,
+        dailyAverage: json['dailyAverage'] as int,
+        weeklyTotal: json['weeklyTotal'] as int,
+        monthlyTrend: json['monthlyTrend'] as double,
+        foodWastePrevented: json['foodWastePrevented'] as double,
+        wasteReduction: json['wasteReduction'] as double,
+        canteenSavings: json['canteenSavings'] as double,
+        studentsHelped: json['studentsHelped'] as int,
+        studentsTrend: json['studentsTrend'] as double,
+        studentSavingsTotal: json['studentSavingsTotal'] as double,
+        urgentRequests: json['urgentRequests'] as int,
+      );
+}
+
+/// Canteen access request model
+class CanteenRequest {
+  final String id;
+  final String studentName;
+  final String studentId;
+  final DateTime requestedAt;
+
+  CanteenRequest({
+    required this.id,
+    required this.studentName,
+    required this.studentId,
+    required this.requestedAt,
+  });
+
+  String get initials {
+    final parts = studentName.trim().split(' ');
+    if (parts.length >= 2) {
+      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    }
+    return studentName.substring(0, 1).toUpperCase();
+  }
+
+  String get timeAgo {
+    final diff = DateTime.now().difference(requestedAt);
+    if (diff.inMinutes < 60) return '${diff.inMinutes} minutes ago';
+    if (diff.inHours < 24) return '${diff.inHours} hours ago';
+    return '${diff.inDays} days ago';
+  }
 }
 
 /// Food category model
@@ -476,6 +509,31 @@ class MockDataService {
     );
   }
 
+  /// Get canteen access requests
+  List<CanteenRequest> getCanteenRequests() {
+    final now = DateTime.now();
+    return [
+      CanteenRequest(
+        id: 'req-001',
+        studentName: 'Anna Kowalski',
+        studentId: '61913050',
+        requestedAt: now.subtract(const Duration(minutes: 3)),
+      ),
+      CanteenRequest(
+        id: 'req-002',
+        studentName: 'Lucas Müller',
+        studentId: '61913051',
+        requestedAt: now.subtract(const Duration(minutes: 12)),
+      ),
+      CanteenRequest(
+        id: 'req-003',
+        studentName: 'Sofia Ivanova',
+        studentId: '61913052',
+        requestedAt: now.subtract(const Duration(minutes: 27)),
+      ),
+    ];
+  }
+
   /// Get all food categories
   List<FoodCategory> getFoodCategories() => List.unmodifiable(_foodCategories);
 
@@ -484,19 +542,22 @@ class MockDataService {
     return [
       {
         'id': '1',
-        'date': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+        'date':
+            DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
         'items': ['Salad', 'Chicken'],
         'totalValue': 6.50,
       },
       {
         'id': '2',
-        'date': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+        'date':
+            DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
         'items': ['Fish', 'Side'],
         'totalValue': 5.00,
       },
       {
         'id': '3',
-        'date': DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+        'date':
+            DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
         'items': ['Veggie', 'Dessert'],
         'totalValue': 5.00,
       },
@@ -508,7 +569,8 @@ class MockDataService {
     final data = {
       'pickupId': pickupId,
       'timestamp': DateTime.now().toIso8601String(),
-      'expiresAt': DateTime.now().add(const Duration(minutes: 5)).toIso8601String(),
+      'expiresAt':
+          DateTime.now().add(const Duration(minutes: 5)).toIso8601String(),
     };
     return base64Encode(utf8.encode(jsonEncode(data)));
   }

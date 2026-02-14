@@ -393,8 +393,10 @@ void main() {
 
         // Assert
         expect(restored.totalMeals, equals(original.totalMeals));
-        expect(restored.moneySaved.thisMonth, equals(original.moneySaved.thisMonth));
-        expect(restored.nextPickup?.location, equals(original.nextPickup?.location));
+        expect(restored.moneySaved.thisMonth,
+            equals(original.moneySaved.thisMonth));
+        expect(restored.nextPickup?.location,
+            equals(original.nextPickup?.location));
       });
     });
   });

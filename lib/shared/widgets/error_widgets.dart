@@ -22,7 +22,7 @@ class ErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.r),
@@ -44,7 +44,7 @@ class ErrorWidget extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24.h),
-            
+
             // Error message
             Text(
               message,
@@ -54,7 +54,7 @@ class ErrorWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             if (subtitle != null) ...[
               SizedBox(height: 8.h),
               Text(
@@ -65,7 +65,7 @@ class ErrorWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
-            
+
             if (onRetry != null) ...[
               SizedBox(height: 32.h),
               SizedBox(
@@ -135,7 +135,7 @@ class EmptyStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.r),

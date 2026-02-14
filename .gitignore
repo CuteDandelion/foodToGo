@@ -110,3 +110,7 @@ code_signing/
 # FVM (Flutter Version Management)
 .fvm/
 .fvm/flutter_sdk
+
+# Claude Code / Entire
+.claude/
+.entire/

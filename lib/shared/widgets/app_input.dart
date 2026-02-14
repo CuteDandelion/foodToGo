@@ -142,9 +142,8 @@ class AppInput extends StatelessWidget {
         vertical: maxLines > 1 ? 16.h : 0,
       ),
       filled: variant == InputVariant.filled,
-      fillColor: variant == InputVariant.filled
-          ? theme.colorScheme.surface
-          : null,
+      fillColor:
+          variant == InputVariant.filled ? theme.colorScheme.surface : null,
       border: OutlineInputBorder(
         borderRadius: borderRadius,
         borderSide: BorderSide(
@@ -183,7 +182,8 @@ class AppInput extends StatelessWidget {
       disabledBorder: OutlineInputBorder(
         borderRadius: borderRadius,
         borderSide: BorderSide(
-          color: (theme.dividerTheme.color ?? AppTheme.lightBorder).withValues(alpha: 0.5),
+          color: (theme.dividerTheme.color ?? AppTheme.lightBorder)
+              .withValues(alpha: 0.5),
           width: 2,
         ),
       ),

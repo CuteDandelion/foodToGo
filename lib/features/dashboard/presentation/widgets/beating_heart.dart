@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../config/theme.dart';
+
 /// Animated beating heart widget for social impact card
 class BeatingHeart extends StatefulWidget {
   final double size;
@@ -8,7 +10,7 @@ class BeatingHeart extends StatefulWidget {
   const BeatingHeart({
     super.key,
     this.size = 24.0,
-    this.color = const Color(0xFFEC4899),
+    this.color = AppTheme.social,
   });
 
   @override
@@ -35,8 +37,8 @@ class _BeatingHeartState extends State<BeatingHeart>
         weight: 20,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.2, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween:
+            Tween(begin: 1.2, end: 1.0).chain(CurveTween(curve: Curves.easeIn)),
         weight: 20,
       ),
       TweenSequenceItem(

@@ -155,7 +155,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.w, vertical: 20.h),
                         child: Column(
                           children: [
                             SizedBox(height: 40.h),
@@ -576,7 +577,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       validator: validator,
       style: const TextStyle(
         fontSize: 16,
-        color: AppTheme.loginTextPrimary, // Fixed color - not affected by dark mode
+        color: AppTheme
+            .loginTextPrimary, // Fixed color - not affected by dark mode
       ),
       decoration: InputDecoration(
         hintText: hint,
@@ -640,7 +642,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
       },
       style: const TextStyle(
         fontSize: 16,
-        color: AppTheme.loginTextPrimary, // Fixed color - not affected by dark mode
+        color: AppTheme
+            .loginTextPrimary, // Fixed color - not affected by dark mode
       ),
       decoration: InputDecoration(
         hintText: 'Password',
@@ -718,7 +721,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(999.r),
-              side: const BorderSide(color: AppTheme.loginCardBorder, width: 2.5),
+              side:
+                  const BorderSide(color: AppTheme.loginCardBorder, width: 2.5),
             ),
           ),
           child: isLoading
@@ -727,7 +731,8 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage>
                   height: 24.h,
                   child: const CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppTheme.loginTextPrimary),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        AppTheme.loginTextPrimary),
                   ),
                 )
               : Text(

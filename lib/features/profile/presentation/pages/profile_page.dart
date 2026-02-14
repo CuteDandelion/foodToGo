@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foodbegood/config/routes.dart';
+import 'package:foodbegood/config/theme.dart';
 import 'package:foodbegood/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:foodbegood/shared/services/mock_data_service.dart';
 
@@ -56,15 +58,15 @@ class _ProfilePageContent extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.error_outline,
-                    size: 64,
+                    size: 64.r,
                     color: Theme.of(context).colorScheme.error,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Text(
                     state.errorMessage ?? 'An error occurred',
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   ElevatedButton(
                     onPressed: () {
                       context.read<ProfileBloc>().add(const ProfileLoad());
@@ -89,23 +91,23 @@ class _ProfilePageContent extends StatelessWidget {
             physics: const ClampingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
             ),
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.r),
             child: Column(
               children: [
                 // Digital ID Card
                 _DigitalIDCard(user: user),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 // Stats Section
                 _StatsSection(state: state),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 // Quick Actions
                 _QuickActions(),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 // Account Information
                 _AccountInfo(user: user),
@@ -137,51 +139,51 @@ class _DigitalIDCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             colorScheme.primary,
-            colorScheme.primary.withAlpha(204),
+            colorScheme.primary.withValues(alpha: 0.8),
           ],
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withAlpha(77),
+            color: colorScheme.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(24.r),
         child: Stack(
           children: [
             // Background pattern
             Positioned(
-              right: -50,
-              top: -50,
+              right: -50.w,
+              top: -50.h,
               child: Container(
-                width: 200,
-                height: 200,
+                width: 200.w,
+                height: 200.h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withAlpha(26),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
               ),
             ),
             Positioned(
-              left: -30,
-              bottom: -30,
+              left: -30.w,
+              bottom: -30.h,
               child: Container(
-                width: 150,
-                height: 150,
+                width: 150.w,
+                height: 150.h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withAlpha(26),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
               ),
             ),
 
             // Content
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: EdgeInsets.all(24.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -193,53 +195,53 @@ class _DigitalIDCard extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.school,
-                            color: Colors.white.withAlpha(230),
-                            size: 24,
+                            color: Colors.white.withValues(alpha: 0.9),
+                            size: 24.r,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8.w),
                           Text(
                             'MRU Student ID',
                             style: textTheme.titleMedium?.copyWith(
-                                  color: Colors.white.withAlpha(230),
-                                  fontWeight: FontWeight.w600,
-                                ),
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(51),
-                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
                           'Active',
                           style: textTheme.bodySmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
 
                   // Profile Photo and Name
                   Row(
                     children: [
                       // Profile Photo
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 80.w,
+                        height: 80.h,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withAlpha(51),
+                          color: Colors.white.withValues(alpha: 0.2),
                           border: Border.all(
-                            color: Colors.white.withAlpha(128),
+                            color: Colors.white.withValues(alpha: 0.5),
                             width: 3,
                           ),
                           image: user.profile.photoPath != null
@@ -252,13 +254,13 @@ class _DigitalIDCard extends StatelessWidget {
                         child: user.profile.photoPath == null
                             ? Icon(
                                 Icons.person,
-                                size: 40,
-                                color: Colors.white.withAlpha(230),
+                                size: 40.r,
+                                color: Colors.white.withValues(alpha: 0.9),
                               )
                             : null,
                       ),
 
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16.w),
 
                       // Name and Info
                       Expanded(
@@ -268,46 +270,46 @@ class _DigitalIDCard extends StatelessWidget {
                             Text(
                               user.profile.fullName,
                               style: textTheme.headlineSmall?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4.h),
                             Text(
                               user.profile.department ?? 'Student',
                               style: textTheme.bodyMedium?.copyWith(
-                                    color: Colors.white.withAlpha(204),
-                                  ),
+                                color: Colors.white.withValues(alpha: 0.8),
+                              ),
                             ),
                             if (user.profile.yearOfStudy != null)
-                        Text(
-                          'Year ${user.profile.yearOfStudy}',
-                          style: textTheme.bodySmall?.copyWith(
-                                color: Colors.white.withAlpha(179),
+                              Text(
+                                'Year ${user.profile.yearOfStudy}',
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                ),
                               ),
-                        ),
                           ],
                         ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
 
                   // Student ID
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16.r),
                     decoration: BoxDecoration(
-                      color: Colors.white.withAlpha(26),
-                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Row(
                       children: [
                         Icon(
                           Icons.badge_outlined,
-                          color: Colors.white.withAlpha(204),
+                          color: Colors.white.withValues(alpha: 0.8),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12.w),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,16 +317,16 @@ class _DigitalIDCard extends StatelessWidget {
                               Text(
                                 'Student ID',
                                 style: textTheme.bodySmall?.copyWith(
-                                      color: Colors.white.withAlpha(179),
-                                    ),
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                ),
                               ),
                               Text(
                                 user.studentId,
                                 style: textTheme.titleLarge?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1,
-                                    ),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1,
+                                ),
                               ),
                             ],
                           ),
@@ -333,37 +335,37 @@ class _DigitalIDCard extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
                   // QR Code
                   Center(
                     child: Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(12.r),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Column(
                         children: [
                           // Simulated QR code
                           Container(
-                            width: 120,
-                            height: 120,
+                            width: 120.w,
+                            height: 120.h,
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: CustomPaint(
                               size: const Size(120, 120),
                               painter: _MiniQRCodePainter(),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.h),
                           Text(
                             'Scan for verification',
                             style: textTheme.bodySmall?.copyWith(
-                                  color: Colors.black54,
-                                ),
+                              color: Colors.black54,
+                            ),
                           ),
                         ],
                       ),
@@ -397,22 +399,22 @@ class _StatsSection extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Expanded(
           child: _StatCard(
             icon: Icons.trending_up,
             value: state.monthlyAverage.toStringAsFixed(1),
             label: 'Avg/Month',
-            color: Colors.orange,
+            color: AppTheme.warning,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Expanded(
           child: _StatCard(
             icon: Icons.local_fire_department,
             value: '${state.currentStreak}',
             label: 'Day Streak',
-            color: Colors.red,
+            color: AppTheme.error,
           ),
         ),
       ],
@@ -439,28 +441,31 @@ class _StatCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: color.withAlpha(26),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withAlpha(51)),
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
+          Icon(icon, color: color, size: 24.r),
+          SizedBox(height: 8.h),
           Text(
             value,
             style: textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
           Text(
             label,
             style: textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
-                ),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.6),
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -482,7 +487,7 @@ class _QuickActions extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
         Row(
           children: [
             Expanded(
@@ -492,7 +497,7 @@ class _QuickActions extends StatelessWidget {
                 onTap: () => context.goMealHistory(),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             Expanded(
               child: _ActionButton(
                 icon: Icons.qr_code,
@@ -508,7 +513,7 @@ class _QuickActions extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             Expanded(
               child: _ActionButton(
                 icon: Icons.edit,
@@ -530,7 +535,8 @@ class _QuickActions extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Profile'),
-        content: const Text('Profile editing will be available in the next update.'),
+        content:
+            const Text('Profile editing will be available in the next update.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -561,19 +567,19 @@ class _ActionButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
           children: [
             Icon(icon, color: colorScheme.primary),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
@@ -598,7 +604,7 @@ class _AccountInfo extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
         children: [
@@ -657,11 +663,11 @@ class _InfoTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.r),
       child: Row(
         children: [
           Icon(icon, color: colorScheme.primary),
-          const SizedBox(width: 16),
+          SizedBox(width: 16.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -669,14 +675,14 @@ class _InfoTile extends StatelessWidget {
                 Text(
                   title,
                   style: textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurface.withAlpha(153),
-                      ),
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
                 Text(
                   subtitle,
                   style: textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -699,8 +705,10 @@ class _MiniQRCodePainter extends CustomPainter {
 
     // Draw finder patterns
     _drawFinderPattern(canvas, paint, Offset(cellSize, cellSize), cellSize * 7);
-    _drawFinderPattern(canvas, paint, Offset(size.width - 8 * cellSize, cellSize), cellSize * 7);
-    _drawFinderPattern(canvas, paint, Offset(cellSize, size.height - 8 * cellSize), cellSize * 7);
+    _drawFinderPattern(canvas, paint,
+        Offset(size.width - 8 * cellSize, cellSize), cellSize * 7);
+    _drawFinderPattern(canvas, paint,
+        Offset(cellSize, size.height - 8 * cellSize), cellSize * 7);
 
     // Draw some data modules
     for (var row = 0; row < 21; row++) {
@@ -726,7 +734,8 @@ class _MiniQRCodePainter extends CustomPainter {
     }
   }
 
-  void _drawFinderPattern(Canvas canvas, Paint paint, Offset offset, double size) {
+  void _drawFinderPattern(
+      Canvas canvas, Paint paint, Offset offset, double size) {
     canvas.drawRect(
       Rect.fromLTWH(offset.dx, offset.dy, size, size),
       paint,
@@ -736,12 +745,14 @@ class _MiniQRCodePainter extends CustomPainter {
       ..color = Colors.white
       ..style = PaintingStyle.fill;
     canvas.drawRect(
-      Rect.fromLTWH(offset.dx + size * 0.15, offset.dy + size * 0.15, size * 0.7, size * 0.7),
+      Rect.fromLTWH(offset.dx + size * 0.15, offset.dy + size * 0.15,
+          size * 0.7, size * 0.7),
       whitePaint,
     );
 
     canvas.drawRect(
-      Rect.fromLTWH(offset.dx + size * 0.3, offset.dy + size * 0.3, size * 0.4, size * 0.4),
+      Rect.fromLTWH(offset.dx + size * 0.3, offset.dy + size * 0.3, size * 0.4,
+          size * 0.4),
       paint,
     );
   }

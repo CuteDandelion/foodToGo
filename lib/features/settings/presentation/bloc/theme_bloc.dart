@@ -54,7 +54,8 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     Emitter<ThemeState> emit,
   ) async {
     try {
-      final isDarkMode = await _storage.prefs.getBool(AppConstants.storageKeyTheme) ?? false;
+      final isDarkMode =
+          await _storage.prefs.getBool(AppConstants.storageKeyTheme) ?? false;
       emit(ThemeState(isDarkMode: isDarkMode));
     } catch (e) {
       // Storage not initialized yet, use default (light theme)
@@ -80,7 +81,8 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     Emitter<ThemeState> emit,
   ) async {
     try {
-      await _storage.prefs.setBool(AppConstants.storageKeyTheme, event.isDarkMode);
+      await _storage.prefs
+          .setBool(AppConstants.storageKeyTheme, event.isDarkMode);
     } catch (e) {
       // Storage not initialized, ignore
     }

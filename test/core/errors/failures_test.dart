@@ -157,7 +157,8 @@ void main() {
       const errors = <String, String>{'field': 'error'};
       const failure1 = ValidationFailure('message', errors: errors);
       const failure2 = ValidationFailure('message', errors: errors);
-      const failure3 = ValidationFailure('message', errors: <String, String>{'field': 'different'});
+      const failure3 = ValidationFailure('message',
+          errors: <String, String>{'field': 'different'});
 
       // Assert
       expect(failure1, equals(failure2));

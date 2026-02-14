@@ -47,7 +47,8 @@ void main() {
         build: () => ThemeBloc(storage: mockStorage),
         expect: () => [const ThemeState(isDarkMode: false)],
         verify: (_) {
-          verify(() => mockPrefs.getBool(AppConstants.storageKeyTheme)).called(1);
+          verify(() => mockPrefs.getBool(AppConstants.storageKeyTheme))
+              .called(1);
         },
       );
 
@@ -86,7 +87,8 @@ void main() {
         act: (bloc) => bloc.add(ThemeToggled()),
         expect: () => [const ThemeState(isDarkMode: true)],
         verify: (_) {
-          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, true)).called(1);
+          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, true))
+              .called(1);
         },
       );
 
@@ -103,7 +105,8 @@ void main() {
         act: (bloc) => bloc.add(ThemeToggled()),
         expect: () => [const ThemeState(isDarkMode: false)],
         verify: (_) {
-          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, false)).called(1);
+          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, false))
+              .called(1);
         },
       );
 
@@ -144,7 +147,8 @@ void main() {
         act: (bloc) => bloc.add(const ThemeChanged(true)),
         expect: () => [const ThemeState(isDarkMode: true)],
         verify: (_) {
-          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, true)).called(1);
+          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, true))
+              .called(1);
         },
       );
 
@@ -161,11 +165,10 @@ void main() {
         act: (bloc) => bloc.add(const ThemeChanged(false)),
         expect: () => [const ThemeState(isDarkMode: false)],
         verify: (_) {
-          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, false)).called(1);
+          verify(() => mockPrefs.setBool(AppConstants.storageKeyTheme, false))
+              .called(1);
         },
       );
-
-
     });
 
     group('State Properties', () {

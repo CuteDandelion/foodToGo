@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/presentation/pages/unified_login_page.dart';
 import '../features/canteen/presentation/pages/canteen_dashboard_page.dart';
 import '../features/dashboard/presentation/pages/student_dashboard_page.dart';
+import '../features/pickup/presentation/bloc/pickup_bloc.dart';
 import '../features/pickup/presentation/pages/confirmation_page.dart';
 import '../features/pickup/presentation/pages/pickup_page.dart';
 import '../features/pickup/presentation/pages/qr_code_page.dart';
@@ -45,7 +47,8 @@ class AppPageTransitions {
         const end = Offset.zero;
         const curve = Curves.easeInOutCubic;
 
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         var offsetAnimation = animation.drive(tween);
 
         return SlideTransition(
@@ -111,7 +114,8 @@ class AppPageTransitions {
         const end = Offset.zero;
         const curve = Curves.easeOutCubic;
 
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         var offsetAnimation = animation.drive(tween);
 
         return SlideTransition(
@@ -163,31 +167,42 @@ class AppRouter {
         ),
       ),
 
-      // Pickup
-      GoRoute(
-        path: RoutePaths.pickup,
-        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
-          key: state.pageKey,
-          child: const PickupPage(),
-        ),
-      ),
+      // Pickup flow with shared PickupBloc
+      ShellRoute(
+        builder: (context, state, child) {
+          return BlocProvider(
+            create: (context) => PickupBloc(),
+            child: child,
+          );
+        },
+        routes: [
+          // Pickup
+          GoRoute(
+            path: RoutePaths.pickup,
+            pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+              key: state.pageKey,
+              child: const PickupPage(),
+            ),
+          ),
 
-      // Time Slot Selection
-      GoRoute(
-        path: RoutePaths.timeSlot,
-        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
-          key: state.pageKey,
-          child: const TimeSlotSelectionPage(),
-        ),
-      ),
+          // Time Slot Selection
+          GoRoute(
+            path: RoutePaths.timeSlot,
+            pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+              key: state.pageKey,
+              child: const TimeSlotSelectionPage(),
+            ),
+          ),
 
-      // Confirmation Page
-      GoRoute(
-        path: RoutePaths.confirmation,
-        pageBuilder: (context, state) => AppPageTransitions.scaleFade(
-          key: state.pageKey,
-          child: const ConfirmationPage(),
-        ),
+          // Confirmation Page
+          GoRoute(
+            path: RoutePaths.confirmation,
+            pageBuilder: (context, state) => AppPageTransitions.scaleFade(
+              key: state.pageKey,
+              child: const ConfirmationPage(),
+            ),
+          ),
+        ],
       ),
 
       // QR Code (kept for dashboard swipe access)
@@ -195,15 +210,22 @@ class AppRouter {
         path: RoutePaths.qrCode,
         pageBuilder: (context, state) {
           final pickupId = state.uri.queryParameters['pickupId'] ?? '';
-          final qrData = state.uri.queryParameters['qrData'] ?? '';
+          final qrData = state.uri.queryParameters['qrData'];
           final expiresAtStr = state.uri.queryParameters['expiresAt'];
-          final expiresAt = expiresAtStr != null ? DateTime.tryParse(expiresAtStr) : null;
+          final studentName = state.uri.queryParameters['studentName'];
+          final pickupTime = state.uri.queryParameters['pickupTime'];
+          final orderItems = state.uri.queryParametersAll['item'] ?? const [];
+          final expiresAt =
+              expiresAtStr != null ? DateTime.tryParse(expiresAtStr) : null;
           return AppPageTransitions.scaleFade(
             key: state.pageKey,
             child: QRCodePage(
               pickupId: pickupId,
-              qrData: qrData.isNotEmpty ? Uri.decodeComponent(qrData) : null,
+              qrData: qrData,
               expiresAt: expiresAt,
+              studentName: studentName,
+              orderItems: orderItems,
+              pickupTime: pickupTime,
             ),
           );
         },
@@ -259,16 +281,35 @@ extension GoRouterExtension on BuildContext {
     required String pickupId,
     String? qrData,
     DateTime? expiresAt,
-    List<dynamic>? items,
+    String? studentName,
+    List<String>? orderItems,
+    String? pickupTime,
   }) {
-    final params = <String, String>{
-      'pickupId': pickupId,
-      if (qrData != null) 'qrData': Uri.encodeComponent(qrData),
-      if (expiresAt != null) 'expiresAt': expiresAt.toIso8601String(),
+    final params = <String, List<String>>{
+      'pickupId': [pickupId],
+      if (qrData != null) 'qrData': [qrData],
+      if (expiresAt != null) 'expiresAt': [expiresAt.toIso8601String()],
+      if (studentName != null && studentName.isNotEmpty)
+        'studentName': [studentName],
+      if (pickupTime != null && pickupTime.isNotEmpty)
+        'pickupTime': [pickupTime],
+      if (orderItems != null && orderItems.isNotEmpty) 'item': orderItems,
     };
-    final queryString = params.entries.map((e) => '${e.key}=${e.value}').join('&');
-    go('${RoutePaths.qrCode}?$queryString');
+    final query = params.entries
+        .expand(
+          (entry) => entry.value.map(
+            (value) =>
+                '${Uri.encodeQueryComponent(entry.key)}=${Uri.encodeQueryComponent(value)}',
+          ),
+        )
+        .join('&');
+    final uri = Uri(
+      path: RoutePaths.qrCode,
+      query: query.isEmpty ? null : query,
+    );
+    go(uri.toString());
   }
+
   void goProfile() => go(RoutePaths.profile);
   void goSettings() => go(RoutePaths.settings);
   void goMealHistory() => go(RoutePaths.mealHistory);

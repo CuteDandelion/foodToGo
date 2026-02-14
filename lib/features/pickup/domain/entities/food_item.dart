@@ -189,5 +189,6 @@ class PickupOrder extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, items, timeSlot, createdAt, status, canteenMessage];
+  List<Object?> get props =>
+      [id, items, timeSlot, createdAt, status, canteenMessage];
 }

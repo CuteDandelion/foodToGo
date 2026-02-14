@@ -4,7 +4,7 @@ import 'package:foodbegood/features/profile/presentation/bloc/profile_bloc.dart'
 import 'package:foodbegood/shared/services/mock_data_service.dart';
 
 /// Edge Case Tests for ProfileBloc
-/// 
+///
 /// These tests cover boundary conditions, error scenarios, and
 /// unusual situations in the profile management flow.
 void main() {
@@ -21,7 +21,6 @@ void main() {
   });
 
   group('ProfileBloc Edge Cases', () {
-    
     group('Edge Case: Empty and Null Values', () {
       blocTest<ProfileBloc, ProfileState>(
         'handles update with all null values',
@@ -40,11 +39,13 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.loaded)
-            .having((s) => s.user?.profile.firstName, 'first name', 'Zain') // Unchanged
-            .having((s) => s.user?.profile.lastName, 'last name', 'Ul Ebad'), // Unchanged
+              .having((s) => s.status, 'status', ProfileStatus.loaded)
+              .having((s) => s.user?.profile.firstName, 'first name',
+                  'Zain') // Unchanged
+              .having((s) => s.user?.profile.lastName, 'last name',
+                  'Ul Ebad'), // Unchanged
         ],
       );
 
@@ -69,11 +70,11 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.firstName, 'first name', '')
-            .having((s) => s.user?.profile.lastName, 'last name', '')
-            .having((s) => s.user?.profile.department, 'department', ''),
+              .having((s) => s.user?.profile.firstName, 'first name', '')
+              .having((s) => s.user?.profile.lastName, 'last name', '')
+              .having((s) => s.user?.profile.department, 'department', ''),
         ],
       );
 
@@ -94,9 +95,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.photoPath, 'photo path', isNull),
+              .having((s) => s.user?.profile.photoPath, 'photo path', isNull),
         ],
       );
 
@@ -117,9 +118,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.photoPath, 'photo path', ''),
+              .having((s) => s.user?.profile.photoPath, 'photo path', ''),
         ],
       );
     });
@@ -145,10 +146,10 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.firstName, 'first name', 'José')
-            .having((s) => s.user?.profile.lastName, 'last name', 'García'),
+              .having((s) => s.user?.profile.firstName, 'first name', 'José')
+              .having((s) => s.user?.profile.lastName, 'last name', 'García'),
         ],
       );
 
@@ -172,10 +173,11 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.firstName, 'first name', 'John 👨‍💻')
-            .having((s) => s.user?.profile.lastName, 'last name', 'Doe 🚀'),
+              .having(
+                  (s) => s.user?.profile.firstName, 'first name', 'John 👨‍💻')
+              .having((s) => s.user?.profile.lastName, 'last name', 'Doe 🚀'),
         ],
       );
 
@@ -199,10 +201,10 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.firstName, 'first name', 'محمد')
-            .having((s) => s.user?.profile.lastName, 'last name', 'أحمد'),
+              .having((s) => s.user?.profile.firstName, 'first name', 'محمد')
+              .having((s) => s.user?.profile.lastName, 'last name', 'أحمد'),
         ],
       );
 
@@ -225,9 +227,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
-          isA<ProfileState>()
-            .having((s) => s.user?.profile.department, 'department', 'Computer Science & Engineering (B.Sc.)'),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
+          isA<ProfileState>().having((s) => s.user?.profile.department,
+              'department', 'Computer Science & Engineering (B.Sc.)'),
         ],
       );
     });
@@ -252,9 +254,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
-          isA<ProfileState>()
-            .having((s) => s.user?.profile.firstName, 'first name', 'A' * 1000),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
+          isA<ProfileState>().having(
+              (s) => s.user?.profile.firstName, 'first name', 'A' * 1000),
         ],
       );
 
@@ -277,9 +279,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
-          isA<ProfileState>()
-            .having((s) => s.user?.profile.photoPath, 'photo path', contains('subfolder')),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
+          isA<ProfileState>().having((s) => s.user?.profile.photoPath,
+              'photo path', contains('subfolder')),
         ],
       );
     });
@@ -304,9 +306,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.yearOfStudy, 'year', 0),
+              .having((s) => s.user?.profile.yearOfStudy, 'year', 0),
         ],
       );
 
@@ -329,9 +331,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.yearOfStudy, 'year', 10),
+              .having((s) => s.user?.profile.yearOfStudy, 'year', 10),
         ],
       );
 
@@ -354,9 +356,9 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.user?.profile.yearOfStudy, 'year', -1),
+              .having((s) => s.user?.profile.yearOfStudy, 'year', -1),
         ],
       );
     });
@@ -383,11 +385,15 @@ void main() {
         wait: const Duration(milliseconds: 2000),
         expect: () => [
           // First update starts
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.updating),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           // Subsequent updates are processed (may combine due to async timing)
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.loaded),
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.loaded),
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.loaded),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.loaded),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.loaded),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.loaded),
         ],
       );
 
@@ -412,11 +418,15 @@ void main() {
         wait: const Duration(milliseconds: 2000),
         expect: () => [
           // First update starts
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.updating),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           // Subsequent updates are processed (may combine due to async timing)
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.loaded),
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.loaded),
-          isA<ProfileState>().having((s) => s.status, 'status', ProfileStatus.loaded),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.loaded),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.loaded),
+          isA<ProfileState>()
+              .having((s) => s.status, 'status', ProfileStatus.loaded),
         ],
       );
     });
@@ -438,10 +448,11 @@ void main() {
         wait: const Duration(milliseconds: 600),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.updating),
+              .having((s) => s.status, 'status', ProfileStatus.updating),
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.error)
-            .having((s) => s.errorMessage, 'error', contains('Null check operator')),
+              .having((s) => s.status, 'status', ProfileStatus.error)
+              .having((s) => s.errorMessage, 'error',
+                  contains('Null check operator')),
         ],
       );
 
@@ -465,13 +476,13 @@ void main() {
         wait: const Duration(milliseconds: 100),
         expect: () => [
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.initial)
-            .having((s) => s.user, 'user', isNull),
+              .having((s) => s.status, 'status', ProfileStatus.initial)
+              .having((s) => s.user, 'user', isNull),
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.loading),
+              .having((s) => s.status, 'status', ProfileStatus.loading),
           isA<ProfileState>()
-            .having((s) => s.status, 'status', ProfileStatus.loaded)
-            .having((s) => s.user, 'user', isNotNull),
+              .having((s) => s.status, 'status', ProfileStatus.loaded)
+              .having((s) => s.user, 'user', isNotNull),
         ],
       );
     });
@@ -487,7 +498,7 @@ void main() {
           currentStreak: 5,
           errorMessage: 'Test error',
         );
-        
+
         expect(state.props, contains(ProfileStatus.loaded));
         expect(state.props, contains(user));
         expect(state.props, contains(34));
@@ -503,13 +514,13 @@ void main() {
           department: 'CS',
           yearOfStudy: 3,
         );
-        
+
         expect(update.props, equals(['John', 'Doe', 'CS', 3]));
       });
 
       test('ProfilePhotoUpdate props includes path', () {
         const update = ProfilePhotoUpdate('/path/to/photo.jpg');
-        
+
         expect(update.props, equals(['/path/to/photo.jpg']));
       });
 
@@ -529,7 +540,7 @@ void main() {
           firstName: 'John',
           lastName: 'Doe',
         );
-        
+
         expect(profile.fullName, equals('John Doe'));
       });
 
@@ -538,7 +549,7 @@ void main() {
           firstName: '',
           lastName: '',
         );
-        
+
         expect(profile.fullName, equals(' '));
       });
 
@@ -547,7 +558,7 @@ void main() {
           firstName: 'José',
           lastName: 'García',
         );
-        
+
         expect(profile.fullName, equals('José García'));
       });
     });

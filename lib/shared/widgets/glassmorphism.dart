@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../config/theme.dart';
+
 /// Glassmorphism card widget with frosted glass effect
 class GlassmorphismCard extends StatelessWidget {
   final Widget child;
@@ -36,13 +38,14 @@ class GlassmorphismCard extends StatelessWidget {
       margin: margin ?? EdgeInsets.zero,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius.r),
-        boxShadow: shadows ?? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: shadows ??
+            [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius.r),
@@ -100,9 +103,9 @@ class GradientBorderCard extends StatefulWidget {
     this.margin,
     this.borderRadius = 20,
     this.gradientColors = const [
-      Color(0xFF10B981),
-      Color(0xFF34D399),
-      Color(0xFF059669),
+      AppTheme.primary,
+      AppTheme.primaryLight,
+      AppTheme.primaryDark,
     ],
     this.borderWidth = 2,
     this.onTap,
@@ -310,7 +313,9 @@ class ShimmerCard extends StatelessWidget {
       margin: margin ?? EdgeInsets.zero,
       height: height.h,
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade200,
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.grey.shade200,
         borderRadius: BorderRadius.circular(borderRadius.r),
       ),
       child: ClipRRect(

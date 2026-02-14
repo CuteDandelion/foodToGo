@@ -31,7 +31,7 @@ void main() {
     testWidgets('displays current date and time', (WidgetTester tester) async {
       // Arrange
       final testTime = DateTime(2026, 2, 13, 14, 30);
-      
+
       // Act
       await tester.pumpWidget(createWidgetUnderTest(
         userName: 'Zain',
@@ -44,7 +44,8 @@ void main() {
       expect(find.text('14:30'), findsOneWidget);
     });
 
-    testWidgets('displays morning greeting before 12:00', (WidgetTester tester) async {
+    testWidgets('displays morning greeting before 12:00',
+        (WidgetTester tester) async {
       // Arrange
       final morningTime = DateTime(2026, 2, 13, 8, 0);
 
@@ -59,7 +60,8 @@ void main() {
       expect(find.text('Good morning, Zain! 👋'), findsOneWidget);
     });
 
-    testWidgets('displays afternoon greeting between 12:00 and 17:00', (WidgetTester tester) async {
+    testWidgets('displays afternoon greeting between 12:00 and 17:00',
+        (WidgetTester tester) async {
       // Arrange
       final afternoonTime = DateTime(2026, 2, 13, 14, 0);
 
@@ -74,7 +76,8 @@ void main() {
       expect(find.text('Good afternoon, Zain! 👋'), findsOneWidget);
     });
 
-    testWidgets('displays evening greeting after 17:00', (WidgetTester tester) async {
+    testWidgets('displays evening greeting after 17:00',
+        (WidgetTester tester) async {
       // Arrange
       final eveningTime = DateTime(2026, 2, 13, 19, 0);
 
@@ -89,7 +92,8 @@ void main() {
       expect(find.text('Good evening, Zain! 👋'), findsOneWidget);
     });
 
-    testWidgets('displays evening greeting before 5:00', (WidgetTester tester) async {
+    testWidgets('displays evening greeting before 5:00',
+        (WidgetTester tester) async {
       // Arrange
       final lateNightTime = DateTime(2026, 2, 13, 4, 0);
 
@@ -125,9 +129,12 @@ void main() {
       );
     }
 
-    testWidgets('displays days, hours, and minutes when more than 24 hours remaining', (WidgetTester tester) async {
+    testWidgets(
+        'displays days, hours, and minutes when more than 24 hours remaining',
+        (WidgetTester tester) async {
       // Arrange
-      final targetTime = DateTime.now().add(const Duration(days: 2, hours: 5, minutes: 30));
+      final targetTime =
+          DateTime.now().add(const Duration(days: 2, hours: 5, minutes: 30));
 
       // Act
       await tester.pumpWidget(createWidgetUnderTest(targetTime: targetTime));
@@ -139,9 +146,11 @@ void main() {
       expect(find.textContaining('m'), findsOneWidget);
     });
 
-    testWidgets('displays hours and minutes when less than 24 hours remaining', (WidgetTester tester) async {
+    testWidgets('displays hours and minutes when less than 24 hours remaining',
+        (WidgetTester tester) async {
       // Arrange
-      final targetTime = DateTime.now().add(const Duration(hours: 5, minutes: 30));
+      final targetTime =
+          DateTime.now().add(const Duration(hours: 5, minutes: 30));
 
       // Act
       await tester.pumpWidget(createWidgetUnderTest(targetTime: targetTime));
@@ -152,9 +161,11 @@ void main() {
       expect(find.textContaining('m'), findsOneWidget);
     });
 
-    testWidgets('displays minutes and seconds when less than 1 hour remaining', (WidgetTester tester) async {
+    testWidgets('displays minutes and seconds when less than 1 hour remaining',
+        (WidgetTester tester) async {
       // Arrange
-      final targetTime = DateTime.now().add(const Duration(minutes: 30, seconds: 45));
+      final targetTime =
+          DateTime.now().add(const Duration(minutes: 30, seconds: 45));
 
       // Act
       await tester.pumpWidget(createWidgetUnderTest(targetTime: targetTime));
@@ -165,7 +176,8 @@ void main() {
       expect(find.textContaining('s'), findsOneWidget);
     });
 
-    testWidgets('countdown displays correct format', (WidgetTester tester) async {
+    testWidgets('countdown displays correct format',
+        (WidgetTester tester) async {
       // Arrange
       final targetTime = DateTime.now().add(const Duration(minutes: 30));
 
@@ -191,7 +203,8 @@ void main() {
       expect(color, equals(const Color(0xFF10B981)));
     });
 
-    test('returns interpolated color between green and yellow at 45 minutes', () {
+    test('returns interpolated color between green and yellow at 45 minutes',
+        () {
       // Arrange
       const timeRemaining = Duration(minutes: 45);
 

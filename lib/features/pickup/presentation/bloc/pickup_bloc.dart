@@ -37,9 +37,10 @@ class PickupBloc extends Bloc<PickupEvent, PickupState> {
     Emitter<PickupState> emit,
   ) {
     final item = event.item;
-    
+
     // Check if already at max for this item type (max 2 per item)
-    final currentCount = state.selectedItems.where((i) => i.id == item.id).length;
+    final currentCount =
+        state.selectedItems.where((i) => i.id == item.id).length;
     if (currentCount >= 2) {
       emit(state.copyWith(
         errorMessage: 'Maximum 2 ${item.name} per pickup',
@@ -102,10 +103,10 @@ class PickupBloc extends Bloc<PickupEvent, PickupState> {
     Emitter<PickupState> emit,
   ) async {
     emit(state.copyWith(status: PickupStatus.loading));
-    
+
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     final timeSlots = _generateTimeSlots(event.date);
     emit(state.copyWith(
       availableTimeSlots: timeSlots,
@@ -173,7 +174,7 @@ class PickupBloc extends Bloc<PickupEvent, PickupState> {
       ));
       return;
     }
-    
+
     // Load time slots for today
     add(PickupLoadTimeSlots(DateTime.now()));
   }
@@ -284,12 +285,13 @@ class PickupBloc extends Bloc<PickupEvent, PickupState> {
     // Canteen hours: 11:00 - 14:00, every 30 minutes
     const startHour = 11;
     const endHour = 14;
-    
+
     for (int hour = startHour; hour < endHour; hour++) {
       for (int minute in [0, 30]) {
-        final timeString = '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+        final timeString =
+            '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
         final isAvailable = _isTimeSlotAvailable(date, hour, minute);
-        
+
         slots.add(TimeSlot(
           id: '${date.year}${date.month}${date.day}_$timeString',
           date: date,
@@ -299,7 +301,7 @@ class PickupBloc extends Bloc<PickupEvent, PickupState> {
         ));
       }
     }
-    
+
     return slots;
   }
 
@@ -307,12 +309,12 @@ class PickupBloc extends Bloc<PickupEvent, PickupState> {
   bool _isTimeSlotAvailable(DateTime date, int hour, int minute) {
     final now = DateTime.now();
     final slotTime = DateTime(date.year, date.month, date.day, hour, minute);
-    
+
     // Don't show past time slots
     if (slotTime.isBefore(now)) {
       return false;
     }
-    
+
     // Randomly make some slots unavailable for realism
     final hash = (date.day + hour + minute).hashCode;
     return hash % 5 != 0; // 80% availability
