@@ -20,7 +20,7 @@ class ConfirmationPage extends StatelessWidget {
         if (didPop) return;
         // Reset and go back to dashboard
         context.read<PickupBloc>().add(const PickupReset());
-        context.goDashboard();
+        context.goStudentDashboard();
       },
       child: Scaffold(
         backgroundColor: isDark ? const Color(0xFF1B5E20) : const Color(0xFFE8F5E9),
@@ -338,7 +338,7 @@ class ConfirmationPage extends StatelessWidget {
               onPressed: () {
                 HapticFeedback.mediumImpact();
                 context.read<PickupBloc>().add(const PickupReset());
-                context.goDashboard();
+                context.goStudentDashboard();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
@@ -372,7 +372,7 @@ class ConfirmationPage extends StatelessWidget {
                 HapticFeedback.lightImpact();
                 // Navigate to dashboard with QR code accessible via swipe
                 context.read<PickupBloc>().add(const PickupReset());
-                context.goDashboard();
+                context.goStudentDashboard();
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.colorScheme.primary,

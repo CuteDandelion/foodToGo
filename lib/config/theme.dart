@@ -11,6 +11,15 @@ class AppTheme {
   static const Color primaryLight = Color(0xFF34D399);
   static const Color primaryDark = Color(0xFF059669);
   static const Color primaryAccent = Color(0xFF6EE7B7);
+  
+  // Login Page Specific Colors (from brand guidelines)
+  static const Color loginBackground = Color(0xFF29f094);  // Bright green
+  static const Color loginCardBorder = Color(0xFF242a24);  // Dark grey
+  static const Color loginTextPrimary = Color(0xFF242a24);  // Dark grey
+  static const Color loginTextSecondary = Color(0xFF666666);  // Medium grey
+  static const Color loginTextMuted = Color(0xFF999999);  // Light grey
+  static const Color loginDivider = Color(0xFFE0E0E0);  // Very light grey
+  static const Color loginCheckboxUnchecked = Color(0xFFCCCCCC);  // Light grey
 
   // Semantic Colors
   static const Color success = Color(0xFF10B981);

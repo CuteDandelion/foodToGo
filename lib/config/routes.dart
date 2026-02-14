@@ -255,7 +255,6 @@ extension GoRouterExtension on BuildContext {
   void goPickup() => go(RoutePaths.pickup);
   void goTimeSlot() => go(RoutePaths.timeSlot);
   void goConfirmation() => go(RoutePaths.confirmation);
-  void goDashboard() => go(RoutePaths.studentDashboard);
   void goQRCode({
     required String pickupId,
     String? qrData,

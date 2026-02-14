@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/routes.dart';
+import '../../../../shared/widgets/shimmer_loading.dart';
 import '../../domain/entities/food_item.dart';
 import '../bloc/pickup_bloc.dart';
 import '../widgets/food_item_card.dart';
@@ -105,7 +106,7 @@ class _PickupPageContentState extends State<_PickupPageContent> {
           builder: (context, state) {
             if (state.status == PickupStatus.initial ||
                 state.status == PickupStatus.loading) {
-              return const Center(child: CircularProgressIndicator());
+              return const _PickupLoadingState();
             }
 
             return Column(
@@ -435,6 +436,51 @@ class _PickupPageContentState extends State<_PickupPageContent> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Loading state for pickup page with shimmer effect
+class _PickupLoadingState extends StatelessWidget {
+  const _PickupLoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Category tabs shimmer
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: List.generate(
+              3,
+              (index) => Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: index < 2 ? 8 : 0),
+                  child: const ShimmerListItem(),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        
+        // Food items shimmer
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: 4,
+            itemBuilder: (context, index) => const ShimmerListItem(),
+          ),
+        ),
+        
+        // Selected items container shimmer
+        Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
+          child: const ShimmerMetricCard(),
+        ),
+      ],
     );
   }
 }
